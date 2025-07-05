@@ -5,10 +5,6 @@ gg:
 spring:
   application:
     name: quiz
-  security:
-    user:
-      name: admin
-      password: 123456
 
   thymeleaf:
     prefix: classpath:/templates/
