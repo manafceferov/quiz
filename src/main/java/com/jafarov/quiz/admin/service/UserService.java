@@ -9,8 +9,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 public class UserService {
 
@@ -27,7 +25,7 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public void createUser(UserIUDRequest request) {
+    public void save(UserIUDRequest request) {
         request.setPassword(passwordEncoder.encode(request.getPassword()));
         repository.save(mapper.toDboUserFromUserIUDRequest(request));
     }
@@ -35,4 +33,14 @@ public class UserService {
     public Page<User> getAll(Pageable pageable) {
         return repository.findAll(pageable);
     }
+
+    public User getById(Long id) {
+        return repository.findById(id).orElse(null);
+    }
+
+    public void update(UserIUDRequest request) {
+        request.setPassword(passwordEncoder.encode(request.getPassword()));
+        repository.save(mapper.toDboUserFromUserIUDRequest(request));
+    }
+
 }

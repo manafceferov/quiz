@@ -59,7 +59,7 @@
                     <td th:text="${user.firstName}+' '+${user.lastName}+' '+${user.fatherName}"></td>
                     <th class="" th:title="${user.createdAt}" th:text="${@diffForHumans.getTime(user.createdAt)}"></th>
                     <th class="align-middle">
-                        <a th:href="@{admin/users/{id}/edit(id=${user.id})}"
+                        <a th:href="@{/admin/users/{id}/edit(id=${user.id})}"
                            class="btn btn-info d-inline btn-sm"
                            type="button"><i class="fas fa-pencil-alt"></i></a>
                         <button type="button" class="btn btn-danger btn-sm btn-circle"
