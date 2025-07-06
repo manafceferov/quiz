@@ -59,7 +59,7 @@ public class UserController {
         return "admin/user/edit";
     }
 
-    @PutMapping("/edit")
+    @PostMapping("/edit")
     public String edit(@Valid @ModelAttribute("userIUDRequest") UserIUDRequest request, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("errors", bindingResult.getAllErrors());
