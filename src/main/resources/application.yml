@@ -5,18 +5,17 @@ gg:
 spring:
   application:
     name: quiz
-  messages:
-    basename: messages
-    encoding: UTF-8
-  locale: az
-
+  security:
+    user:
+      name: admin
+      password: 123456
 
   thymeleaf:
     prefix: classpath:/templates/
     suffix: .html
 
   datasource:
-    url: jdbc:postgresql://localhost:5433/quizdb
+    url: jdbc:postgresql://192.168.1.101:5433/quizdb
     username: quizuser
     password: quizpassword
     driver-class-name: org.postgresql.Driver
@@ -33,6 +32,6 @@ spring:
     enabled: true
     change-log: classpath:db/changelog/db.changelog-master.yaml  # ✅ əsas changelog faylı
 
-  web:
-    locale-resolver: fixed
-    locale: az
+server:
+  port: 8081
+
