@@ -1,18 +1,145 @@
 <th:block th:replace="~{admin/fragments/header}"></th:block>
 
 
+<div class="container">
+    <div class="alert alert-success shadow border border-success text-center">
+        <i class="fa fa-check mr-2"></i>
+    </div>
+</div>
+
+<div class="card border border-dark shadow mb-5">
+    <div class="card-body bg-light mt-2">
+        <form th:action="@{admin/users}" method="GET">
+            <div class="form-row">
+                <div class="col-md-6 form-group">
+                    <input type="text" name="name" id="" class="form-control" autofocus
+                           placeholder="Ad">
+                </div>
+
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-outline-primary w-100"><i
+                            class="fas fa-search"></i> Axtar
+                    </button>
+                </div>
+                <div class="col-md-2">
+                    <a th:action="@{admin/users}"
+                       class="btn btn-outline-warning w-100 text-center" type="button"><i
+                            class="fas fa-sync"></i> Axtarışı Sıfırla</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card shadow mb-4">
+    <div class="card-header">
+        <a th:href="@{/admin/users/create}" class="btn btn-dark float-right"> <i class="fa fa-plus"></i>
+            Əlavə
+            Et</a>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead class="text-center">
+                <tr>
+                    <th>No</th>
+                    <th>Ad</th>
+                    <th>Daxil Edilmə Tarixi</th>
+                    <th>Əməliyyatlar</th>
+                </tr>
+                </thead>
+                <tbody class="text-center">
+                <tr th:each="user, stat : ${users}">
+                    <th class="align-middle">
+                        <div class="badge badge-pill badge-dark">
+                            [[${stat.count}]]
+                        </div>
+                    </th>
+
+                    <td th:text="${user.firstName}+' '+${user.lastName}+' '+${user.fatherName}"></td>
+                    <th class="" th:title="${user.createdAt}" th:text="${@diffForHumans.getTime(user.createdAt)}"></th>
+                    <th class="align-middle">
+                        <a th:href="@{/admin/users/{id}/edit(id=${user.id})}"
+                           class="btn btn-info d-inline btn-sm"
+                           type="button"><i class="fas fa-pencil-alt"></i></a>
+                        <button type="button" class="btn btn-danger btn-sm btn-circle"
+                                onclick="loadDeleteModal([[${user.id}]]);"
+                                data-toggle="modal" data-target="#deleteModal">
+                            <i class="far fa-trash-alt"></i>
+                        </button>
+                    </th>
+                </tr>
+                </tbody>
+            </table>
+            <div th:replace="~{admin/fragments/pagination :: paginationFragment(${users}, '/admin/users')}"></div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="deleteModal" data-backdrop="static" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-toggle="modal" data-target="#deleteModal">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete?
+                <input type="hidden" id="id" name="id">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn bg-success text-white" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-danger" id="modal-confirm_delete">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
+<link href="{{asset('back/')}}/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
 
 
-<h1>Create Index Page</h1>
+<script src="{{asset('back/')}}/vendor/datatables/jquery.dataTables.min.js"></script>
+<script src="{{asset('back/')}}/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+<script src="{{asset('back/')}}/js/demo/datatables-demo.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
 
+<script>
+    setTimeout(function () {
 
+        $(".alert").hide("2000")
 
+    }, 3000);
 
+    function loadDeleteModal(id) {
+        $('#modal-confirm_delete').attr('onclick', `confirmDelete(${id})`);
+        $('#deleteModal').modal('show');
+    }
 
+    function confirmDelete(id) {
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            url: "{{ route('admin.event.destroy') }}/" + id,
+            type: 'get',
+            data: {
+                "_token": "{{ csrf_token() }}",
 
-
+                '_method': 'delete',
+            },
+            success: function (data) {
+                $('#deleteModal').modal('hide');
+                $(document).ajaxStop(function () {
+                    window.location.reload();
+                });
+            }
+        });
+    }
+</script>
 
 <th:block th:replace="~{admin/fragments/footer}"></th:block>

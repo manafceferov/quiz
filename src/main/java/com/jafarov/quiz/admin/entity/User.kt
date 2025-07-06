@@ -29,6 +29,10 @@ open class User @JvmOverloads constructor(
     @Column(name = "first_name", length = 100)
     var firstName: String? = null,
 
+    @Nationalized
+    @Column(name = "father_name", length = 100)
+    var fatherName: String? = null,
+
     @Column(nullable = false, length = 100)
     var password: String? = null,
 

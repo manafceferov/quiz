@@ -37,6 +37,9 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.10")
     implementation("org.projectlombok:lombok:1.18.38")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("org.modelmapper:modelmapper:3.1.1")
+    implementation ("org.mapstruct:mapstruct:1.5.5.Final")
+    annotationProcessor ("org.mapstruct:mapstruct-processor:1.5.5.Final")
     runtimeOnly("org.postgresql:postgresql")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
 
@@ -44,6 +47,7 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    implementation("org.ocpsoft.prettytime:prettytime:5.0.3.Final")
 }
 
 dependencyManagement {

@@ -5,6 +5,11 @@ gg:
 spring:
   application:
     name: quiz
+  messages:
+    basename: messages
+    encoding: UTF-8
+  locale: az
+
 
   thymeleaf:
     prefix: classpath:/templates/
@@ -28,3 +33,6 @@ spring:
     enabled: true
     change-log: classpath:db/changelog/db.changelog-master.yaml  # ✅ əsas changelog faylı
 
+  web:
+    locale-resolver: fixed
+    locale: az
