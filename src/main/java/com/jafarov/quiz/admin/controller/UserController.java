@@ -1,6 +1,7 @@
 package com.jafarov.quiz.admin.controller;
 
-import com.jafarov.quiz.admin.dto.user.UserIUDRequest;
+import com.jafarov.quiz.admin.dto.user.UserInsertRequest;
+import com.jafarov.quiz.admin.dto.user.UserUpdateRequest;
 import com.jafarov.quiz.admin.service.UserService;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -9,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 
@@ -32,12 +34,16 @@ public class UserController {
 
     @GetMapping("/create")
     public String create(Model model) {
-        model.addAttribute("userIUDRequest", new UserIUDRequest());
+        model.addAttribute("userIUDRequest", new UserInsertRequest());
         return "admin/user/create";
     }
 
     @PostMapping()
-    public String create(@Valid @ModelAttribute("userIUDRequest") UserIUDRequest request, BindingResult bindingResult, Model model) {
+    public String create(@Valid @ModelAttribute("userIUDRequest") UserInsertRequest request,
+                         BindingResult bindingResult,
+                         @RequestParam("file") MultipartFile file,
+                         Model model) {
+
         if (bindingResult.hasErrors()) {
             model.addAttribute("errors", bindingResult.getAllErrors());
             return "admin/user/create";
@@ -54,7 +60,7 @@ public class UserController {
     }
 
     @PostMapping("/edit")
-    public String edit(@Valid @ModelAttribute("userIUDRequest") UserIUDRequest request, BindingResult bindingResult, Model model) {
+    public String edit(@Valid @ModelAttribute("userIUDRequest") UserUpdateRequest request, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("errors", bindingResult.getAllErrors());
             model.addAttribute("user", request);
@@ -65,8 +71,9 @@ public class UserController {
         return "redirect:/admin/users";
     }
 
-    @DeleteMapping()
-    public String delete() {
-        return "admin/user/index";
+    @GetMapping("/{id}/delete")
+    public String delete(@PathVariable("id") Long id) {
+        userService.deleteById(id);
+        return "redirect:/admin/users";
     }
 }
