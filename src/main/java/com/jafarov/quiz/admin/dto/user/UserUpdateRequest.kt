@@ -5,10 +5,13 @@ import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Size
 import org.jetbrains.annotations.NotNull
+import org.jetbrains.annotations.Nullable
 import org.springframework.web.multipart.MultipartFile
 
 @FieldMatch(first = "password", second = "passwordConfirmation", message = "{FieldMatch}")
-class UserIUDRequest @JvmOverloads constructor(
+class UserUpdateRequest (
+
+    @field: NotNull()
     var id: Long? = null,
 
     @field: NotNull()
@@ -32,17 +35,13 @@ class UserIUDRequest @JvmOverloads constructor(
     @field: NotBlank(message = "{email} {NotBlank}")
     var email: String? = null,
 
-    @field: NotNull
-    @field: Size(min = 3, max = 100 , message = "{password} {Size}")
-    @field: NotBlank(message = "{password} {NotBlank}")
+    @field: Nullable
     var password: String? = null,
 
-    @field: NotNull
-    @field: Size(min = 3, max = 100 , message = "{passwordConfirmation} {Size}")
-    @field: NotBlank(message = "{passwordConfirmation} {NotBlank}")
+    @field: Nullable
     var passwordConfirmation: String? = null,
 
     @field: NotNull
     var file: MultipartFile? = null
-) {
+){
 }

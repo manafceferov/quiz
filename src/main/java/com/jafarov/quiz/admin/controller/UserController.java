@@ -1,7 +1,7 @@
 package com.jafarov.quiz.admin.controller;
 
-import com.jafarov.quiz.admin.dto.user.UserIUDRequest;
-import com.jafarov.quiz.admin.entity.User;
+import com.jafarov.quiz.admin.dto.user.UserInsertRequest;
+import com.jafarov.quiz.admin.dto.user.UserUpdateRequest;
 import com.jafarov.quiz.admin.service.UserService;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -34,12 +34,12 @@ public class UserController {
 
     @GetMapping("/create")
     public String create(Model model) {
-        model.addAttribute("userIUDRequest", new UserIUDRequest());
+        model.addAttribute("userIUDRequest", new UserInsertRequest());
         return "admin/user/create";
     }
 
     @PostMapping()
-    public String create(@Valid @ModelAttribute("userIUDRequest") UserIUDRequest request,
+    public String create(@Valid @ModelAttribute("userIUDRequest") UserInsertRequest request,
                          BindingResult bindingResult,
                          @RequestParam("file") MultipartFile file,
                          Model model) {
@@ -49,7 +49,7 @@ public class UserController {
             return "admin/user/create";
         }
 
-        userService.save(request, file);
+        userService.save(request);
         return "redirect:/admin/users";
     }
 
@@ -60,7 +60,7 @@ public class UserController {
     }
 
     @PostMapping("/edit")
-    public String edit(@Valid @ModelAttribute("userIUDRequest") UserIUDRequest request, BindingResult bindingResult, Model model) {
+    public String edit(@Valid @ModelAttribute("userIUDRequest") UserUpdateRequest request, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("errors", bindingResult.getAllErrors());
             model.addAttribute("user", request);

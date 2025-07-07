@@ -37,10 +37,10 @@ open class User @JvmOverloads constructor(
     var password: String? = null,
 
     @Column(name = "created_at", nullable = false, insertable = false, updatable = false)
-    var createdAt: LocalDateTime? = null,
+    var createdAt: LocalDateTime? = LocalDateTime.now(),
 
     @Column(name = "updated_at", nullable = false, insertable = false, updatable = false)
-    var updatedAt: LocalDateTime? = null,
+    var updatedAt: LocalDateTime? = LocalDateTime.now(),
 
     @Column(name = "status", nullable = false)
     var status: Boolean? = true
