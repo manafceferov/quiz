@@ -9,7 +9,7 @@ import java.security.Principal;
 
 @Controller
 @RequestMapping("/admin")
-public class AuthController {
+public class AuthController extends BaseController {
 
     @GetMapping("/login")
     public String login(Principal principal) {

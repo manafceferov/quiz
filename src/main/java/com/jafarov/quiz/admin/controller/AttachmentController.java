@@ -13,7 +13,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 @Controller
-public class FileUploadController {
+public class AttachmentController extends BaseController{
 
     // Dosyaların kaydedileceği dizin
     private static String UPLOADED_FOLDER = "src/main/resources/static/uploads/";

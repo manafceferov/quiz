@@ -16,35 +16,11 @@
         </li>
 
         <li class="nav-item">
-            <a class="nav-link @if(Route::currentRouteName() == 'admin.regions.index') disabled text-success @endif"
-               href="#">
-                <i class="fas fa-map"></i> <span>Regionlar</span></a>
+            <a class="nav-link"
+               th:href="@{/admin/topics}">
+                <i class="fas fa-map"></i> <span>Quizzes</span></a>
         </li>
 
-        <li class="nav-item">
-            <a class="nav-link @if(Route::currentRouteName() == 'admin.cities.index') disabled text-success @endif"
-               href="#">
-                <i class="fas fa-city"></i> <span>Şəhərlər</span></a>
-        </li>
-
-        <li class="nav-item">
-            <a class="nav-link @if(Route::currentRouteName() == 'admin.addresses.index') disabled text-success @endif"
-               href="#">
-                <i class="fas fa-map-marked"></i> <span>Tədbir Məkanları</span></a>
-        </li>
-
-
-        <li class="nav-item">
-            <a class="nav-link @if(Route::currentRouteName() == 'admin.events.index') disabled text-success @endif"
-               href="#">
-                <i class="fas fa-calendar"></i> <span>Tədbirlər</span></a>
-        </li>
-
-        <li class="nav-item">
-            <a class="nav-link @if(Route::currentRouteName() == 'admin.participants.index') disabled text-success @endif"
-               href="#">
-                <i class="fas fa-calendar"></i> <i class="fas fa-users"></i> <span>Tədbir İştirakçıları</span></a>
-        </li>
 
         <!-- Sidebar Toggler (Sidebar) -->
         <div class="text-center d-none d-md-inline">

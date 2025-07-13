@@ -1,49 +1,38 @@
 package com.jafarov.quiz.admin.entity
 
+import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
+import jakarta.persistence.FetchType
+import jakarta.persistence.OneToOne
 import jakarta.persistence.Table
 import org.hibernate.annotations.Nationalized
-import java.time.LocalDateTime
 
 @Entity
 @Table(name = "users")
-open class User @JvmOverloads constructor(
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    var id: Long? = null,
-
-    @Column(nullable = false, unique = true, length = 100)
-    var email: String? = null,
+class User @JvmOverloads constructor(
 
     @Nationalized
-    @Column(name = "last_name", length = 100)
-    var lastName: String? = null,
+    @Column(name = "first_name", nullable = false, length = 100)
+    var firstName: String = "",
 
     @Nationalized
-    @Column(name = "first_name", length = 100)
-    var firstName: String? = null,
+    @Column(name = "last_name", nullable = false, length = 100)
+    var lastName: String = "",
 
     @Nationalized
-    @Column(name = "father_name", length = 100)
-    var fatherName: String? = null,
+    @Column(name = "father_name", nullable = false, length = 100)
+    var fatherName: String = "",
 
-    @Column(nullable = false, length = 100)
-    var password: String? = null,
+    @Column(name = "email", nullable = false, unique = true, length = 100)
+    var email: String = "",
 
-    @Column(name = "created_at", nullable = false, insertable = false, updatable = false)
-    var createdAt: LocalDateTime? = LocalDateTime.now(),
-
-    @Column(name = "updated_at", nullable = false, insertable = false, updatable = false)
-    var updatedAt: LocalDateTime? = LocalDateTime.now(),
+    @Column(name = "password", nullable = false, length = 100)
+    var password: String = "",
 
     @Column(name = "status", nullable = false)
-    var status: Boolean? = true
+    var status: Boolean = true,
 
-) {
-}
+    @OneToOne(mappedBy = "user", cascade = [CascadeType.ALL], fetch = FetchType.LAZY, orphanRemoval = true)
+    var attachment: Attachment? = null
+):BaseEntity()

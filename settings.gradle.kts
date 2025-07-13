@@ -3,4 +3,4 @@ pluginManagement {
         kotlin("jvm") version "2.1.21"
     }
 }
-rootProject.name = "quiz"
+rootProject.name = "topic"

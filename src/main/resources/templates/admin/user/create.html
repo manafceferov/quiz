@@ -7,92 +7,57 @@
 <div class="container">
     <div class="card shadow mb-4 border border-dark">
         <div class="card-header">
-            <a th:href="@{/admin/users}" class="btn btn-dark float-right"> <i
-                    class="fa fa-arrow-left"> </i>
-                Geri</a>
+            <a th:href="@{/admin/users}" class="btn btn-dark float-right">
+                <i class="fa fa-arrow-left"></i> Geri
+            </a>
         </div>
         <div class="card-body">
             <form th:action="@{/admin/users}" th:object="${userIUDRequest}" method="POST" enctype="multipart/form-data" class="text-primary">
+                <div class="form-row">
+                    <div class="form-group col-md-3">
+                        <label>Ad :</label>
+                        <input type="text" class="form-control" th:field="*{firstName}" required/>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label>Soyad :</label>
+                        <input type="text" class="form-control" th:field="*{lastName}" required/>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label>Ata Adı :</label>
+                        <input type="text" class="form-control" th:field="*{fatherName}" required/>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label>Email :</label>
+                        <input type="email" class="form-control" th:field="*{email}" required/>
+                    </div>
+                </div>
 
                 <div class="form-row">
-                    <div class="form-group col-md-3">
-                        <label for="">Ad :</label>
-                        <input type="text" name="firstName" id="" th:field="*{firstName}" class="form-control" required>
-                    </div>
-                    <div class="form-group col-md-3">
-                        <label for="">Soyad :</label>
-                        <input type="text" name="lastName" id="" th:field="*{lastName}" class="form-control" required>
-                    </div>
-                    <div class="form-group col-md-3">
-                        <label for="">Ata Adı :</label>
-                        <input type="text" name="fatherName" id="" th:field="*{fatherName}" class="form-control" required>
-                    </div>
-                    <div class="form-group col-md-3">
-                        <label for="">Email :</label>
-                        <input type="email" name="email" id="" th:field="*{email}" class="form-control" required>
-                    </div>
-                </div>
-                <hr>
-                <div class="form-row">
                     <div class="form-group col-md-6">
-                        <label for="">Şifrə :</label>
-                        <input type="password" name="password" class="form-control password" id="password" th:field="*{password}" required>
+                        <label>Şifrə :</label>
+                        <input type="password" class="form-control password" th:field="*{password}" required/>
                     </div>
                     <div class="form-group col-md-6">
-                        <label for="">Şifrəni təstiqlə :</label>
-                        <input type="password" name="passwordConfirmation" class="form-control password"
-                               id="password_confirmation" th:field="*{passwordConfirmation}" required>
+                        <label>Şifrəni təstiqlə :</label>
+                        <input type="password" class="form-control password" th:field="*{passwordConfirmation}" required/>
                     </div>
                 </div>
+
                 <div class="form-row">
                     <div class="form-group col-md-6">
-                        <label for="checkbox">Şifrəni göstər :</label>
-                        <input type="checkbox" onclick="myFunction()" id="checkbox">
+                        <label>Profil Şəkili Yüklə:</label>
+                        <input type="file" class="form-control" th:field="*{file}" required/>
                     </div>
                 </div>
-                <hr>
-                <div class="form-row">
-                    <div class="form-group mt-4 col-md-6">
-                        <label for="">Profil Şəkili :</label>
-                        <input type="file" name="file" id="" required>
-                    </div>
+
+                <div class="form-group mt-4">
+                    <button type="submit" class="btn btn-success btn-block">
+                        <i class="fa fa-plus"></i> Əlavə Et
+                    </button>
                 </div>
-                <div class="form-group mt-5">
-                    <button type="submit" class="btn btn-success btn-block"><i class="fa fa-plus"></i> Əlavə Et</button>
-                </div>
-        </form>
+            </form>
+        </div>
     </div>
 </div>
-</div>
-
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.js"></script>
-
-<script>
-    function myFunction() {
-        var x = $('.password').attr('type');
-
-        if (x === "password") {
-            document.getElementById("password").type = "text";
-            document.getElementById("password_confirmation").type = "text";
-        } else {
-            document.getElementById("password").type = "password";
-            document.getElementById("password_confirmation").type = "password";
-        }
-    }
-</script>
-
-<script>
-    $('.btn-secondary').click(function (e) {
-        e.preventDefault()
-        $('.form-check-input').prop('checked', true);
-    })
-</script>
-
-<style>
-    hr {
-        border: 1px solid black;
-    }
-</style>
 
 <th:block th:replace="~{admin/fragments/footer}"></th:block>
