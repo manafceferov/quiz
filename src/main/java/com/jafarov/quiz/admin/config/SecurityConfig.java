@@ -1,10 +1,11 @@
 package com.jafarov.quiz.admin.config;
 
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -19,7 +20,7 @@ public class SecurityConfig {
 
     private final UserDetailsService userDetailsService;
 
-    public SecurityConfig(UserDetailsService userDetailsService) {
+    public SecurityConfig(@Lazy UserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
     }
 
@@ -28,16 +29,24 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
+                        // Giriş səhifəsinə və statik resurslara icazə ver
                         .requestMatchers("/admin/login", "/admin/sb-admin/**").permitAll()
-                        .anyRequest().authenticated()
+                        // Admin səhifələrinə giriş üçün autentifikasiya tələb et
+                        .requestMatchers("/admin/**").authenticated()
+                        .anyRequest().permitAll()
                 )
-                .formLogin(login -> login
+               .formLogin(form -> form
                         .loginPage("/admin/login")
                         .loginProcessingUrl("/admin/login")
                         .defaultSuccessUrl("/admin/home", true)
                         .failureUrl("/admin/login?error=true")
                         .permitAll()
                 );
+//                .logout(logout -> logout
+//                        .logoutUrl("/admin/logout")
+//                        .logoutSuccessUrl("/admin/login?logout=true")
+//                        .permitAll()
+//                );
 
         return http.build();
     }
@@ -47,11 +56,9 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    // 👇 UserDetailsService və PasswordEncoder burada istifadə olunur
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
-        AuthenticationManagerBuilder builder =
-                http.getSharedObject(AuthenticationManagerBuilder.class);
+        AuthenticationManagerBuilder builder = http.getSharedObject(AuthenticationManagerBuilder.class);
         builder.userDetailsService(userDetailsService)
                 .passwordEncoder(passwordEncoder());
         return builder.build();

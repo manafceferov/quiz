@@ -7,108 +7,69 @@
 <div class="container">
     <div class="card shadow mb-4 border border-dark">
         <div class="card-header">
-            <a th:href="@{/admin/users}" class="btn btn-dark float-right"> <i
-                    class="fa fa-arrow-left"> </i>
-                Geri</a>
+            <a th:href="@{/admin/users}" class="btn btn-dark float-right">
+                <i class="fa fa-arrow-left"></i> Geri
+            </a>
         </div>
         <div class="card-body">
-            <form th:action="@{/admin/users/edit}" th:object="${userIUDRequest}" method="POST"
-                  enctype="multipart/form-data" class="text-primary">
-                <input type="hidden" name="id" th:value="${user.id}">
+            <form th:action="@{/admin/users/edit}" th:object="${userIUDRequest}" method="POST" enctype="multipart/form-data" class="text-primary">
+                <input type="hidden" th:field="*{id}"/>
 
                 <div class="form-row">
                     <div class="form-group col-md-3">
-                        <label for="firstName">Ad :</label>
-                        <input type="text" name="firstName" id="firstName" class="form-control"
-                               th:value="${user.firstName}">
+                        <label>Ad :</label>
+                        <input type="text" class="form-control" th:field="*{firstName}" required/>
                     </div>
                     <div class="form-group col-md-3">
-                        <label for="lastName">Soyad :</label>
-                        <input type="text" name="lastName" id="lastName" class="form-control"
-                               th:value="${user.lastName}">
+                        <label>Soyad :</label>
+                        <input type="text" class="form-control" th:field="*{lastName}" required/>
                     </div>
                     <div class="form-group col-md-3">
-                        <label for="fatherName">Ata Adı :</label>
-                        <input type="text" name="fatherName" id="fatherName" class="form-control"
-                               th:value="${user.fatherName}">
+                        <label>Ata Adı :</label>
+                        <input type="text" class="form-control" th:field="*{fatherName}" required/>
                     </div>
                     <div class="form-group col-md-3">
-                        <label for="email">Email :</label>
-                        <input type="email" name="email" id="email" class="form-control" th:value="${user.email}">
-                    </div>
-                </div>
-                <hr>
-                <div class="form-row">
-                    <div class="form-group col-md-6">
-                        <label for="password">Şifrə :</label>
-                        <input type="password" name="password" class="form-control password"
-                               id="password" placeholder="Yeni parol (əgər dəyişmək istəyirsinizsə)">
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label for="password_confirmation">Şifrəni təstiqlə :</label>
-                        <input type="password" name="passwordConfirmation" class="form-control password"
-                               id="password_confirmation" placeholder="Parolu təkrar daxil edin">
+                        <label>Email :</label>
+                        <input type="email" class="form-control" th:field="*{email}" required/>
                     </div>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group col-md-6">
-                        <label for="checkbox">Şifrəni göstər :</label>
-                        <input type="checkbox" onclick="myFunction()" id="checkbox">
+                        <label>Şifrə :</label>
+                        <input type="password" class="form-control password" th:field="*{password}"/>
                     </div>
-                </div>
-                <hr>
-                <div class="form-row">
-                    <div class="form-group mt-4 col-md-6">
-                        <label for="">Profil Şəkili :</label>
-                        <input type="file" name="file" id="">
-                    </div>
-                </div>
-                <div class="form-row">
-
                     <div class="form-group col-md-6">
-                        <div class="badge badge-pill badge-success w-25">
-                            <a href="#" target="blank"
-                               class="text-white"> <i class="fas fa-image"></i> image view</a>
-                        </div>
+                        <label>Şifrəni təstiqlə :</label>
+                        <input type="password" class="form-control password" th:field="*{password}"/>
                     </div>
                 </div>
-                <hr>
-                <div class="form-group mt-5">
-                    <button type="submit" class="btn btn-success btn-block"><i class="fa fa-edit"></i> Yenilə</button>
+
+                <div class="form-row align-items-end">
+                    <div class="form-group col-md-6">
+                        <label>Profil Şəkili Yüklə:</label>
+                        <input type="file" class="form-control" name="file"/>
+                    </div>
+                    <div class="form-group mt-4 col-md-6" th:if="${userIUDRequest.attachment != null}">
+                        <label>Profil Şəkili:</label><br/>
+                        <img th:src="@{${userIUDRequest.attachment.fileUrl}}" alt="Profil şəkli"
+                             width="150" height="150" style="border: 1px solid #ccc; border-radius: 5px;"/>
+                    </div>
+
+                    <div class="form-group mt-4 col-md-6" th:if="${userIUDRequest.attachment != null}">
+                        <label>Mövcud Profil Şəkili:</label><br/>
+                        <a th:href="@{${userIUDRequest.attachment.fileUrl}}" target="_blank" class="btn btn-outline-primary">
+                            <i class="fas fa-image"></i> Şəkilə Bax
+                        </a>
+                    </div>
+                </div>
+
+                <div class="form-group mt-4">
+                    <button type="submit" class="btn btn-success btn-block">Yenilə</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.js"></script>
-
-<script>
-    function myFunction() {
-        var x = $('.password').attr('type');
-
-        if (x === "password") {
-            document.getElementById("password").type = "text";
-            document.getElementById("password_confirmation").type = "text";
-        } else {
-            document.getElementById("password").type = "password";
-            document.getElementById("password_confirmation").type = "password";
-        }
-    }
-</script>
-
-<script>
-    $('.btn-secondary').click(function (e) {
-        e.preventDefault()
-        $('.form-check-input').prop('checked', true);
-    })
-</script>
-
-<style>
-    hr {
-        border: 1px solid black;
-    }
-</style>
 
 <th:block th:replace="~{admin/fragments/footer}"></th:block>

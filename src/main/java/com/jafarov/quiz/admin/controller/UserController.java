@@ -2,6 +2,7 @@ package com.jafarov.quiz.admin.controller;
 
 import com.jafarov.quiz.admin.dto.user.UserInsertRequest;
 import com.jafarov.quiz.admin.dto.user.UserUpdateRequest;
+import com.jafarov.quiz.admin.entity.User;
 import com.jafarov.quiz.admin.service.UserService;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -17,7 +18,7 @@ import javax.validation.Valid;
 @Controller
 @RequestMapping("/admin/users")
 @Validated
-public class UserController {
+public class UserController extends BaseController {
 
     private final UserService userService;
 
@@ -26,7 +27,9 @@ public class UserController {
     }
 
     @GetMapping()
-    public String index(Model model, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+    public String index(Model model,
+                        @RequestParam(defaultValue = "0") int page,
+                        @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
         model.addAttribute("users", userService.getAll(pageable));
         return "admin/user/index";
@@ -49,21 +52,26 @@ public class UserController {
             return "admin/user/create";
         }
 
+        request.setFile(file);
         userService.save(request);
         return "redirect:/admin/users";
     }
 
     @GetMapping("{id}/edit")
     public String edit(@PathVariable("id") Long id, Model model) {
-        model.addAttribute("user", userService.getById(id));
+        User user = userService.edit(id);
+        model.addAttribute("userIUDRequest", user);
         return "admin/user/edit";
     }
 
     @PostMapping("/edit")
-    public String edit(@Valid @ModelAttribute("userIUDRequest") UserUpdateRequest request, BindingResult bindingResult, Model model) {
+    public String edit(@Valid @ModelAttribute("userIUDRequest") UserUpdateRequest request,
+                       BindingResult bindingResult,
+                       Model model) {
+
         if (bindingResult.hasErrors()) {
             model.addAttribute("errors", bindingResult.getAllErrors());
-            model.addAttribute("user", request);
+            model.addAttribute("user", userService.edit(request.getId()));
             return "admin/user/edit";
         }
 

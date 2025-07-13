@@ -12,23 +12,38 @@ databaseChangeLog:
                   autoIncrement: true
                   constraints:
                     primaryKey: true
+                    nullable: false
+
               - column:
                   name: file_name
-                  type: NVARCHAR(255)
+                  type: VARCHAR(255)
                   constraints:
                     nullable: false
+
               - column:
                   name: file_url
                   type: VARCHAR(255)
                   constraints:
                     nullable: false
+
               - column:
                   name: created_at
                   type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
                   constraints:
                     nullable: false
+
               - column:
-                  name: source_id
+                  name: user_id
                   type: BIGINT
                   constraints:
                     nullable: false
+                    unique: true
+
+        - addForeignKeyConstraint:
+            baseTableName: attachments
+            baseColumnNames: user_id
+            referencedTableName: users
+            referencedColumnNames: id
+            onDelete: CASCADE
+            constraintName: fk_attachment_user

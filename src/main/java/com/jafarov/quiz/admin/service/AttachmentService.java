@@ -7,12 +7,15 @@ import com.jafarov.quiz.admin.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.time.LocalDateTime;
+import java.util.UUID;
+
 
 @Service
 public class AttachmentService {
@@ -27,56 +30,51 @@ public class AttachmentService {
         this.userRepository = userRepository;
     }
 
-    public void upload(Long userId, MultipartFile file)  {
+    public void upload(Long userId, MultipartFile file) {
+        if (file.isEmpty()) return;
 
-        try{
+        try {
+            Path uploadPath = Paths.get(UPLOAD_DIR);
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
 
-        if (file.isEmpty()) {
-            throw new IllegalArgumentException("Fayl boşdur");
-        }
+            String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+            Path filePath = uploadPath.resolve(fileName);
+            Files.write(filePath, file.getBytes(), StandardOpenOption.CREATE);
 
-        Path uploadPath = Paths.get(UPLOAD_DIR);
-        if (!Files.exists(uploadPath)) {
-            Files.createDirectories(uploadPath);
-        }
+            String fileUrl = "/uploads/" + fileName;
 
-        String fileName = file.getOriginalFilename();
-        Path filePath = uploadPath.resolve(fileName);
-        Files.write(filePath, file.getBytes());
+            User user = userRepository.findById(userId)
+                    .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
 
-        String fileUrl = "/uploads/" + fileName;
+            // Köhnə faylı sil
+            Attachment existingAttachment = attachmentRepository.findByUserId(userId);
+            if (existingAttachment != null) {
+                deleteFile(existingAttachment.getFileUrl());
+                attachmentRepository.delete(existingAttachment);
+            }
 
-        // Attachment yaratmaq
-        Attachment attachment = new Attachment(
-                0L,
-                fileName,
-                fileUrl,
-                LocalDateTime.now(),
-                userId  // sourceId - istifadəçi ID-si
-        );
+            Attachment attachment = new Attachment(fileName, fileUrl, LocalDateTime.now());
+            attachmentRepository.save(attachment);
 
-        Attachment savedAttachment = attachmentRepository.save(attachment);
-
-        // İstifadəçini tapmaq
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("İstifadəçi tapılmadı"));
-
-        // İstifadəçini yeniləmək (əgər lazımdırsa)
-        User updatedUser = new User(
-                user.getId(),
-                user.getFirstName(),
-                user.getLastName(),
-                user.getFatherName(),
-                user.getEmail(),
-                user.getPassword()
-        );
-
-
-
-        userRepository.save(updatedUser);
-        }catch(Exception ex){
-            System.out.println("Fayl əlavə edin");
+        } catch (IOException e) {
+            throw new RuntimeException("File upload failed: " + e.getMessage());
         }
     }
 
+    public void deleteByUserId(Long userId) {
+        Attachment attachment = attachmentRepository.findByUserId(userId);
+        if (attachment != null) {
+            deleteFile(attachment.getFileUrl());
+            attachmentRepository.delete(attachment);
+        }
+    }
+
+    private void deleteFile(String fileUrl) {
+        File file = new File("src/main/resources/static" + fileUrl);
+        if (file.exists()) {
+            file.delete();
+        }
+    }
 }

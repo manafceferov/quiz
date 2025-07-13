@@ -1,0 +1,7 @@
+<div th:fragment="successMsg(success)" class="container">
+    <div th:if="${success != null}"
+         class="alert alert-success shadow border border-success text-center">
+        <i class="fa fa-check mr-2"></i>
+        <span th:text="${success}">Əməliyyat uğurla yerinə yetirildi</span>
+    </div>
+</div>
