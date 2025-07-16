@@ -7,39 +7,150 @@
 <div class="container">
     <div class="card shadow mb-4 border border-dark">
         <div class="card-header">
-            <a th:href="@{/admin/questions}" class="btn btn-dark float-right">
+            <a th:href="@{/admin/questions/topic/{topicId}(topicId=${request.topicId})}"
+               class="btn btn-dark float-right">
                 <i class="fa fa-arrow-left"></i> Geri
             </a>
         </div>
         <div class="card-body">
-            <form th:action="@{/admin/questions}" th:object="${request}" method="POST" enctype="multipart/form-data" class="text-primary">
+            <form th:action="@{/admin/questions}"
+                  th:object="${request}"
+                  method="POST"
+                  enctype="multipart/form-data"
+                  class="text-primary">
+
+                <!-- Topic ID -->
                 <input type="hidden" th:field="*{topicId}"/>
 
+                <!-- Əsas Sual -->
                 <div class="form-row">
                     <div class="form-group col-md-12">
-                        <label>İmtahan Mövzusu:</label>
-                        <input type="text" class="form-control" th:field="*{question}" required/>
+                        <label for="questionEditor">Sual:</label>
+                        <textarea id="questionEditor"
+                                  class="form-control summernote"
+                                  th:field="*{question}"
+                                  required></textarea>
+                    </div>
+                </div>
+
+                <div class="answers">
+                    <div class="form-row">
+                            <div class="form-group col-md-12">
+                                <label class="font-weight-bold text text-center">Cavablar:</label>
+                            </div>
+                    </div>
+
+                    <div class="form-row">
+
+                        <div class="form-check form-group col-md-1">
+                            <input class="form-check-input form-control" type="radio" name="exampleRadios" id="0" value="option1">
+                        </div>
+
+                        <div class="form-group col-md-9">
+                            <div class="form-group d-flex gap-2">
+                                <textarea class="form-control summernote" name="answers[0].answer" placeholder="Cavab mətnini yazın..." required></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-md-1">
+                            <div class="toggle btn btn-success" data-toggle="toggle" role="button"
+                                 style="width: 61.9844px; height: 38px;">
+                                <input class="switch" economic-region-id="1" type="checkbox" name="answers[0].isCorrect" data-toggle="toggle" data-onstyle="success" data-offstyle="danger" checked="">
+                                <div class="toggle-group">
+
+                                    <label for="" class="btn btn-success toggle-on">On</label>
+                                    <label for="" class="btn btn-danger toggle-off">Off</label>
+                                    <span class="toggle-handle btn btn-light"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-md-1">
+                            <button type="button" class="btn btn-danger btn-sm form-control trash">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </div>
+
                     </div>
                 </div>
 
                 <div class="form-row">
-                    <div class="form-group">
-                        <label for="">A/P</label>
-                        <select class="form-control" name="is_active" required>
-                            <option value="1" selected>Aktiv</option>
-                            <option value="0">Passiv</option>
-                        </select>
+                    <div class="form-group col-md-3">
+                        <button type="button" class="btn btn-primary form-control plus">
+                            <i class="fa fa-plus"></i>
+                        </button>
                     </div>
                 </div>
-
+                <!-- Submit -->
                 <div class="form-group mt-4">
                     <button type="submit" class="btn btn-success btn-block">
-                        <i class="fa fa-plus"></i> Əlavə Et
+                        <i class="fa fa-check"></i> Əlavə Et
                     </button>
                 </div>
+
             </form>
         </div>
     </div>
 </div>
 
 <th:block th:replace="~{admin/fragments/footer}"></th:block>
+
+<script th:inline="javascript">
+    window.addEventListener('load', function () {
+        $('.summernote').summernote({
+            height: 250,
+            placeholder: 'Sual mətnini yazın...'
+        });
+    });
+    let answerIndex = 1;
+
+    $('.plus').click(function () {
+        let answer = `
+            <div class="form-row">
+                    <div class="form-check form-group col-md-1">
+                        <input class="form-check-input form-control" type="radio" name="exampleRadios" id="${answerIndex}" value="option1">
+                    </div>
+
+                    <div class="form-group col-md-9">
+                        <div class="form-group d-flex gap-2">
+                            <textarea class="form-control summernote" name="answers[${answerIndex}].answer" required></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-1">
+                        <div class="toggle btn btn-success" data-toggle="toggle" role="button"
+                             style="width: 61.9844px; height: 38px;">
+                            <input class="switch" economic-region-id="1" type="checkbox" data-toggle="toggle" name="answers[${answerIndex}].isCorrect" data-onstyle="success" data-offstyle="danger" checked="">
+                            <div class="toggle-group">
+
+                                <label for="" class="btn btn-success toggle-on">On</label>
+                                <label for=""class="btn btn-danger toggle-off">Off</label>
+                                <span class="toggle-handle btn btn-light"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-1">
+                        <button type="button" class="btn btn-danger btn-sm form-control trash">
+                            <i class="fa fa-trash"></i>
+                        </button>
+                    </div>
+
+                </div>
+        `;
+        const $answer = $(answer);
+        $('.answers').append($answer);
+
+        $answer.find('.summernote').summernote({
+            height: 250,
+            placeholder: 'Cavab mətnini yazın...'
+        });
+
+        answerIndex++;
+    })
+
+    $(document).on('click', '.trash', function () {
+        $(this).parent().parent().remove();
+    })
+
+</script>

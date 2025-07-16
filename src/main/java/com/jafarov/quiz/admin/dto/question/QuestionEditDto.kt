@@ -6,4 +6,5 @@ open class QuestionEditDto @JvmOverloads constructor (
 
     var question: String? = null,
     var topicId: Long? = null,
+    var plainText: String? = null
 ): BaseDto()

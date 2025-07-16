@@ -50,6 +50,7 @@ public class UserService {
     }
 
     public Page<User> getAll(Pageable pageable) {
+
         return repository.findAll(pageable);
     }
 
@@ -61,23 +62,18 @@ public class UserService {
         User existingUser = repository.findById(request.getId())
                 .orElseThrow(() -> new RuntimeException("User not found: " + request.getId()));
 
-        // Set password only if changed
         if (request.getPassword() == null || request.getPassword().isBlank()) {
             request.setPassword(existingUser.getPassword());
         } else {
             request.setPassword(passwordEncoder.encode(request.getPassword()));
         }
-
         if (request.getFile() != null && !request.getFile().isEmpty()) {
             attachmentService.deleteByUserId(existingUser.getId());
             attachmentService.upload(existingUser.getId(), request.getFile());
         }
 
         User updatedUser = mapper.toDboUserFromUserUpdateRequest(request);
-
-        // Ensure persistence identity is preserved
         updatedUser.setId(existingUser.getId());
-        //updatedUser.setCreatedAt(existingUser.getCreatedAt());
         updatedUser.setAttachment(existingUser.getAttachment());
 
         repository.save(updatedUser);
@@ -95,4 +91,5 @@ public class UserService {
     public User findByEmail(String username) {
         return repository.findByEmail(username).orElse(null);
     }
+
 }

@@ -36,6 +36,7 @@ public class QuizTopicService {
     }
 
     public Page<Topic> getAll(Pageable pageable) {
+
         return repository.findAll(pageable);
     }
 
@@ -46,10 +47,20 @@ public class QuizTopicService {
     }
 
     public void deleteById(Long id) {
+
         repository.deleteById(id);
     }
 
     public Optional<Topic> findById(Long id) {
+
         return repository.findById(id);
     }
+
+    public Page<Topic> getAll(String name, Pageable pageable) {
+        if (name == null || name.isBlank()) {
+            return repository.findAll(pageable);
+        }
+        return repository.findByNameContainingIgnoreCase(name.trim(), pageable);
+    }
+
 }

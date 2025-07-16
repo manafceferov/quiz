@@ -55,11 +55,14 @@ public class QuizTopicController {
     }
 
     @GetMapping
-    public String index(@RequestParam(defaultValue = "0") int page,
-                             @RequestParam(defaultValue = "10") int size,
-                             Model model) {
+    public String index(@RequestParam(required = false) String name,
+                        @RequestParam(defaultValue = "0") int page,
+                        @RequestParam(defaultValue = "10") int size,
+                        Model model) {
+
         Pageable pageable = PageRequest.of(page, size);
-        model.addAttribute("topics", service.getAll(pageable));
+        model.addAttribute("topics", service.getAll(name, pageable));
+        model.addAttribute("param", name);
         return "admin/topic/index";
     }
 

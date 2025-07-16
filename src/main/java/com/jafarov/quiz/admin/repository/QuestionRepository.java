@@ -13,4 +13,9 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
 
     @Query("SELECT q FROM Question q WHERE q.topicId = :topicId")
     Page<Question> findByTopicId(@Param("topicId") Long topicId, Pageable pageable);
+
+    @Query("SELECT q FROM Question q WHERE q.topicId = :topicId AND LOWER(q.question) LIKE LOWER(CONCAT('%', :keyword, '%'))")
+    Page<Question> findByTopicIdAndQuestionContainingIgnoreCase(@Param("topicId") Long topicId,
+                                                                @Param("keyword") String keyword,
+                                                                Pageable pageable);
 }

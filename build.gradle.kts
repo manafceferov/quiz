@@ -42,6 +42,7 @@ dependencies {
     annotationProcessor("org.mapstruct:mapstruct-processor:1.5.5.Final")
     runtimeOnly("org.postgresql:postgresql")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
+    implementation("org.jsoup:jsoup:1.17.1")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
