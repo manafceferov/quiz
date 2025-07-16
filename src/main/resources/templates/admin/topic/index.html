@@ -9,23 +9,22 @@
 
 <div class="card border border-dark shadow mb-5">
     <div class="card-body bg-light mt-2">
-        <form th:action="@{admin/topics}" method="GET">
-            <div class="form-row">
-                <div class="col-md-6 form-group">
-                    <input type="text" name="name" id="" class="form-control" autofocus
-                           placeholder="Ad">
-                </div>
+        <form th:action="@{/admin/topics}" method="get" class="form-row">
+            <div class="col-md-6 form-group">
+                <input type="text" name="name" class="form-control"
+                       placeholder="Ad" th:value="${param.name}">
+            </div>
 
-                <div class="col-md-2">
-                    <button type="submit" class="btn btn-outline-primary w-100"><i
-                            class="fas fa-search"></i> Axtar
-                    </button>
-                </div>
-                <div class="col-md-2">
-                    <a th:action="@{admin/topics}"
-                       class="btn btn-outline-warning w-100 text-center" type="button"><i
-                            class="fas fa-sync"></i> Axtarışı Sıfırla</a>
-                </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-outline-primary w-100">
+                    <i class="fas fa-search"></i> Axtar
+                </button>
+            </div>
+
+            <div class="col-md-2">
+                <a th:href="@{/admin/topics}" class="btn btn-outline-warning w-100">
+                    <i class="fas fa-sync"></i> Sıfırla
+                </a>
             </div>
         </form>
     </div>
@@ -33,7 +32,8 @@
 
 <div class="card shadow mb-4">
     <div class="card-header">
-        <a th:href="@{/admin/topics/create}" class="btn btn-dark float-right"> <i class="fa fa-plus"></i>
+        <a th:href="@{/admin/topics/create}" class="btn btn-dark float-right">
+            <i class="fa fa-plus"></i>
             Əlavə Et</a>
     </div>
     <div class="card-body">
@@ -42,7 +42,7 @@
                 <thead class="text-center">
                 <tr>
                     <th>No</th>
-                    <th>Ad</th>
+                    <th>İmtahan Mövzuları</th>
                     <th>Daxil Edilmə Tarixi</th>
                     <th>Əməliyyatlar</th>
                 </tr>
@@ -62,9 +62,13 @@
                            class="btn btn-info d-inline btn-sm btn-circle"
                            type="button"><i class="fas fa-pencil-alt"></i></a>
 
-                        <a th:href="@{/admin/topics/{id}/delete(id=${topic.id})}"
-                           class="btn btn-danger btn-sm btn-circle"
-                           type="button"><i class="far fa-trash-alt"></i></a>
+                        <a href="#"
+                           th:data-url="@{/admin/topics/{id}/delete(id=${topic.id})}"
+                           class="btn btn-danger btn-sm btn-circle delete-btn"
+                           type="button">
+                            <i class="far fa-trash-alt"></i>
+                        </a>
+
                         <a th:href="@{/admin/questions/topic/{id}(id=${topic.id})}"
                            class="btn btn-success d-inline btn-sm btn-circle"
                            type="button"><i class="fas fa-eye"></i>
@@ -79,22 +83,24 @@
     </div>
 </div>
 
-<div class="modal fade" id="deleteModal" data-backdrop="static" tabindex="-1" role="dialog"
-     aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-toggle="modal" data-target="#deleteModal">
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog"
+     aria-labelledby="deleteModalLabel" aria-hidden="true" data-backdrop="static">
     <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
+        <div class="modal-content border-danger">
             <div class="modal-header">
+                <h5 class="modal-title text-danger" id="deleteModalLabel">Silinsin?</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
+
             <div class="modal-body">
-                Are you sure you want to delete?
-                <input type="hidden" id="id" name="id">
+                Bu qeydi silmək istədiyinizə əminsiniz?
             </div>
+
             <div class="modal-footer">
-                <button type="button" class="btn bg-success text-white" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-danger" id="modal-confirm_delete">Delete</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Çıx</button>
+                <button type="button" class="btn btn-danger" id="modal-confirm_delete">Sil</button>
             </div>
         </div>
     </div>
@@ -142,6 +148,30 @@
             }
         });
     }
+</script>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    document.addEventListener('DOMContentLoaded', () => {
+
+        setTimeout(() => $(".alert").hide(2000), 3000);
+
+        document.querySelectorAll('.delete-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const url = btn.dataset.url;
+                $('#modal-confirm_delete').data('url', url);
+                $('#deleteModal').modal('show');
+            });
+        });
+
+        $('#modal-confirm_delete').on('click', function () {
+            const url = $(this).data('url');
+            window.location.href = url;
+        });
+
+    });
+    /*]]>*/
 </script>
 
 <th:block th:replace="~{admin/fragments/footer}"></th:block>

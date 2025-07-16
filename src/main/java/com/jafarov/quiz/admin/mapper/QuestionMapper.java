@@ -14,4 +14,6 @@ public interface QuestionMapper {
     Question toDboQuestionFromQuestionUpdateRequest(QuestionUpdateRequest dto);
 
     QuestionEditDto toDto(Question entity);
+
+
 }

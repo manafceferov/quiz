@@ -54,4 +54,11 @@ public class QuestionService {
         return repository.findById(id);
     }
 
+    public Page<Question> searchQuestionsByTopicAndKeyword(Long topicId, String keyword, Pageable pageable) {
+        if (keyword == null || keyword.trim().isEmpty()) {
+            return repository.findByTopicId(topicId, pageable);
+        }
+        return repository.findByTopicIdAndQuestionContainingIgnoreCase(topicId, keyword.trim(), pageable);
+    }
+
 }

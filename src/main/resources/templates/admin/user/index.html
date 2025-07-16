@@ -22,9 +22,10 @@
                     </button>
                 </div>
                 <div class="col-md-2">
-                    <a th:action="@{admin/users}"
-                       class="btn btn-outline-warning w-100 text-center" type="button"><i
-                            class="fas fa-sync"></i> Axtarışı Sıfırla</a>
+                    <a th:href="@{/admin/users}"
+                       class="btn btn-outline-warning w-100 text-center">
+                        <i class="fas fa-sync"></i> Axtarışı Sıfırla
+                    </a>
                 </div>
             </div>
         </form>
@@ -87,12 +88,12 @@
                 </button>
             </div>
             <div class="modal-body">
-                Are you sure you want to delete?
+                Bu qeydi silmək istədiyinizə əminsiniz?
                 <input type="hidden" id="id" name="id">
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn bg-success text-white" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-danger" id="modal-confirm_delete">Delete</button>
+                <button type="button" class="btn bg-success text-white" data-dismiss="modal">Çıx</button>
+                <button type="button" class="btn btn-danger" id="modal-confirm_delete">Sil</button>
             </div>
         </div>
     </div>
