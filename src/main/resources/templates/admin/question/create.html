@@ -19,10 +19,8 @@
                   enctype="multipart/form-data"
                   class="text-primary">
 
-                <!-- Topic ID -->
                 <input type="hidden" th:field="*{topicId}"/>
 
-                <!-- Əsas Sual -->
                 <div class="form-row">
                     <div class="form-group col-md-12">
                         <label for="questionEditor" style="font-weight: bold; color: black;">Sual:</label>
@@ -43,7 +41,7 @@
                     <div class="form-row">
 
                         <div class="form-group col-md-1">
-                            <input class="form-check-input form-control" type="radio" name="exampleRadios" id="0" value="option1">
+                            <input class="form-check-input form-control" type="radio" name="correctAnswerIndex" id="0" value="0">
                         </div>
 
                         <div class="form-group col-md-9">
@@ -51,8 +49,12 @@
                         </div>
 
                         <div class="form-group col-md-1">
-                            <input type="checkbox" name="answers[0].isCorrect" data-toggle="toggle"
-                                   data-on="On" data-off="Off" data-onstyle="success" class="form-control answer-toggle" data-offstyle="danger"/>
+                            <input type="checkbox" name="answers[0].isActive" value="true"
+                                   data-toggle="toggle"
+                                   data-on="On" data-off="Off"
+                                   data-onstyle="success" data-offstyle="danger"
+                                   class="form-control answer-toggle"/>
+                            <input type="hidden" name="answers[0].isActive" value="false" />
                         </div>
 
                         <div class="form-group col-md-1">
@@ -72,7 +74,7 @@
                         </button>
                     </div>
                 </div>
-                <!-- Submit -->
+
                 <div class="form-group mt-4">
                     <button type="submit" class="btn btn-success btn-block">
                         <i class="fa fa-check"></i> Əlavə Et
@@ -107,7 +109,7 @@
         let answer = `
             <div class="form-row">
                     <div class="form-check form-group col-md-1">
-                        <input class="form-check-input form-control" type="radio" name="exampleRadios" id="${answerIndex}" value="option1">
+                        <input class="form-check-input form-control" type="radio" name="correctAnswerIndex" id="${answerIndex}" value="${answerIndex}">
                     </div>
 
                     <div class="form-group col-md-9">
@@ -115,8 +117,12 @@
                     </div>
 
                     <div class="form-group col-md-1">
-                        <input type="checkbox" name="answers[${answerIndex}].isActive" data-toggle="toggle"
-                                data-on="On" data-off="Off" data-onstyle="success" class="form-control answer-toggle" data-offstyle="danger"/>
+                        <input type="checkbox" name="answers[${answerIndex}].isActive" value="true"
+                               data-toggle="toggle"
+                               data-on="On" data-off="Off"
+                               data-onstyle="success" data-offstyle="danger"
+                               class="form-control answer-toggle"/>
+                        <input type="hidden" name="answers[${answerIndex}].isActive" value="false" />
                     </div>
 
                     <div class="form-group col-md-1">
@@ -150,5 +156,4 @@
     $(document).on('click', '.trash', function () {
         $(this).parent().parent().remove();
     })
-
 </script>
