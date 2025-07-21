@@ -6,7 +6,6 @@ import com.jafarov.quiz.admin.entity.Answer;
 import com.jafarov.quiz.admin.service.AnswerService;
 import com.jafarov.quiz.admin.service.QuestionService;
 import jakarta.validation.Valid;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
@@ -30,11 +29,10 @@ public class QuestionController {
     }
 
     @GetMapping("/topic/{topicId}")
-    public String index(@PathVariable Long topicId,
+    public String index(@PathVariable Long topicId, Model model,
                         @RequestParam(defaultValue = "0") int page,
                         @RequestParam(defaultValue = "10") int size,
-                        @RequestParam(required = false) String keyword,
-                        Model model) {
+                        @RequestParam(required = false) String keyword) {
 
         Pageable pageable = PageRequest.of(page, size);
         model.addAttribute("questions", service.searchQuestionsByTopicAndKeyword(topicId, keyword, pageable));
@@ -45,6 +43,7 @@ public class QuestionController {
 
     @GetMapping("/{id}")
     public String view(@PathVariable Long id, Model model) {
+
         model.addAttribute("question", service.getById(id));
         model.addAttribute("answers", answerService.getAnswersByQuestionId(id));
         return "admin/question/view";
@@ -52,6 +51,7 @@ public class QuestionController {
 
     @GetMapping("/topic/{topicId}/create")
     public String create(@PathVariable Long topicId, Model model) {
+
         QuestionInsertRequest request = new QuestionInsertRequest();
         request.setTopicId(topicId);
         model.addAttribute("request", request);
@@ -60,12 +60,17 @@ public class QuestionController {
 
     @PostMapping
     public String create(@Valid @ModelAttribute("request") QuestionInsertRequest request,
-                         BindingResult bindingResult, RedirectAttributes redirectAttributes, Model model) {
+                         Model model,
+                         BindingResult bindingResult,
+                         RedirectAttributes redirectAttributes,
+                         @RequestParam(name = "correctAnswerIndex") int correctAnswerIndex) {
+
         if (bindingResult.hasErrors()) {
             model.addAttribute("errors", bindingResult.getAllErrors());
             return "admin/question/create";
         }
-        service.save(request);
+
+        service.save(request, correctAnswerIndex);
         redirectAttributes.addFlashAttribute("success", "Sual əlavə edildi");
         redirectAttributes.addAttribute("topicId", request.getTopicId());
         return "redirect:/admin/questions/topic/{topicId}";
@@ -73,63 +78,36 @@ public class QuestionController {
 
     @GetMapping("/{id}/edit")
     public String edit(@PathVariable Long id, Model model) {
-        QuestionEditDto dto = service.getById(id);
-        model.addAttribute("request", dto);
 
-        model.addAttribute("answers", answerService.getAnswersByQuestionId(id));
-        AnswerInsertRequest newAnswer = new AnswerInsertRequest();
-        newAnswer.setQuestionId(id);
-        model.addAttribute("newAnswer", newAnswer);
-
+        QuestionEditDto data = service.getQuestionWithAnswersById(id);
+        model.addAttribute("request", data);
         return "admin/question/edit";
     }
 
     @PostMapping("/edit")
     public String edit(@Valid @ModelAttribute("request") QuestionUpdateRequest request,
-                       BindingResult bindingResult, RedirectAttributes redirectAttributes, Model m) {
+                       Model model,
+                       BindingResult bindingResult,
+                       RedirectAttributes redirectAttributes,
+                       @RequestParam(name = "correctAnswerIndex") int correctAnswerIndex) {
+
         if (bindingResult.hasErrors()) {
-            m.addAttribute("errors", bindingResult.getAllErrors());
+            model.addAttribute("errors", bindingResult.getAllErrors());
             return "admin/question/edit";
         }
-        service.update(request);
+        service.update(request,correctAnswerIndex);
         redirectAttributes.addFlashAttribute("success", "Sual yeniləndi");
         redirectAttributes.addAttribute("topicId", request.getTopicId());
         return "redirect:/admin/questions/topic/{topicId}";
     }
 
     @GetMapping("/{id}/delete")
-    public String delete(@PathVariable Long id, @RequestParam Long topicId,
-                         RedirectAttributes redirectAttributes) {
+    public String delete(@PathVariable Long id, @RequestParam Long topicId, RedirectAttributes redirectAttributes) {
+
         service.deleteById(id);
         redirectAttributes.addFlashAttribute("success", "Sual silindi");
         redirectAttributes.addAttribute("topicId", topicId);
         return "redirect:/admin/questions/topic/{topicId}";
     }
-
-    @GetMapping("/answers/{id}")
-    @ResponseBody
-    public List<Answer> answersJson(@PathVariable("id") Long id) {
-        return answerService.getAnswersByQuestionId(id);
-    }
-
-    @PostMapping("/answers/create")
-    public String answer(@ModelAttribute("newAnswer") AnswerInsertRequest request,
-                            RedirectAttributes redirectAttributes) {
-        answerService.insert(request);
-        redirectAttributes.addFlashAttribute("success", "Cavab əlavə edildi");
-        redirectAttributes.addAttribute("id", request.getQuestionId());
-        return "redirect:/admin/questions/{id}/edit";
-    }
-
-    @PostMapping("/answers/{id}/delete")
-    public String answer(@PathVariable Long id,
-                               @RequestParam Long questionId,
-                               RedirectAttributes redirectAttributes) {
-        answerService.deleteById(id);
-        redirectAttributes.addFlashAttribute("success", "Cavab silindi");
-        redirectAttributes.addAttribute("id", questionId);
-        return "redirect:/admin/questions/{id}/edit";
-    }
-
 
 }

@@ -45,6 +45,11 @@ databaseChangeLog:
                   type: boolean
                   constraints:
                     nullable: false
+              - column:
+                  name: is_active
+                  type: boolean
+                  constraints:
+                    nullable: false
 
         - addForeignKeyConstraint:
             baseTableName: quiz_topics

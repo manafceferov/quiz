@@ -13,6 +13,9 @@ open class Topic @JvmOverloads constructor(
     @Nationalized
     open var name: String? = null,
 
+    @Column(name = "is_active", nullable = false)
+    open var isActive: Boolean = false,
+
     @Column(name = "status")
     open var status: Boolean = false
 
