@@ -55,6 +55,7 @@ public class UserService {
     }
 
     public User edit(Long id) {
+
         return repository.getUserByIdWithAttachment(id);
     }
 
@@ -85,10 +86,12 @@ public class UserService {
     }
 
     public User findById(Long id) {
+
         return repository.findById(id).orElse(null);
     }
 
     public User findByEmail(String username) {
+
         return repository.findByEmail(username).orElse(null);
     }
 

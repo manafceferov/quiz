@@ -19,13 +19,11 @@
                   enctype="multipart/form-data"
                   class="text-primary">
 
-                <!-- Topic ID -->
                 <input type="hidden" th:field="*{topicId}"/>
 
-                <!-- Əsas Sual -->
                 <div class="form-row">
                     <div class="form-group col-md-12">
-                        <label for="questionEditor">Sual:</label>
+                        <label for="questionEditor" style="font-weight: bold; color: black;">Sual:</label>
                         <textarea id="questionEditor"
                                   class="form-control summernote"
                                   th:field="*{question}"
@@ -36,33 +34,27 @@
                 <div class="answers">
                     <div class="form-row">
                             <div class="form-group col-md-12">
-                                <label class="font-weight-bold text text-center">Cavablar:</label>
+                                <label style="font-weight: bold; color: black;">Cavablar:</label>
                             </div>
                     </div>
 
                     <div class="form-row">
 
-                        <div class="form-check form-group col-md-1">
-                            <input class="form-check-input form-control" type="radio" name="exampleRadios" id="0" value="option1">
+                        <div class="form-group col-md-1">
+                            <input class="form-check-input form-control" type="radio" name="correctAnswerIndex" id="0" value="0" required>
                         </div>
 
                         <div class="form-group col-md-9">
-                            <div class="form-group d-flex gap-2">
                                 <textarea class="form-control summernote" name="answers[0].answer" placeholder="Cavab mətnini yazın..." required></textarea>
-                            </div>
                         </div>
 
                         <div class="form-group col-md-1">
-                            <div class="toggle btn btn-success" data-toggle="toggle" role="button"
-                                 style="width: 61.9844px; height: 38px;">
-                                <input class="switch" economic-region-id="1" type="checkbox" name="answers[0].isCorrect" data-toggle="toggle" data-onstyle="success" data-offstyle="danger" checked="">
-                                <div class="toggle-group">
-
-                                    <label for="" class="btn btn-success toggle-on">On</label>
-                                    <label for="" class="btn btn-danger toggle-off">Off</label>
-                                    <span class="toggle-handle btn btn-light"></span>
-                                </div>
-                            </div>
+                            <input type="checkbox" name="answers[0].isActive" value="true"
+                                   data-toggle="toggle"
+                                   data-on="On" data-off="Off"
+                                   data-onstyle="success" data-offstyle="danger"
+                                   class="form-control answer-toggle"/>
+                            <input type="hidden" name="answers[0].isActive" value="false" />
                         </div>
 
                         <div class="form-group col-md-1">
@@ -72,6 +64,7 @@
                         </div>
 
                     </div>
+
                 </div>
 
                 <div class="form-row">
@@ -81,7 +74,7 @@
                         </button>
                     </div>
                 </div>
-                <!-- Submit -->
+
                 <div class="form-group mt-4">
                     <button type="submit" class="btn btn-success btn-block">
                         <i class="fa fa-check"></i> Əlavə Et
@@ -99,7 +92,15 @@
     window.addEventListener('load', function () {
         $('.summernote').summernote({
             height: 250,
-            placeholder: 'Sual mətnini yazın...'
+            placeholder: 'Sual mətnini yazın...',
+            callbacks: {
+                onInit: function () {
+                    $('.note-editable').css({
+                        'color': '#333',
+                        'font-family': 'Arial, sans-serif'
+                    });
+                }
+            }
         });
     });
     let answerIndex = 1;
@@ -108,26 +109,20 @@
         let answer = `
             <div class="form-row">
                     <div class="form-check form-group col-md-1">
-                        <input class="form-check-input form-control" type="radio" name="exampleRadios" id="${answerIndex}" value="option1">
+                        <input class="form-check-input form-control" type="radio" name="correctAnswerIndex" id="${answerIndex}" value="${answerIndex}" required>
                     </div>
 
                     <div class="form-group col-md-9">
-                        <div class="form-group d-flex gap-2">
                             <textarea class="form-control summernote" name="answers[${answerIndex}].answer" required></textarea>
-                        </div>
                     </div>
 
                     <div class="form-group col-md-1">
-                        <div class="toggle btn btn-success" data-toggle="toggle" role="button"
-                             style="width: 61.9844px; height: 38px;">
-                            <input class="switch" economic-region-id="1" type="checkbox" data-toggle="toggle" name="answers[${answerIndex}].isCorrect" data-onstyle="success" data-offstyle="danger" checked="">
-                            <div class="toggle-group">
-
-                                <label for="" class="btn btn-success toggle-on">On</label>
-                                <label for=""class="btn btn-danger toggle-off">Off</label>
-                                <span class="toggle-handle btn btn-light"></span>
-                            </div>
-                        </div>
+                        <input type="checkbox" name="answers[${answerIndex}].isActive" value="true"
+                               data-toggle="toggle"
+                               data-on="On" data-off="Off"
+                               data-onstyle="success" data-offstyle="danger"
+                               class="form-control answer-toggle"/>
+                        <input type="hidden" name="answers[${answerIndex}].isActive" value="false" />
                     </div>
 
                     <div class="form-group col-md-1">
@@ -143,14 +138,22 @@
 
         $answer.find('.summernote').summernote({
             height: 250,
-            placeholder: 'Cavab mətnini yazın...'
+            placeholder: 'Cavab mətnini yazın...',
+            callbacks: {
+                onInit: function () {
+                    $('.note-editable').css({
+                        'color': '#333',
+                        'font-family': 'Arial, sans-serif'
+                    });
+                }
+            }
         });
 
+        $answer.find('.answer-toggle').bootstrapToggle();
         answerIndex++;
     })
 
     $(document).on('click', '.trash', function () {
         $(this).parent().parent().remove();
     })
-
 </script>

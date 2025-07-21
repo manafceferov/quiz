@@ -20,6 +20,9 @@ open class Answer @JvmOverloads constructor(
     @Column(name = "is_correct", nullable = false)
     open var isCorrect: Boolean = false,
 
+    @Column(name = "is_active", nullable = false)
+    open var isActive: Boolean = false,
+
     @Column(name = "question_id", nullable = false)
     open var questionId: Long? = null,
 
