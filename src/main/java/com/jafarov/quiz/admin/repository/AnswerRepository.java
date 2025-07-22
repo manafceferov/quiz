@@ -17,6 +17,6 @@ public interface AnswerRepository extends JpaRepository<Answer, Long> {
 
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query(value = "DELETE FROM answers WHERE question_id = :questionId AND id NOT IN (:ids)", nativeQuery = true)
-    void deleteByIds(@Param("questionId") Long questionId, @Param("ids") List<Long> ids);
+    void deleteByIds(@Param("questionId") Long questionId, @Param("ids") List<Long> answerIds);
 
 }

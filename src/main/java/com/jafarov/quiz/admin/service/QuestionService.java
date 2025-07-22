@@ -1,6 +1,7 @@
 package com.jafarov.quiz.admin.service;
 
 import com.jafarov.quiz.admin.dto.answer.AnswerInsertRequest;
+import com.jafarov.quiz.admin.dto.answer.AnswerUpdateRequest;
 import com.jafarov.quiz.admin.dto.question.QuestionEditDto;
 import com.jafarov.quiz.admin.dto.question.QuestionInsertRequest;
 import com.jafarov.quiz.admin.dto.question.QuestionUpdateRequest;
@@ -64,27 +65,32 @@ public class QuestionService {
 
     @Transactional
     public void update(QuestionUpdateRequest request, int correctAnswerIndex) {
-        Question question = mapper.toDboQuestionFromQuestionUpdateRequest(request);
+        Question question = repository.saveAndFlush( mapper.toDboQuestionFromQuestionUpdateRequest(request));
 
-        List<Long> incomingIds = request.getAnswers().stream()
-                .map(AnswerInsertRequest::getId)
-                .filter(Objects::nonNull)
-                .toList();
-        answerService.deleteByIds(request.getId(), incomingIds);
-
-        List<Answer> answers = new ArrayList<>();
         for (int i = 0; i < request.getAnswers().size(); i++) {
-            AnswerInsertRequest answerDto = request.getAnswers().get(i);
-            Answer answer = answerMapper.toDboFromInsert(answerDto);
-            answer.setQuestion(question);
-            answer.setCorrect(i == correctAnswerIndex);
-            answers.add(answer);
+            AnswerUpdateRequest answer = request.getAnswers().get(i);
+            answer.setIsCorrect(i == correctAnswerIndex);
         }
 
-        question.setAnswers(new HashSet<>(answers));
-        repository.save(question);
-    }
+        List<Long> existingAnswerIds = new ArrayList<>();
+        List<AnswerUpdateRequest> toUpdate = new ArrayList<>();
+        List<AnswerInsertRequest> toInsert = new ArrayList<>();
 
+        for (AnswerUpdateRequest answer : request.getAnswers()) {
+            if (answer.getId() != null) {
+                existingAnswerIds.add(answer.getId());
+                toUpdate.add(answer);
+            } else {
+                AnswerInsertRequest insertRequest = new AnswerInsertRequest();
+                insertRequest.setQuestionId(question.getId());
+                insertRequest.setAnswer(answer.getAnswer());
+                toInsert.add(insertRequest);
+            }
+        }
+        answerService.deleteByIds(question.getId(), existingAnswerIds);
+        answerService.updateAll(toUpdate);
+        answerService.saveAll(toInsert);
+    }
 
     public void deleteById(Long id) {
         repository.deleteById(id);
