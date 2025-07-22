@@ -18,6 +18,7 @@ public interface AnswerMapper {
     Answer toDboFromInsert(AnswerInsertRequest from);
     List<Answer> toDboFromAnswerInsertRequest(List<AnswerInsertRequest> from);
     Answer toDboFromUpdate(AnswerUpdateRequest from);
+    List<Answer> toDboFromAnswerUpdateRequest(List<AnswerUpdateRequest> from);
     AnswerEditDto toDto(Answer from);
 
     Question toDboQuestionFromQuestionInsertRequest(QuestionInsertRequest from);
