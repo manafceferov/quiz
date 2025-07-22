@@ -69,8 +69,17 @@
                         enctype="multipart/form-data"
                         class="text-primary">
                              <input type="hidden" name="topicId" th:value="${topicId}"/>
-                            <input type="checkbox" name="questions.isActive" data-toggle="toggle" data-on="On"
-                                     data-off="Off" data-onstyle="success" data-offstyle="danger" data-size="sm" class="answer-toggle" onchange='this.form.submit()'/>
+<!--                            <input type="checkbox" name="questions.isActive" data-toggle="toggle" data-on="On"-->
+<!--                                     data-off="Off" data-onstyle="success" data-offstyle="danger" data-size="sm" class="answer-toggle" onchange='this.form.submit()'/>-->
+                            <input type="checkbox"
+                                   th:name="questions.isActive"
+                                   th:attr="checked=${question.isActive} ? 'checked' : null"
+                                   data-toggle="toggle"
+                                   data-on="On" data-off="Off"
+                                   data-onstyle="success" data-offstyle="danger"
+                                   class="form-control answer-toggle"
+                                   onchange='this.form.submit()'
+                            />
                         </form>
 
                     </th>
