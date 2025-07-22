@@ -95,14 +95,16 @@ public class QuestionController {
             model.addAttribute("errors", bindingResult.getAllErrors());
             return "admin/question/edit";
         }
-        service.update(request,correctAnswerIndex);
+        service.update(request, correctAnswerIndex);
         redirectAttributes.addFlashAttribute("success", "Sual yeniləndi");
         redirectAttributes.addAttribute("topicId", request.getTopicId());
         return "redirect:/admin/questions/topic/{topicId}";
     }
 
     @GetMapping("/{id}/delete")
-    public String delete(@PathVariable Long id, @RequestParam Long topicId, RedirectAttributes redirectAttributes) {
+    public String delete(@PathVariable Long id,
+                         @RequestParam Long topicId,
+                         RedirectAttributes redirectAttributes) {
 
         service.deleteById(id);
         redirectAttributes.addFlashAttribute("success", "Sual silindi");
@@ -110,4 +112,17 @@ public class QuestionController {
         return "redirect:/admin/questions/topic/{topicId}";
     }
 
+    @GetMapping("/change-status/question/{id}/status/{status}")
+    public String changeStatus(
+            @PathVariable Long id,
+            @PathVariable Boolean status,
+            @RequestParam Long topicId,
+            RedirectAttributes redirectAttributes
+    ) {
+
+
+        service.changeStatus(id, !status);
+        redirectAttributes.addAttribute("topicId", topicId);
+        return "redirect:/admin/questions/topic/{topicId}";
+    }
 }

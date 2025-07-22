@@ -63,8 +63,25 @@
                            class="btn btn-danger btn-sm btn-circle delete-btn">
                             <i class="far fa-trash-alt"></i>
                         </a>
-                        <input type="checkbox" name="answers[${answerIndex}].isActive" data-toggle="toggle" data-on="On"
-                               data-off="Off" data-onstyle="success" data-offstyle="danger" data-size="sm" class="answer-toggle"/>
+                        <form
+                        th:action="@{/admin/questions/change-status/question/{id}/status/{status}(id=${question.id}, status=${question.isActive == true ? 1 : 0})}"
+                        method="GET"
+                        enctype="multipart/form-data"
+                        class="text-primary">
+                             <input type="hidden" name="topicId" th:value="${topicId}"/>
+<!--                            <input type="checkbox" name="questions.isActive" data-toggle="toggle" data-on="On"-->
+<!--                                     data-off="Off" data-onstyle="success" data-offstyle="danger" data-size="sm" class="answer-toggle" onchange='this.form.submit()'/>-->
+                            <input type="checkbox"
+                                   th:name="questions.isActive"
+                                   th:attr="checked=${question.isActive} ? 'checked' : null"
+                                   data-toggle="toggle"
+                                   data-on="On" data-off="Off"
+                                   data-onstyle="success" data-offstyle="danger"
+                                   class="form-control answer-toggle"
+                                   onchange='this.form.submit()'
+                            />
+                        </form>
+
                     </th>
                 </tr>
                 </tbody>
@@ -116,31 +133,6 @@
 
     }, 3000);
 
-    function loadDeleteModal(id) {
-        $('#modal-confirm_delete').attr('onclick', `confirmDelete(${id})`);
-        $('#deleteModal').modal('show');
-    }
-
-    function confirmDelete(id) {
-        $.ajax({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            url: "{{ route('admin.event.destroy') }}/" + id,
-            type: 'get',
-            data: {
-                "_token": "{{ csrf_token() }}",
-
-                '_method': 'delete',
-            },
-            success: function (data) {
-                $('#deleteModal').modal('hide');
-                $(document).ajaxStop(function () {
-                    window.location.reload();
-                });
-            }
-        });
-    }
 </script>
 
 <script th:inline="javascript">

@@ -112,4 +112,9 @@ public class QuestionService {
 
         return mapper.toQuestionEditDtoFromQuestionDbo(data);
     }
+
+    @Transactional
+    public void changeStatus(Long id, Boolean status) {
+        repository.changeStatus(id, status);
+    }
 }
