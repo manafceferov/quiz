@@ -9,21 +9,19 @@
 
 <div class="card border border-dark shadow mb-5">
     <div class="card-body bg-light mt-2">
-        <form th:action="@{admin/users}" method="GET">
+        <form th:action="@{/admin/users}" method="GET">
             <div class="form-row">
                 <div class="col-md-6 form-group">
-                    <input type="text" name="name" id="" class="form-control" autofocus
-                           placeholder="Ad">
+                    <input type="text" name="name" class="form-control"
+                           th:value="${param.name}">
                 </div>
-
                 <div class="col-md-2">
-                    <button type="submit" class="btn btn-outline-primary w-100"><i
-                            class="fas fa-search"></i> Axtar
+                    <button type="submit" class="btn btn-outline-primary w-100">
+                        <i class="fas fa-search"></i> Axtar
                     </button>
                 </div>
                 <div class="col-md-2">
-                    <a th:href="@{/admin/users}"
-                       class="btn btn-outline-warning w-100 text-center">
+                    <a th:href="@{/admin/users}" class="btn btn-outline-warning w-100 text-center">
                         <i class="fas fa-sync"></i> Axtarışı Sıfırla
                     </a>
                 </div>
@@ -44,7 +42,7 @@
                 <thead class="text-center">
                 <tr>
                     <th>No</th>
-                    <th>Ad</th>
+                    <th>Ad Soyad Ata Adı</th>
                     <th>Daxil Edilmə Tarixi</th>
                     <th>Əməliyyatlar</th>
                 </tr>

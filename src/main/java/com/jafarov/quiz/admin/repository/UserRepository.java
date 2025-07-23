@@ -14,7 +14,6 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificationExecutor<User> {
 
-
     Optional<User> findByEmail(String email);
 
     @EntityGraph(attributePaths = {"attachment"})
@@ -23,6 +22,6 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
     @Query("SELECT u FROM User u LEFT JOIN FETCH u.attachment WHERE u.id = :id")
     User getUserByIdWithAttachment(@Param("id") Long id);
 
-
-
+    @Query("SELECT u FROM User u WHERE " + "LOWER(CONCAT(u.firstName, ' ', u.lastName, ' ', u.fatherName)) LIKE LOWER(CONCAT('%', :name, '%'))")
+    Page<User> searchByFullName(@Param("name") String name, Pageable pageable);
 }

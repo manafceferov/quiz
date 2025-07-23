@@ -28,10 +28,14 @@ public class UserController extends BaseController {
 
     @GetMapping()
     public String index(Model model,
+                        @RequestParam(required = false) String name,
                         @RequestParam(defaultValue = "0") int page,
-                        @RequestParam(defaultValue = "10") int size) {
+                        @RequestParam(defaultValue = "10") int size
+    ) {
+
         Pageable pageable = PageRequest.of(page, size);
-        model.addAttribute("users", userService.getAll(pageable));
+        model.addAttribute("param", name);
+        model.addAttribute("users", userService.searchUsers(name, pageable));
         return "admin/user/index";
     }
 
@@ -42,10 +46,12 @@ public class UserController extends BaseController {
     }
 
     @PostMapping()
-    public String create(@Valid @ModelAttribute("userIUDRequest") UserInsertRequest request,
+    public String create(@Valid @ModelAttribute("userIUDRequest")
+                         UserInsertRequest request,
                          BindingResult bindingResult,
                          @RequestParam("file") MultipartFile file,
-                         Model model) {
+                         Model model
+    ) {
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("errors", bindingResult.getAllErrors());
@@ -65,9 +71,11 @@ public class UserController extends BaseController {
     }
 
     @PostMapping("/edit")
-    public String edit(@Valid @ModelAttribute("userIUDRequest") UserUpdateRequest request,
+    public String edit(@Valid @ModelAttribute("userIUDRequest")
+                       UserUpdateRequest request,
                        BindingResult bindingResult,
-                       Model model) {
+                       Model model
+    ) {
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("errors", bindingResult.getAllErrors());
