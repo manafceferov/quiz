@@ -63,4 +63,8 @@ public class QuizTopicService {
         return repository.findByNameContainingIgnoreCase(name.trim(), pageable);
     }
 
+    @Transactional
+    public void changeStatus(Long id, Boolean status) {
+        repository.changeStatus(id, status);
+    }
 }

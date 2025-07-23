@@ -64,24 +64,24 @@
                             <i class="far fa-trash-alt"></i>
                         </a>
                         <form
-                        th:action="@{/admin/questions/change-status/question/{id}/status/{status}(id=${question.id}, status=${question.isActive == true ? 1 : 0})}"
-                        method="GET"
-                        enctype="multipart/form-data"
-                        class="text-primary">
-                             <input type="hidden" name="topicId" th:value="${topicId}"/>
-<!--                            <input type="checkbox" name="questions.isActive" data-toggle="toggle" data-on="On"-->
-<!--                                     data-off="Off" data-onstyle="success" data-offstyle="danger" data-size="sm" class="answer-toggle" onchange='this.form.submit()'/>-->
+                                th:action="@{/admin/questions/change-status/question/{id}/status/{status}(id=${question.id}, status=${question.isActive == true ? 0 : 1})}"
+                                method="GET"
+                                enctype="multipart/form-data"
+                                class="d-inline-block m-0 p-0 align-middle">
+
+                            <input type="hidden" name="topicId" th:value="${topicId}" />
+
                             <input type="checkbox"
                                    th:name="questions.isActive"
                                    th:attr="checked=${question.isActive} ? 'checked' : null"
                                    data-toggle="toggle"
                                    data-on="On" data-off="Off"
                                    data-onstyle="success" data-offstyle="danger"
-                                   class="form-control answer-toggle"
+                                   data-size="sm"
+                                   class="form-check-input"
                                    onchange='this.form.submit()'
                             />
                         </form>
-
                     </th>
                 </tr>
                 </tbody>

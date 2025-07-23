@@ -10,6 +10,8 @@ import com.jafarov.quiz.admin.service.QuizTopicService;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import javax.validation.Valid;
 
 @Controller
@@ -95,4 +97,18 @@ public class QuizTopicController {
         service.deleteById(id);
         return "redirect:/admin/topics";
     }
+
+    @GetMapping("/change-status/topic/{id}/status/{status}")
+    public String changeStatus(
+            @PathVariable Long id,
+            @PathVariable Boolean status,
+            RedirectAttributes redirectAttributes
+    ) {
+
+        service.changeStatus(id, status);
+
+        return "redirect:/admin/topics";
+
+    }
 }
+
