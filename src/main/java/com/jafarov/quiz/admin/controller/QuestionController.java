@@ -121,7 +121,7 @@ public class QuestionController {
     ) {
 
 
-        service.changeStatus(id, !status);
+        service.changeStatus(id, status);
         redirectAttributes.addAttribute("topicId", topicId);
         return "redirect:/admin/questions/topic/{topicId}";
     }

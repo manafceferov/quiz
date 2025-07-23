@@ -73,7 +73,25 @@
                            class="btn btn-success d-inline btn-sm btn-circle"
                            type="button"><i class="fas fa-eye"></i>
                         </a>
+                        <form
+                                th:action="@{/admin/topics/change-status/topic/{id}/status/{status}(id=${topic.id}, status=${topic.isActive == true ? 0 : 1})}"
+                                method="GET"
+                                enctype="multipart/form-data"
+                                class="d-inline-block m-0 p-0 align-middle">
 
+                            <input type="hidden" name="topicId" th:value="${topicId}" />
+
+                            <input type="checkbox"
+                                   th:name="topics.isActive"
+                                   th:attr="checked=${topic.isActive} ? 'checked' : null"
+                                   data-toggle="toggle"
+                                   data-on="On" data-off="Off"
+                                   data-onstyle="success" data-offstyle="danger"
+                                   data-size="sm"
+                                   class="form-check-input"
+                                   onchange='this.form.submit()'
+                            />
+                        </form>
                     </th>
                 </tr>
                 </tbody>
