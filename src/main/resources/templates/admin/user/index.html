@@ -65,7 +65,25 @@
                         <a th:href="@{/admin/users/{id}/delete(id=${user.id})}"
                            class="btn btn-danger btn-sm btn-circle"
                            type="button"><i class="far fa-trash-alt"></i></a>
+                        <form
+                                th:action="@{/admin/users/change-status/user/{id}/status/{status}(id=${user.id}, status=${user.status == true ? 0 : 1})}"
+                                method="GET"
+                                enctype="multipart/form-data"
+                                class="d-inline-block m-0 p-0 align-middle">
 
+                            <input type="hidden" name="topicId" th:value="${userId}" />
+
+                            <input type="checkbox"
+                                   th:name="users.isActive"
+                                   th:attr="checked=${user.status} ? 'checked' : null"
+                                   data-toggle="toggle"
+                                   data-on="On" data-off="Off"
+                                   data-onstyle="success" data-offstyle="danger"
+                                   data-size="sm"
+                                   class="form-check-input"
+                                   onchange='this.form.submit()'
+                            />
+                        </form>
                     </th>
                 </tr>
                 </tbody>

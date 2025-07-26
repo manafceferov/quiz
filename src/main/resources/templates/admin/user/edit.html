@@ -50,11 +50,6 @@
                         <label>Profil Şəkili Yüklə:</label>
                         <input type="file" class="form-control" name="file"/>
                     </div>
-                    <div class="form-group mt-4 col-md-6" th:if="${userIUDRequest.attachment != null}">
-                        <label>Profil Şəkili:</label><br/>
-                        <img th:src="@{${userIUDRequest.attachment.fileUrl}}" alt="Profil şəkli"
-                             width="150" height="150" style="border: 1px solid #ccc; border-radius: 5px;"/>
-                    </div>
 
                     <div class="form-group mt-4 col-md-6" th:if="${userIUDRequest.attachment != null}">
                         <label>Mövcud Profil Şəkili:</label><br/>

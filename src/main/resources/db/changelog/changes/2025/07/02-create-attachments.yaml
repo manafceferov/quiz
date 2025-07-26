@@ -15,6 +15,42 @@ databaseChangeLog:
                     nullable: false
 
               - column:
+                  name: created_by_id
+                  type: BIGINT
+
+              - column:
+                  name: last_modified_by_id
+                  type: BIGINT
+
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+
+              - column:
+                  name: table_type
+                  type: VARCHAR(31)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: owner_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: owner_type
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+
+              - column:
                   name: file_name
                   type: VARCHAR(255)
                   constraints:
@@ -26,24 +62,18 @@ databaseChangeLog:
                   constraints:
                     nullable: false
 
-              - column:
-                  name: created_at
-                  type: TIMESTAMP
-                  defaultValueComputed: CURRENT_TIMESTAMP
-                  constraints:
-                    nullable: false
-
-              - column:
-                  name: user_id
-                  type: BIGINT
-                  constraints:
-                    nullable: false
-                    unique: true
 
         - addForeignKeyConstraint:
             baseTableName: attachments
-            baseColumnNames: user_id
+            baseColumnNames: created_by_id
             referencedTableName: users
             referencedColumnNames: id
-            onDelete: CASCADE
-            constraintName: fk_attachment_user
+            constraintName: fk_attachment_created_by
+
+        - addForeignKeyConstraint:
+            baseTableName: attachments
+            baseColumnNames: last_modified_by_id
+            referencedTableName: users
+            referencedColumnNames: id
+            constraintName: fk_attachment_modified_by
+

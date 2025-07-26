@@ -43,7 +43,8 @@ dependencies {
     runtimeOnly("org.postgresql:postgresql")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jsoup:jsoup:1.17.1")
-
+    implementation("org.hibernate:hibernate-core:6.6.22.Final")
+    implementation("org.hibernate:hibernate-jpamodelgen:6.2.9.Final")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
