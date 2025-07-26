@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="az" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Participant Ana Səhifə</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+        .welcome-alert {
+            transition: opacity 0.5s ease;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+
+        <a class="navbar-brand me-auto" href="#">Quiz App</a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link active" href="#" aria-current="page">Ana səhifə</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">İmtahanlarım</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Profil</a></li>
+                <li class="nav-item"><a class="nav-link text-danger" href="/participant/logout">Çıxış</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-4">
+    <div id="welcomeMessage" class="alert alert-success text-center welcome-alert">
+        <h4>Xoş gəlmisiniz, <span th:text="${participant.firstName}">İstifadəçi</span>!</h4>
+    </div>
+</div>
+
+<div class="container mt-5">
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover align-middle text-center">
+            <thead class="table-dark">
+            <tr>
+                <th>#</th>
+                <th>Mövzu</th>
+                <th>Sual sayı</th>
+                <th>Əməliyyat</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="topic, iterStat : ${topics}">
+                <td th:text="${iterStat.index + 1}">1</td>
+                <td th:text="${topic.name}">Java</td>
+                <td th:text="${topic.count}">0</td>
+                <td>
+                    <a th:href="@{'/participant/start/' + ${topic.id}}" class="btn btn-primary btn-sm">Başla</a>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(topics)}">
+                <td colspan="4">Hazırda heç bir mövzu mövcud deyil</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Əgər pagination istifadə edirsənsə, aşağıdakı kimi əlavə et -->
+    <nav th:if="${totalPages != null and totalPages > 1}">
+        <ul class="pagination justify-content-center">
+            <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                <a class="page-link" th:href="@{|/participant/home?page=${currentPage - 1}|}">Əvvəlki</a>
+            </li>
+            <li class="page-item" th:each="pageNum : ${#numbers.sequence(0, totalPages -1)}"
+                th:classappend="${pageNum == currentPage} ? 'active'">
+                <a class="page-link" th:href="@{|/participant/home?page=${pageNum}|}" th:text="${pageNum + 1}">1</a>
+            </li>
+            <li class="page-item" th:classappend="${currentPage + 1 == totalPages} ? 'disabled'">
+                <a class="page-link" th:href="@{|/participant/home?page=${currentPage + 1}|}">Növbəti</a>
+            </li>
+        </ul>
+    </nav>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    setTimeout(function () {
+        const welcomeMsg = document.getElementById('welcomeMessage');
+        if (welcomeMsg) {
+            welcomeMsg.style.opacity = '0';
+            setTimeout(() => welcomeMsg.style.display = 'none', 500); // 0.5 saniyə fade-out üçün
+        }
+    }, 2000);
+</script>
+
+<th:block th:replace="~{participant/fragments/footer}"></th:block>
+
+</body>
+</html>
