@@ -4,6 +4,6 @@ interface TopicWithQuestionCountProjection {
 
     val id: Long?
     val name: String?
-    val count: Int?
+    val questionCount: Int?
     val description: String?
 }

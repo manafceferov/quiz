@@ -23,8 +23,8 @@ public interface TopicRepository extends JpaRepository<Topic, Long> {
 
     @Query(value = """
                 Select t.id,
-                       t.name ,
-                       q.count
+                       t.name,
+                       q.count as question_count
                 from quiz_topics t
                          inner join (
                     Select q.topic_id, count(q.id) as count from questions q where q.is_active = true group by topic_id

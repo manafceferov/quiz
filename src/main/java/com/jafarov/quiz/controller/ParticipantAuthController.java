@@ -1,5 +1,11 @@
 package com.jafarov.quiz.controller;
 
+import com.jafarov.quiz.dto.topic.TopicWithQuestionCountProjection;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.ui.Model;
 import com.jafarov.quiz.entity.Participant;
 import com.jafarov.quiz.service.ParticipantService;
@@ -12,8 +18,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.security.Principal;
+
 @Controller
-@RequestMapping("/participant")
 public class ParticipantAuthController {
 
     private final ParticipantService participantService;
@@ -23,27 +30,16 @@ public class ParticipantAuthController {
     }
 
     @GetMapping("/login")
-    public String loginPage(Model model) {
-        model.addAttribute("error", null);
+    public String login(Principal principal) {
+        if (principal != null)
+            return "redirect:/participant/home";
+
         return "participant/login";
     }
 
     @PostMapping("/login")
-    public String login(@RequestParam("email") String email,
-                        @RequestParam("password") String password,
-                        HttpSession session,
-                        Model model
-    ) {
-
-        Participant participant = participantService.authenticateByEmail(email, password);
-
-        if (participant != null) {
-            session.setAttribute("participant", participant);
-            return "redirect:/participant/home";
-        } else {
-            model.addAttribute("error", "Email və ya şifrə yalnışdır");
-            return "participant/login";
-        }
+    public String auth() {
+        return "redirect:/home";
     }
 
     @PostMapping("/register")
