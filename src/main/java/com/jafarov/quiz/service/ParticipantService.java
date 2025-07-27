@@ -34,16 +34,6 @@ public class ParticipantService {
         this.topicService = topicService;
     }
 
-    public Participant authenticateByEmail(String email,
-                                           String password
-    ) {
-        Participant participant = participantRepository.findByEmail(email);
-        if (participant != null && passwordEncoder.matches(password, participant.getPassword())) {
-            return participant;
-        }
-        return null;
-    }
-
     public Participant register(String firstName,
                                 String lastName,
                                 String email,

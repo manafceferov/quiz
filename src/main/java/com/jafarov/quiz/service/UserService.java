@@ -94,11 +94,6 @@ public class UserService {
         return repository.findById(id).orElse(null);
     }
 
-    public User findByEmail(String username) {
-
-        return repository.findByEmail(username).orElse(null);
-    }
-
     public Page<User> searchUsers(String name, Pageable pageable) {
         if (name != null && !name.trim().isEmpty()) {
             return repository.searchByFullName(name.trim(), pageable);

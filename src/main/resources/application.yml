@@ -23,7 +23,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate  # ✅ Liquibase istifadə edərkən Hibernate avtomatik cədvəl yaratmamalıdır
-    show-sql: true
+    show-sql: false
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
