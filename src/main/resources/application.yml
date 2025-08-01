@@ -33,5 +33,5 @@ spring:
     change-log: classpath:db/changelog/db.changelog-master.yaml  # ✅ əsas changelog faylı
 
 server:
-  port: 8082
+  port: 8088
 

@@ -43,7 +43,10 @@ open class Participant (
     @Column(name = "gender")
     open var gender: String? = null,
 
+    @Column(name = "role", nullable = false)
+    open var role: String = "ROLE_PARTICIPANT",
+
     @OneToOne(mappedBy = "participant", fetch = FetchType.LAZY)
     open var attachment: Attachment? = null,
 
-): BaseEntity()
+    ): BaseEntity()

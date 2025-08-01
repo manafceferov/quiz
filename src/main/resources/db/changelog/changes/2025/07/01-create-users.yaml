@@ -58,6 +58,12 @@ databaseChangeLog:
                   type: BOOLEAN
                   constraints:
                     nullable: false
+              - column:
+                  name: role
+                  type: VARCHAR(20)
+                  defaultValue: 'ROLE_ADMIN'
+                  constraints:
+                    nullable: false
 
         - addForeignKeyConstraint:
             baseTableName: users

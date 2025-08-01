@@ -67,6 +67,12 @@ databaseChangeLog:
               - column:
                   name: gender
                   type: VARCHAR(20)
+              - column:
+                  name: role
+                  type: VARCHAR(20)
+                  defaultValue: 'ROLE_PARTICIPANT'
+                  constraints:
+                    nullable: false
 
         - addForeignKeyConstraint:
             baseTableName: participants

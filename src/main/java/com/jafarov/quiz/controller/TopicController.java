@@ -14,7 +14,7 @@ import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/admin/topics")
-public class TopicController {
+public class TopicController extends BaseController{
 
     private final TopicService service;
 

@@ -16,7 +16,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/admin/questions")
-public class QuestionController {
+public class QuestionController extends BaseController{
 
     private final QuestionService service;
     private final AnswerService answerService;
