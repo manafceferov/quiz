@@ -1,0 +1,107 @@
+/* Ümumi body üçün dark mode */
+body.dark-mode {
+    background-color: #121212 !important;
+    color: #e0e0e0 !important;
+}
+
+/* Wrapper və container hissələri */
+body.dark-mode #wrapper,
+body.dark-mode #content-wrapper,
+body.dark-mode #content,
+body.dark-mode .container,
+body.dark-mode .container-fluid,
+body.dark-mode .content {
+    background-color: #121212 !important;
+    color: #e0e0e0 !important;
+}
+
+/* Kartlar, cədvəllər, form sahələri, modallar */
+body.dark-mode .card,
+body.dark-mode .table,
+body.dark-mode .form-control,
+body.dark-mode .form-group,
+body.dark-mode .modal-content,
+body.dark-mode .input-group,
+body.dark-mode .pagination,
+body.dark-mode .dropdown-menu,
+body.dark-mode .list-group,
+body.dark-mode .list-group-item,
+body.dark-mode .alert {
+    background-color: #1e1e1e !important;
+    color: #e0e0e0 !important;
+    border-color: #333 !important;
+}
+
+/* Button, link, nav-link */
+body.dark-mode a,
+body.dark-mode .btn,
+body.dark-mode .nav-link {
+    color: #ddd !important;
+}
+
+body.dark-mode .btn-outline-primary {
+    border-color: #666 !important;
+    color: #ddd !important;
+}
+
+body.dark-mode .btn-outline-primary:hover {
+    background-color: #444 !important;
+    color: white !important;
+}
+
+/* ƏLAVƏ EDİLDİ: bütün btn-outline-* düymələri üçün */
+body.dark-mode .btn-outline-warning,
+body.dark-mode .btn-outline-success,
+body.dark-mode .btn-outline-danger,
+body.dark-mode .btn-outline-info,
+body.dark-mode .btn-outline-secondary,
+body.dark-mode .btn-outline-dark {
+    background-color: transparent !important;
+    color: #ddd !important;
+    border-color: #666 !important;
+}
+
+body.dark-mode .btn-outline-warning:hover,
+body.dark-mode .btn-outline-success:hover,
+body.dark-mode .btn-outline-danger:hover,
+body.dark-mode .btn-outline-info:hover,
+body.dark-mode .btn-outline-secondary:hover,
+body.dark-mode .btn-outline-dark:hover {
+    background-color: #444 !important;
+    color: white !important;
+    border-color: #888 !important;
+}
+
+/* Select, checkbox, radio və input */
+body.dark-mode select,
+body.dark-mode input,
+body.dark-mode textarea {
+    background-color: #2a2a2a !important;
+    color: #e0e0e0 !important;
+    border-color: #444 !important;
+}
+
+/* Modal header və footer */
+body.dark-mode .modal-header,
+body.dark-mode .modal-footer {
+    background-color: #2a2a2a !important;
+    border-color: #333 !important;
+}
+
+/* Summernote (əgər varsa) */
+body.dark-mode .note-editor.note-frame {
+    background-color: #1e1e1e !important;
+    color: #e0e0e0 !important;
+    border-color: #333 !important;
+}
+
+body.dark-mode .note-editable {
+    background-color: #1e1e1e !important;
+    color: #e0e0e0 !important;
+}
+
+/* Dropdown item hover */
+body.dark-mode .dropdown-item:hover {
+    background-color: #333 !important;
+    color: white !important;
+}

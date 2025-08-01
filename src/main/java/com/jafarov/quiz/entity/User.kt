@@ -34,6 +34,9 @@ open class User @JvmOverloads constructor(
     @Column(name = "status", nullable = false)
     open var status: Boolean = true,
 
+    @Column(name = "role", nullable = false)
+    open var role: String = "ROLE_ADMIN",
+
     @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
     open var attachment: Attachment? = null
 ): BaseEntity()

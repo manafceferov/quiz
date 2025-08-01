@@ -1,19 +1,12 @@
 package com.jafarov.quiz.service;
 
 import com.jafarov.quiz.dto.topic.TopicWithQuestionCountProjection;
-import com.jafarov.quiz.dto.topic.TopicWithQuestionCountProjectionDto;
-import com.jafarov.quiz.enums.OwnerType;
 import com.jafarov.quiz.entity.Participant;
 import com.jafarov.quiz.repository.ParticipantRepository;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ParticipantService {
@@ -38,14 +31,13 @@ public class ParticipantService {
                                 String lastName,
                                 String email,
                                 String password,
-                                String confirmPassword,
-                                MultipartFile file
+                                String confirmPassword
     ) {
         if (!password.equals(confirmPassword)) {
             throw new IllegalArgumentException("Şifrə və təsdiq uyğun gəlmir");
         }
 
-        if (participantRepository.findByEmail(email) != null) {
+        if (participantRepository.findByEmail(email).isPresent()) {
             throw new IllegalArgumentException("Bu email artıq qeydiyyatdan keçib");
         }
 
@@ -57,9 +49,6 @@ public class ParticipantService {
         participant.setStatus(true);
         participant = participantRepository.save(participant);
 
-        if (file != null && !file.isEmpty()) {
-            attachmentService.upload(participant.getId(), OwnerType.PARTICIPANT, file);
-        }
         return participant;
     }
 
@@ -67,4 +56,8 @@ public class ParticipantService {
         return topicService.getAllTopics(pageable);
     }
 
+    public Participant findByEmail(String username) {
+        return participantRepository.findByEmail(username)
+                .orElseThrow(() -> new IllegalArgumentException("Participant not found with email: " + username));
+    }
 }

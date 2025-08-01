@@ -34,7 +34,7 @@ dependencies {
     implementation("org.liquibase:liquibase-core:4.20.0")
     implementation("org.springframework.ai:spring-ai-pdf-document-reader")
     implementation("org.springframework.session:spring-session-core")
-    implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity5:3.0.4.RELEASE")
+    implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity6")
     implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.10")
     implementation("org.projectlombok:lombok:1.18.38")
     implementation("org.modelmapper:modelmapper:3.1.1")
@@ -49,7 +49,6 @@ dependencies {
     testImplementation("org.springframework.security:spring-security-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     implementation("org.ocpsoft.prettytime:prettytime:5.0.3.Final")
-
     // --- Liquibase Runtime dependencies ---
     liquibaseRuntime("org.liquibase:liquibase-core:4.20.0")
     liquibaseRuntime("org.postgresql:postgresql")

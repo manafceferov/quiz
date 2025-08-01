@@ -1,13 +1,7 @@
 package com.jafarov.quiz.controller;
 
-import com.jafarov.quiz.dto.topic.TopicWithQuestionCountProjection;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.ui.Model;
-import com.jafarov.quiz.entity.Participant;
 import com.jafarov.quiz.service.ParticipantService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
@@ -21,7 +15,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.security.Principal;
 
 @Controller
-public class ParticipantAuthController {
+public class ParticipantAuthController extends BaseController{
 
     private final ParticipantService participantService;
 
@@ -30,16 +24,11 @@ public class ParticipantAuthController {
     }
 
     @GetMapping("/login")
-    public String login(Principal principal) {
-        if (principal != null)
-            return "redirect:/participant/home";
+    public String login(Authentication authentication) {
+        if (authentication != null && authentication.isAuthenticated())
+            return "redirect:/";
 
         return "participant/login";
-    }
-
-    @PostMapping("/login")
-    public String auth() {
-        return "redirect:/home";
     }
 
     @PostMapping("/register")
@@ -48,23 +37,22 @@ public class ParticipantAuthController {
                            @RequestParam("email") String email,
                            @RequestParam("password") String password,
                            @RequestParam("confirm-password") String confirmPassword,
-                           @RequestParam(value = "file", required = false) MultipartFile file,
                            Model model,
                            RedirectAttributes redirectAttributes
     ) {
         try {
-            participantService.register(firstName, lastName, email, password, confirmPassword, file);
+            participantService.register(firstName, lastName, email, password, confirmPassword);
             redirectAttributes.addFlashAttribute("success", "Qeydiyyatdan keçdiniz");
-            return "redirect:/participant/login";
+            return "redirect:/login";
         } catch (IllegalArgumentException e) {
             model.addAttribute("error", e.getMessage());
-            return "participant/login";
+            return "/login";
         }
     }
 
     @GetMapping("/logout")
     public String logout(HttpSession session) {
         session.invalidate();
-        return "redirect:/participant/login";
+        return "redirect:/";
     }
 }

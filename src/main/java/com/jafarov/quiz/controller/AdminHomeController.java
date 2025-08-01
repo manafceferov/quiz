@@ -20,7 +20,4 @@ public class AdminHomeController extends BaseController {
     public String index(Model model) {
         return "admin/home";
     }
-
-
-
 }
