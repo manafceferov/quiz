@@ -50,9 +50,9 @@ public class ParticipantAuthController extends BaseController{
         }
     }
 
-    @GetMapping("/logout")
-    public String logout(HttpSession session) {
-        session.invalidate();
-        return "redirect:/";
-    }
+//    @GetMapping("/logout")
+//    public String logout(HttpSession session) {
+//        session.();
+//        return "redirect:/";
+//    }
 }
