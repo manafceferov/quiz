@@ -1,20 +1,12 @@
 package com.jafarov.quiz.service;
 
-import com.jafarov.quiz.controller.CustomParticipantDetails;
+import com.jafarov.quiz.config.auth.CustomParticipantDetails;
 import com.jafarov.quiz.entity.Participant;
 import com.jafarov.quiz.repository.ParticipantRepository;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Service;
-
-import java.io.IOException;
 
 @Service
 public class CustomParticipantDetailService implements UserDetailsService {
