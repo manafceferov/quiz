@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 
 @Service
-public class CustomUserDetailsService implements UserDetailsService, AuthenticationSuccessHandler {
+public class CustomUserDetailsService implements UserDetailsService {
 
     private final UserRepository repository;
 
@@ -35,8 +35,4 @@ public class CustomUserDetailsService implements UserDetailsService, Authenticat
         return new CustomUserDetails(user);
     }
 
-    @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-
-    }
 }

@@ -13,6 +13,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.session.web.http.CookieHttpSessionIdResolver;
+import org.springframework.session.web.http.DefaultCookieSerializer;
+import org.springframework.session.web.http.HttpSessionIdResolver;
 
 @Configuration
 @EnableWebSecurity
@@ -34,6 +37,7 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+
     @Bean
     @Order(1)
     public SecurityFilterChain adminSecurityFilterChain(HttpSecurity http) throws Exception {
@@ -51,16 +55,17 @@ public class SecurityConfig {
                 )
                 .userDetailsService(userDetailsService)
                 .formLogin(form -> form
-                        .loginPage("/admin/login")
-                        .loginProcessingUrl("/admin/login")
-                        .defaultSuccessUrl("/admin/home", true)
-                        .failureUrl("/admin/login?error=true")
-                        .successHandler(userDetailsService)
-                        .permitAll()
+                                .loginPage("/admin/login")
+                                .loginProcessingUrl("/admin/login")
+                                .defaultSuccessUrl("/admin/home", true)
+                                .failureUrl("/admin/login?error=true")
+//                        .successHandler(userDetailsService)
+                                .permitAll()
                 )
                 .logout(logout -> logout
                         .logoutUrl("/admin/logout")
                         .logoutSuccessUrl("/admin/login?logout=true")
+                        .deleteCookies("ADMINSESSIONID")
                         .permitAll()
                 )
                 .csrf(csrf -> csrf.disable());
@@ -85,23 +90,43 @@ public class SecurityConfig {
                 )
                 .userDetailsService(participantDetailsService)
                 .formLogin(form -> form
-                        .loginPage("/login")
-                        .loginProcessingUrl("/login")
-                        .defaultSuccessUrl("/", true)
-                        .failureUrl("/login?error=true")
-                        .successHandler(participantDetailsService)
-                        .permitAll()
+                                .loginPage("/login")
+                                .loginProcessingUrl("/login")
+                                .defaultSuccessUrl("/", true)
+                                .failureUrl("/login?error=true")
+//                        .successHandler(participantDetailsService)
+                                .permitAll()
                 )
                 .logout(logout -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"))
                         .logoutSuccessUrl("/")
                         .invalidateHttpSession(true)
                         .clearAuthentication(true)
-                        .deleteCookies("JSESSIONID")
+                        .deleteCookies("PARTICIPANTSESSIONID")
                 )
                 .csrf(csrf -> csrf.disable());
 
         return http.build();
+    }
+
+    @Bean
+    @Order(3)
+    public HttpSessionIdResolver adminSessionResolver() {
+        CookieHttpSessionIdResolver resolver = new CookieHttpSessionIdResolver();
+        DefaultCookieSerializer cookieSerializer = new DefaultCookieSerializer();
+        cookieSerializer.setCookieName("ADMINSESSIONID");
+        resolver.setCookieSerializer(cookieSerializer);
+        return resolver;
+    }
+
+    @Bean
+    @Order(4)
+    public HttpSessionIdResolver participantSessionResolver() {
+        CookieHttpSessionIdResolver resolver = new CookieHttpSessionIdResolver();
+        DefaultCookieSerializer cookieSerializer = new DefaultCookieSerializer();
+        cookieSerializer.setCookieName("PARTICIPANTSESSIONID");
+        resolver.setCookieSerializer(cookieSerializer);
+        return resolver;
     }
 
 }

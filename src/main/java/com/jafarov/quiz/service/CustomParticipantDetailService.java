@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 
 @Service
-public class CustomParticipantDetailService implements UserDetailsService, AuthenticationSuccessHandler {
+public class CustomParticipantDetailService implements UserDetailsService {
     private final ParticipantRepository repository;
 
     public CustomParticipantDetailService(ParticipantRepository repository) {
@@ -30,10 +30,5 @@ public class CustomParticipantDetailService implements UserDetailsService, Authe
                 .orElseThrow(() -> new UsernameNotFoundException("Participant not found with email: " + email));
 
         return new CustomParticipantDetails(participant);
-    }
-
-    @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-
     }
 }
