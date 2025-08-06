@@ -55,8 +55,9 @@ public class TopicController extends BaseController{
     }
 
     @PostMapping()
-    public String create(@Valid @ModelAttribute("request")
-                             TopicInsertRequest request,
+    public String create(@Valid
+                         @ModelAttribute("request")
+                         TopicInsertRequest request,
                          BindingResult bindingResult,
                          Model model
     ) {
@@ -81,7 +82,7 @@ public class TopicController extends BaseController{
 
     @PostMapping("/edit")
     public String edit(@Valid @ModelAttribute("request")
-                           TopicUpdateRequest request,
+                       TopicUpdateRequest request,
                        BindingResult bindingResult,
                        Model model
     ) {

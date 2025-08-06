@@ -13,12 +13,12 @@ import org.hibernate.annotations.Nationalized
 @Table(name = "questions")
 open class Question @JvmOverloads constructor(
 
-    @Column(name = "question", nullable = false)
+    @Column(name = "question")
     @Nationalized
     open var question: String? = null,
 
-    @Column(name = "is_active", nullable = false)
-    open var isActive: Boolean = false,
+    @Column(name = "is_active")
+    open var isActive: Boolean? = false,
 
     @Column(name = "topic_id")
     open var topicId: Long? = null,

@@ -3,40 +3,43 @@ package com.jafarov.quiz.controller;
 import com.jafarov.quiz.dto.topic.TopicWithQuestionCountProjection;
 import com.jafarov.quiz.entity.Participant;
 import com.jafarov.quiz.service.ParticipantService;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import com.jafarov.quiz.service.TopicService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.List;
 
 @Controller
 public class ParticipantHomeController extends BaseController{
 
     private final ParticipantService participantService;
+    private final TopicService topicService;
 
-    public ParticipantHomeController(ParticipantService participantService) {
+    public ParticipantHomeController(ParticipantService participantService,
+                                     TopicService topicService) {
         this.participantService = participantService;
+        this.topicService = topicService;
     }
 
     @GetMapping("/")
-    public String loginPage(@RequestParam(defaultValue = "0") int page,
-                            @RequestParam(defaultValue = "6") int size,
+    public String loginPage(@RequestParam(required = false) String name,
                             Model model,
                             Authentication authentication) {
 
-        Pageable pageable = PageRequest.of(page, size);
-        Page<TopicWithQuestionCountProjection> topicsPage = participantService.getAllTopics(pageable);
+        List<TopicWithQuestionCountProjection> topics;
 
-        model.addAttribute("topics", topicsPage.getContent());
-        model.addAttribute("currentPage", page);
-        model.addAttribute("totalPages", topicsPage.getTotalPages());
+        if (name != null && !name.isBlank()) {
+            topics = topicService.searchTopicsWithQuestionCount(name);
+        } else {
+            topics = topicService.getAllWithQuestionCount();
+        }
 
-        // Burada participant-i əlavə edirik
+        model.addAttribute("topics", topics);
+
         if (authentication != null && authentication.isAuthenticated()) {
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             Participant participant = participantService.findByEmail(userDetails.getUsername());

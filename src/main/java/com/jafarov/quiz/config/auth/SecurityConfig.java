@@ -87,7 +87,10 @@ public class SecurityConfig {
 
     @Bean
     @Order(1)
-    public SecurityFilterChain adminSecurityFilterChain(HttpSecurity http, SessionAuthenticationStrategy adminSessionAuthenticationStrategy, LogoutHandler customLogoutHandler) throws Exception {
+    public SecurityFilterChain adminSecurityFilterChain(HttpSecurity http,
+                                                        SessionAuthenticationStrategy adminSessionAuthenticationStrategy,
+                                                        LogoutHandler customLogoutHandler
+    ) throws Exception {
         http
                 .securityMatcher("/admin/**")
                 .securityContext(context -> context
@@ -130,7 +133,10 @@ public class SecurityConfig {
 
     @Bean
     @Order(2)
-    public SecurityFilterChain publicSecurityFilterChain(HttpSecurity http, SessionAuthenticationStrategy participantSessionAuthenticationStrategy, LogoutHandler customLogoutHandler) throws Exception {
+    public SecurityFilterChain publicSecurityFilterChain(HttpSecurity http,
+                                                         SessionAuthenticationStrategy participantSessionAuthenticationStrategy,
+                                                         LogoutHandler customLogoutHandler
+    ) throws Exception {
         http
                 .securityContext(context -> context
                         .securityContextRepository(participantSecurityContextRepository())

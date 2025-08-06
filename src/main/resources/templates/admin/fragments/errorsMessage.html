@@ -1,0 +1,7 @@
+<div th:fragment="errorsMsg(errors)" class="container">
+    <div th:if="${errors != null}"
+         class="alert alert-danger shadow border border-danger text-center">
+        <i class="fa fa-check mr-2"></i>
+        <span th:text="${errors}">Xəta baş verdi</span>
+    </div>
+</div>

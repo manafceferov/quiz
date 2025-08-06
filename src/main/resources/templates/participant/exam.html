@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="az" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>İmtahan</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .correct {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+        }
+
+        .incorrect {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+<div class="container mt-5">
+    <div class="card">
+        <div class="card-body">
+
+            <div th:if="${!isExamFinished}">
+                <h4 class="mb-4" th:text="'Sual ' + (${questionIndex} + 1)"></h4>
+                <p class="lead" th:utext="${question.question}">Sual mətni</p>
+
+                <form id="answerForm"
+                      th:action="@{'/exam/' + ${topicId} + '/question/' + ${questionIndex} + '/submit'}"
+                      method="post">
+                    <div class="form-check mb-2" th:each="answer : ${question.answers}">
+                        <input class="form-check-input" type="radio" name="answerId" th:value="${answer.id}"
+                               th:id="'answer_' + ${answer.id}" required>
+                        <label class="form-check-label" th:for="'answer_' + ${answer.id}"
+                               th:utext="${answer.answer}">Cavab</label>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary mt-3"
+                            th:text="${questionIndex + 1 == totalQuestions} ? 'Nəticə' : 'Növbəti'">Növbəti
+                    </button>
+                </form>
+
+                <div id="feedbackSection" class="mt-4 d-none">
+                    <p id="feedbackText" class="fw-bold"></p>
+                </div>
+            </div>
+
+            <div th:if="${isExamFinished}">
+                <h3>İmtahan tamamlandı!</h3>
+                <p>Doğru cavabların sayı: <span th:text="${score}"></span> / <span th:text="${totalQuestions}"></span>
+                </p>
+
+                <div th:each="question, iterStat : ${questions}">
+                    <h5 th:text="'Sual ' + (iterStat.index + 1) + ': ' + ${question.question}"></h5>
+
+                    <ul>
+                        <li th:each="answer : ${question.answers}"
+                            th:text="${answer.answer}"
+                            th:classappend="
+                    ${answer.id == #lists.findFirst(userAnswers, ua -> ua.questionId == question.id)?.answerId} ?
+                        (answer.isCorrect ? 'text-success' : 'text-danger') : ''">
+                            Cavab
+                        </li>
+                    </ul>
+                </div>
+
+                <a th:href="@{/}" class="btn btn-primary mt-3">Ana səhifəyə qayıt</a>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById("answerForm")?.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        const form = e.target;
+        const selected = form.querySelector('input[name="answerId"]:checked');
+
+        if (!selected) return;
+
+        const selectedId = selected.value;
+        const allOptions = form.querySelectorAll('input[name="answerId"]');
+        allOptions.forEach(option => option.disabled = true);
+
+        fetch(form.action, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            body: `answerId=${selectedId}`
+        })
+            .then(response => response.json())
+            .then(result => {
+                const correctId = result.correctAnswerId;
+
+                allOptions.forEach(option => {
+                    const parentDiv = option.parentElement;
+                    if (option.value === correctId.toString()) {
+                        parentDiv.classList.add("correct");
+                    } else if (option.checked) {
+                        parentDiv.classList.add("incorrect");
+                    }
+                });
+
+                const feedback = document.getElementById("feedbackText");
+                const feedbackSection = document.getElementById("feedbackSection");
+                feedback.textContent = (selectedId === correctId.toString())
+                    ? "Doğru cavab!"
+                    : "Səhv cavab!";
+                feedbackSection.classList.remove("d-none");
+
+                setTimeout(() => {
+                    const nextUrl = form.action.replace('/submit', '').replace(/\/question\/(\d+)$/, function (match, p1) {
+                        return '/question/' + (parseInt(p1) + 1);
+                    });
+                    window.location.href = nextUrl;
+                }, 2000);
+            });
+    });
+</script>
+</body>
+</html>

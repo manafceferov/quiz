@@ -4,32 +4,40 @@
     <title>İştirakçı Girişi</title>
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body { padding-top: 90px; }
+        body {
+            padding-top: 90px;
+        }
+
         .panel-login {
             border-color: #ccc;
-            box-shadow: 0px 2px 3px rgba(0,0,0,0.2);
+            box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.2);
         }
-        .panel-login>.panel-heading {
+
+        .panel-login > .panel-heading {
             color: #00415d;
             background-color: #fff;
             border-color: #fff;
-            text-align:center;
+            text-align: center;
         }
-        .panel-login>.panel-heading a {
+
+        .panel-login > .panel-heading a {
             text-decoration: none;
             color: #666;
             font-weight: bold;
             font-size: 15px;
         }
-        .panel-login>.panel-heading a.active {
+
+        .panel-login > .panel-heading a.active {
             color: #029f5b;
             font-size: 18px;
         }
+
         .panel-login input[type="text"], .panel-login input[type="password"], .panel-login input[type="email"] {
             height: 45px;
             border: 1px solid #ddd;
             font-size: 16px;
         }
+
         .btn-login {
             background-color: #59B2E0;
             color: #fff;
@@ -38,10 +46,12 @@
             text-transform: uppercase;
             border-color: #59B2E6;
         }
+
         .btn-login:hover {
             background-color: #53A3CD;
             border-color: #53A3CD;
         }
+
         .btn-register {
             background-color: #1CB94E;
             color: #fff;
@@ -50,6 +60,7 @@
             text-transform: uppercase;
             border-color: #1CB94A;
         }
+
         .btn-register:hover {
             background-color: #1CA347;
             border-color: #1CA347;
@@ -77,21 +88,25 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <!-- Login Form -->
-                            <form id="login-form" th:action="@{/login}" method="post" role="form" style="display: block;">
-                                <div th:if="${param.error}" class="alert alert-danger">Email və ya şifrə yanlışdır!</div>
+                            <form id="login-form" th:action="@{/login}" method="post" role="form"
+                                  style="display: block;">
+                                <div th:if="${param.error}" class="alert alert-danger">Email və ya şifrə yanlışdır!
+                                </div>
                                 <div th:if="${param.logout}" class="alert alert-success">Uğurla çıxış etdiniz!</div>
                                 <div class="form-group">
-                                    <input type="text" name="username" id="login-email" class="form-control" placeholder="Email" required />
+                                    <input type="text" name="username" id="login-email" class="form-control"
+                                           placeholder="Email" required/>
                                 </div>
                                 <div class="form-group">
-                                    <input type="password" name="password" id="login-password" class="form-control" placeholder="Şifrə" required />
+                                    <input type="password" name="password" id="login-password" class="form-control"
+                                           placeholder="Şifrə" required/>
                                 </div>
                                 <div class="form-group text-center">
-                                    <input type="checkbox" name="remember-me" id="remember" />
+                                    <input type="checkbox" name="remember-me" id="remember"/>
                                     <label for="remember"> Xatırla</label>
                                 </div>
                                 <div class="form-group">
-                                    <input type="submit" class="form-control btn btn-login" value="Daxil ol" />
+                                    <input type="submit" class="form-control btn btn-login" value="Daxil ol"/>
                                 </div>
                                 <div class="form-group text-center">
                                     <a href="#" class="forgot-password">Şifrəni unutdun?</a>
@@ -99,24 +114,29 @@
                             </form>
 
                             <!-- Register Form (əgər implementasiya olunmayıbsa, silə bilərsən) -->
-                            <form id="register-form" th:action="@{/register}" method="post" role="form" style="display: none;" enctype="multipart/form-data">
+                            <form id="register-form" th:action="@{/register}" method="post" role="form"
+                                  style="display: none;" enctype="multipart/form-data">
                                 <div class="form-group">
-                                    <input type="text" name="firstName" class="form-control" placeholder="Ad" required />
+                                    <input type="text" name="firstName" class="form-control" placeholder="Ad" required/>
                                 </div>
                                 <div class="form-group">
-                                    <input type="text" name="lastName" class="form-control" placeholder="Soyad" required />
+                                    <input type="text" name="lastName" class="form-control" placeholder="Soyad"
+                                           required/>
                                 </div>
                                 <div class="form-group">
-                                    <input type="email" name="email" class="form-control" placeholder="Email" required />
+                                    <input type="email" name="email" class="form-control" placeholder="Email" required/>
                                 </div>
                                 <div class="form-group">
-                                    <input type="password" name="password" class="form-control" placeholder="Şifrə" required />
+                                    <input type="password" name="password" class="form-control" placeholder="Şifrə"
+                                           required/>
                                 </div>
                                 <div class="form-group">
-                                    <input type="password" name="confirm-password" class="form-control" placeholder="Təsdiq Şifrəsi" required />
+                                    <input type="password" name="confirm-password" class="form-control"
+                                           placeholder="Təsdiq Şifrəsi" required/>
                                 </div>
                                 <div class="form-group">
-                                    <input type="submit" class="form-control btn btn-register" value="Qeydiyyatdan keç" />
+                                    <input type="submit" class="form-control btn btn-register"
+                                           value="Qeydiyyatdan keç"/>
                                 </div>
                             </form>
                         </div>

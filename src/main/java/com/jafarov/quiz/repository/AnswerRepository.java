@@ -19,4 +19,16 @@ public interface AnswerRepository extends JpaRepository<Answer, Long> {
     @Query(value = "DELETE FROM answers WHERE question_id = :questionId AND id NOT IN (:ids)", nativeQuery = true)
     void deleteByIds(@Param("questionId") Long questionId, @Param("ids") List<Long> answerIds);
 
+    @Modifying
+    @Query("UPDATE Answer a SET a.isActive = false WHERE a.question.topicId = :topicId")
+    void deactivateByTopicId(@Param("topicId") Long topicId);
+
+    @Modifying
+    @Query("UPDATE Answer a SET a.isActive = :status WHERE a.id = :id")
+    void changeStatus(@Param("id") Long id, @Param("status") Boolean status);
+
+    @Query("SELECT a FROM Answer a WHERE a.id = :id")
+    Answer findAnswerById(@Param("id") Long id);
+
 }
+

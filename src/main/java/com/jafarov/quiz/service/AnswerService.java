@@ -69,5 +69,10 @@ public class AnswerService {
         repository.deleteByIds(questionId, ids);
     }
 
+    @Transactional
+    public void changeStatus(Long id, Boolean status) {
+        repository.changeStatus(id, status);
+    }
+
 }
 

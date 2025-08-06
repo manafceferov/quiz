@@ -2,12 +2,12 @@ document.addEventListener("DOMContentLoaded", function () {
     const body = document.body;
     const toggleButton = document.getElementById("darkModeToggle");
 
-    // Əgər localStorage-da dark mode aktivdirsə, class əlavə et
     if (localStorage.getItem("darkMode") === "enabled") {
         body.classList.add("dark-mode");
+    } else {
+        body.classList.remove("dark-mode");
     }
 
-    // Button klikində dəyiş
     if (toggleButton) {
         toggleButton.addEventListener("click", function () {
             body.classList.toggle("dark-mode");
@@ -18,5 +18,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 localStorage.setItem("darkMode", "disabled");
             }
         });
+    } else {
+        console.log("Dark mode toggle button not found!");
     }
 });

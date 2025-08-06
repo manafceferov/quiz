@@ -1,5 +1,6 @@
 package com.jafarov.quiz.mapper;
 
+import com.jafarov.quiz.dto.exam.QuestionExamDto;
 import com.jafarov.quiz.dto.question.QuestionEditDto;
 import com.jafarov.quiz.dto.question.QuestionInsertRequest;
 import com.jafarov.quiz.dto.question.QuestionUpdateRequest;
@@ -14,5 +15,7 @@ public interface QuestionMapper {
     Question toDboQuestionFromQuestionUpdateRequest(QuestionUpdateRequest dto);
 
     QuestionEditDto toQuestionEditDtoFromQuestionDbo(Question entity);
+
+    QuestionExamDto toQuestionExamDtoFromQuestionDbo(Question entity);
 
 }

@@ -21,12 +21,39 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
                                                                 @Param("keyword") String keyword,
                                                                 Pageable pageable);
 
-
-    @EntityGraph(attributePaths={"answers"})
+    @EntityGraph(attributePaths = {"answers"})
     @Query("SELECT q FROM Question q WHERE q.id = :id ")
     Question getQuestionWithAnswersById(@Param("id") Long id);
 
     @Modifying
     @Query("UPDATE Question q SET q.isActive = :status WHERE q.id = :id")
     void changeStatus(@Param("id") Long id, @Param("status") Boolean status);
+
+    @Modifying
+    @Query("UPDATE Question q SET q.isActive = false WHERE q.topicId = :topicId")
+    void deactivateByTopicId(@Param("topicId") Long topicId);
+
+    @Modifying
+    @Query(value = """
+                UPDATE questions q
+                SET is_active = CASE 
+                    WHEN (
+                        SELECT COUNT(*) 
+                        FROM answers a 
+                        WHERE a.question_id = q.id 
+                        AND a.is_active = true
+                    ) >= 2 THEN true
+                    ELSE false
+                END
+                WHERE q.id = :questionId
+            """, nativeQuery = true)
+    void deactivateIfAnyAnswerIsInactive(@Param("questionId") Long questionId);
+
+    @Query(value = """
+            SELECT case when count(*) >= 2 then false else true end as result
+            FROM answers a
+            WHERE a.question_id = :questionId
+              AND a.is_active = true
+            """, nativeQuery = true)
+    Boolean getActiveAnswerByQuestionId(@Param("questionId") Long questionId);
 }

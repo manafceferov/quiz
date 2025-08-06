@@ -2,8 +2,8 @@ package com.jafarov.quiz.dto.topic
 
 interface TopicWithQuestionCountProjection {
 
-    val id: Long?
-    val name: String?
-    val questionCount: Int?
-    val description: String?
+    var id: Long?
+    var name: String?
+    var questionCount: Int?
+    var description: String?
 }

@@ -124,7 +124,10 @@ public class QuestionController extends BaseController{
             RedirectAttributes redirectAttributes
     ) {
 
-        service.changeStatus(id, status);
+        Boolean result = service.changeStatus(id, status);
+        if (!result) {
+            redirectAttributes.addFlashAttribute("errors", "Xeta bas verdi");
+        }
         redirectAttributes.addAttribute("topicId", topicId);
         return "redirect:/admin/questions/topic/{topicId}";
     }

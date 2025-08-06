@@ -30,7 +30,6 @@ public class QuestionService {
             QuestionMapper mapper,
             AnswerService answerService,
             AnswerMapper answerMapper
-
     ) {
         this.repository = repository;
         this.mapper = mapper;
@@ -64,7 +63,7 @@ public class QuestionService {
 
     @Transactional
     public void update(QuestionUpdateRequest request, int correctAnswerIndex) {
-        Question question = repository.saveAndFlush( mapper.toDboQuestionFromQuestionUpdateRequest(request));
+        Question question = repository.saveAndFlush(mapper.toDboQuestionFromQuestionUpdateRequest(request));
 
         for (int i = 0; i < request.getAnswers().size(); i++) {
             AnswerUpdateRequest answer = request.getAnswers().get(i);
@@ -89,6 +88,11 @@ public class QuestionService {
         answerService.deleteByIds(question.getId(), existingAnswerIds);
         answerService.updateAll(toUpdate);
         answerService.saveAll(toInsert);
+        chechkQuestionStatus(question.getId());
+    }
+
+    public void chechkQuestionStatus(Long id) {
+        repository.deactivateIfAnyAnswerIsInactive(id);
     }
 
     public void deleteById(Long id) {
@@ -116,7 +120,15 @@ public class QuestionService {
     }
 
     @Transactional
-    public void changeStatus(Long id, Boolean status) {
+    public Boolean changeStatus(Long id,
+                                Boolean status
+    ) {
+        Boolean active = repository.getActiveAnswerByQuestionId(id);
+        if (active && status) {
+            return false;
+        }
+
         repository.changeStatus(id, status);
+        return true;
     }
 }
