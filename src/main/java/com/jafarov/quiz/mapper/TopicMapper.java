@@ -14,4 +14,5 @@ public interface TopicMapper {
     Topic toDboQuizTopicFromQuizTopicUpdateRequest(TopicUpdateRequest dto);
 
     TopicEditDto toDto(Topic entity);
+
 }

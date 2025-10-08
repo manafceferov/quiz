@@ -1,0 +1,55 @@
+databaseChangeLog:
+  - changeSet:
+      id: 8
+      author: jafarov
+      changes:
+        - createTable:
+            tableName: participant_answers
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+
+              - column:
+                  name: quiz_result_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: question_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: answer_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+
+        - addForeignKeyConstraint:
+            baseTableName: participant_answers
+            baseColumnNames: quiz_result_id
+            referencedTableName: quiz_results
+            referencedColumnNames: id
+            constraintName: fk_participant_answers_quiz_result_id
+
+        - addForeignKeyConstraint:
+            baseTableName: participant_answers
+            baseColumnNames: question_id
+            referencedTableName: questions
+            referencedColumnNames: id
+            constraintName: fk_participant_answers_question_id
+
+        - addForeignKeyConstraint:
+            baseTableName: participant_answers
+            baseColumnNames: answer_id
+            referencedTableName: answers
+            referencedColumnNames: id
+            constraintName: fk_participant_answers_answer_id
+

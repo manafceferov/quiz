@@ -49,11 +49,6 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
             """, nativeQuery = true)
     void deactivateIfAnyAnswerIsInactive(@Param("questionId") Long questionId);
 
-    @Query(value = """
-            SELECT case when count(*) >= 2 then false else true end as result
-            FROM answers a
-            WHERE a.question_id = :questionId
-              AND a.is_active = true
-            """, nativeQuery = true)
-    Boolean getActiveAnswerByQuestionId(@Param("questionId") Long questionId);
+    @Query("select count(*) from Question q where q.topicId = :topicId and q.isActive = true")
+    Long getCountByTopicId(Long topicId);
 }

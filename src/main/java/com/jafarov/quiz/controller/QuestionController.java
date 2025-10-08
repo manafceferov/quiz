@@ -29,10 +29,12 @@ public class QuestionController extends BaseController{
     }
 
     @GetMapping("/topic/{topicId}")
-    public String index(@PathVariable Long topicId, Model model,
+    public String index(Model model,
+                        @PathVariable Long topicId,
                         @RequestParam(defaultValue = "0") int page,
                         @RequestParam(defaultValue = "10") int size,
-                        @RequestParam(required = false) String keyword) {
+                        @RequestParam(required = false) String keyword
+    ) {
 
         Pageable pageable = PageRequest.of(page, size);
         model.addAttribute("questions", service.searchQuestionsByTopicAndKeyword(topicId, keyword, pageable));
@@ -42,7 +44,10 @@ public class QuestionController extends BaseController{
     }
 
     @GetMapping("/{id}")
-    public String view(@PathVariable Long id, Model model) {
+    public String view(@PathVariable
+                       Long id,
+                       Model model
+    ) {
 
         model.addAttribute("question", service.getById(id));
         model.addAttribute("answers", answerService.getAnswersByQuestionId(id));
@@ -50,7 +55,10 @@ public class QuestionController extends BaseController{
     }
 
     @GetMapping("/topic/{topicId}/create")
-    public String create(@PathVariable Long topicId, Model model) {
+    public String create(@PathVariable
+                         Long topicId,
+                         Model model
+    ) {
 
         QuestionInsertRequest request = new QuestionInsertRequest();
         request.setTopicId(topicId);
@@ -79,7 +87,10 @@ public class QuestionController extends BaseController{
     }
 
     @GetMapping("/{id}/edit")
-    public String edit(@PathVariable Long id, Model model) {
+    public String edit(@PathVariable
+                       Long id,
+                       Model model
+    ) {
 
         QuestionEditDto data = service.getQuestionWithAnswersById(id);
         model.addAttribute("request", data);
@@ -88,7 +99,7 @@ public class QuestionController extends BaseController{
 
     @PostMapping("/edit")
     public String edit(@Valid @ModelAttribute("request")
-                           QuestionUpdateRequest request,
+                       QuestionUpdateRequest request,
                        Model model,
                        BindingResult bindingResult,
                        RedirectAttributes redirectAttributes,
@@ -108,7 +119,8 @@ public class QuestionController extends BaseController{
     @GetMapping("/{id}/delete")
     public String delete(@PathVariable Long id,
                          @RequestParam Long topicId,
-                         RedirectAttributes redirectAttributes) {
+                         RedirectAttributes redirectAttributes
+    ) {
 
         service.deleteById(id);
         redirectAttributes.addFlashAttribute("success", "Sual silindi");
@@ -117,11 +129,10 @@ public class QuestionController extends BaseController{
     }
 
     @GetMapping("/change-status/question/{id}/status/{status}")
-    public String changeStatus(
-            @PathVariable Long id,
-            @PathVariable Boolean status,
-            @RequestParam Long topicId,
-            RedirectAttributes redirectAttributes
+    public String changeStatus(@PathVariable Long id,
+                               @PathVariable Boolean status,
+                               @RequestParam Long topicId,
+                               RedirectAttributes redirectAttributes
     ) {
 
         Boolean result = service.changeStatus(id, status);

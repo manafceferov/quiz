@@ -7,7 +7,8 @@
     <div class="card-body bg-light mt-2">
         <form th:action="@{/admin/questions/topic/{topicId}(topicId=${topicId})}" method="get" class="form-row mb-3">
             <div class="col-md-6">
-                <input type="text" name="keyword" class="form-control" placeholder="Sual mətni ilə axtar" th:value="${keyword}">
+                <input type="text" name="keyword" class="form-control" placeholder="Sual mətni ilə axtar"
+                       th:value="${keyword}">
             </div>
             <div class="col-md-2">
                 <button type="submit" class="btn btn-outline-primary w-100">
@@ -15,7 +16,8 @@
                 </button>
             </div>
             <div class="col-md-2">
-                <a th:href="@{/admin/questions/topic/{topicId}(topicId=${topicId})}" class="btn btn-outline-warning w-100">
+                <a th:href="@{/admin/questions/topic/{topicId}(topicId=${topicId})}"
+                   class="btn btn-outline-warning w-100">
                     <i class="fas fa-sync"></i> Axtarışı Sıfırla
                 </a>
             </div>
@@ -53,7 +55,8 @@
                     </th>
 
                     <td th:utext="${question.question}"></td>
-                    <th class="" th:title="${question.createdAt}" th:text="${@diffForHumans.getTime(question.createdAt)}"></th>
+                    <th class="" th:title="${question.createdAt}"
+                        th:text="${@diffForHumans.getTime(question.createdAt)}"></th>
                     <th class="align-middle">
                         <a th:href="@{/admin/questions/{id}/edit(id=${question.id})}"
                            class="btn btn-info d-inline btn-sm"
@@ -70,7 +73,7 @@
                                 enctype="multipart/form-data"
                                 class="d-inline-block m-0 p-0 align-middle">
 
-                            <input type="hidden" name="topicId" th:value="${topicId}" />
+                            <input type="hidden" name="topicId" th:value="${topicId}"/>
 
                             <input type="checkbox"
                                    th:name="questions.isActive"

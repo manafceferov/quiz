@@ -1,27 +1,25 @@
 package com.jafarov.quiz;
 
-import com.jafarov.quiz.dto.user.UserInsertRequest;
-import com.jafarov.quiz.service.UserService;
+import com.jafarov.quiz.dto.admin.AdminInsertRequest;
+import com.jafarov.quiz.service.AdminService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-
 import java.util.LinkedList;
 import java.util.List;
 
 @Component
 public class DataInitializer implements CommandLineRunner {
 
-    public final UserService userService;
+    public final AdminService adminService;
     private final PasswordEncoder passwordEncoder;
 
-    public DataInitializer(UserService userService,
+    public DataInitializer(AdminService adminService,
                            PasswordEncoder passwordEncoder
     ) {
-        this.userService = userService;
+        this.adminService = adminService;
         this.passwordEncoder = passwordEncoder;
     }
-
 
     @Override
     public void run(String... args) throws Exception {
@@ -29,10 +27,15 @@ public class DataInitializer implements CommandLineRunner {
     }
 
     public void initUsers() {
-        List<UserInsertRequest> userRequest = new LinkedList<UserInsertRequest>();
+        List<AdminInsertRequest> userRequest = new LinkedList<AdminInsertRequest>();
+
+        if (adminService.existsByEmail("anarceferov1996@gmail.com") &&
+                adminService.existsByEmail("mjafarov21@gmail.com")) {
+            return;
+        }
 
         userRequest.add(
-                new UserInsertRequest(1L,
+                new AdminInsertRequest(1L,
                         "Anar",
                         "Cəfərov",
                         "İlham",
@@ -42,7 +45,7 @@ public class DataInitializer implements CommandLineRunner {
         );
 
         userRequest.add(
-                new UserInsertRequest(2L,
+                new AdminInsertRequest(2L,
                         "Manaf",
                         "Cəfərov",
                         "İlham",
@@ -51,6 +54,6 @@ public class DataInitializer implements CommandLineRunner {
                 )
         );
 
-        userService.saveAll(userRequest);
+        adminService.saveAll(userRequest);
     }
 }

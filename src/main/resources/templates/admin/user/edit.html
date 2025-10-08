@@ -12,7 +12,8 @@
             </a>
         </div>
         <div class="card-body">
-            <form th:action="@{/admin/users/edit}" th:object="${userIUDRequest}" method="POST" enctype="multipart/form-data" class="text-primary">
+            <form th:action="@{/admin/users/edit}" th:object="${userIUDRequest}" method="POST"
+                  enctype="multipart/form-data" class="text-primary">
                 <input type="hidden" th:field="*{id}"/>
 
                 <div class="form-row">
@@ -53,7 +54,8 @@
 
                     <div class="form-group mt-4 col-md-6" th:if="${userIUDRequest.attachment != null}">
                         <label>Mövcud Profil Şəkili:</label><br/>
-                        <a th:href="@{${userIUDRequest.attachment.fileUrl}}" target="_blank" class="btn btn-outline-primary">
+                        <a th:href="@{${userIUDRequest.attachment.fileUrl}}" target="_blank"
+                           class="btn btn-outline-primary">
                             <i class="fas fa-image"></i> Şəkilə Bax
                         </a>
                     </div>

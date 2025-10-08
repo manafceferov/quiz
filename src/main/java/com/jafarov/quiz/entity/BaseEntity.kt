@@ -31,7 +31,7 @@ open class BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "created_by_id", updatable = false, insertable = false)
-    open var createdBy: User? = null
+    open var createdBy: Admin? = null
 
     @LastModifiedBy
     @Column(name = "last_modified_by_id")
@@ -39,7 +39,7 @@ open class BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "last_modified_by_id", updatable = false, insertable = false)
-    open var lastModifiedBy: User? = null
+    open var lastModifiedBy: Admin? = null
 
     @CreatedDate
     @Column(name = "created_at", updatable = false)

@@ -11,7 +11,7 @@ import org.hibernate.annotations.Nationalized
 @Entity
 @Table(name = "participants")
 @DiscriminatorValue("PARTICIPANT")
-open class Participant (
+open class Participant @JvmOverloads constructor (
 
     @Nationalized
     @Column(name = "first_name", nullable = false, length = 100)

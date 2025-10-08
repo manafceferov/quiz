@@ -7,10 +7,16 @@ import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
+import jakarta.persistence.Version
+import org.hibernate.annotations.DynamicUpdate
 import org.hibernate.annotations.Nationalized
+import org.hibernate.annotations.OptimisticLockType
+import org.hibernate.annotations.OptimisticLocking
 
 @Entity
 @Table(name = "questions")
+@DynamicUpdate
+@OptimisticLocking(type = OptimisticLockType.ALL)
 open class Question @JvmOverloads constructor(
 
     @Column(name = "question")
@@ -28,6 +34,10 @@ open class Question @JvmOverloads constructor(
     open var topic: Topic? = null,
 
     @OneToMany(mappedBy = "question", fetch = FetchType.LAZY)
-    open var answers: MutableSet<Answer>? = null
+    open var answers: MutableSet<Answer>? = null,
 
-): BaseEntity()
+    @Version
+    @Column(name = "version", nullable = false)
+    open var version: Int? = null
+
+) : BaseEntity()

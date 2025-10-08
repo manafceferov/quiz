@@ -2,7 +2,6 @@ package com.jafarov.quiz.util.date;
 
 import org.ocpsoft.prettytime.PrettyTime;
 import org.springframework.stereotype.Component;
-
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;

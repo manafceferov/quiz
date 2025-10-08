@@ -6,7 +6,7 @@ import jakarta.persistence.Table
 import org.hibernate.annotations.Nationalized
 
 @Entity
-@Table(name = "quiz_topics")
+@Table(name = "topics")
 open class Topic @JvmOverloads constructor(
 
     @Column(name = "name", nullable = false)
@@ -15,8 +15,5 @@ open class Topic @JvmOverloads constructor(
 
     @Column(name = "is_active", nullable = false)
     open var isActive: Boolean = false,
-
-    @Column(name = "status")
-    open var status: Boolean = false
 
 ): BaseEntity()

@@ -1,3 +1,4 @@
+<th:block th:replace="~{participant/fragments/header}"></th:block>
 <!DOCTYPE html>
 <html lang="az" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
@@ -15,21 +16,18 @@
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
-
         <a class="navbar-brand me-auto" href="#">Quiz App</a>
-
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
-
         <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
             <ul class="navbar-nav">
-                <li class="nav-item"><a class="nav-link active" href="#" aria-current="page">Ana səhifə</a></li>
+                <li class="nav-item"><a class="nav-link active" th:href="@{/}" aria-current="page">Ana səhifə</a></li>
                 <li class="nav-item" sec:authorize="hasRole('PARTICIPANT')">
-                    <a class="nav-link" href="#">İmtahanlarım</a>
+                    <a class="nav-link" th:href="@{/quiz/my-exams}">İmtahanlarım</a>
                 </li>
                 <li class="nav-item" sec:authorize="hasRole('PARTICIPANT')">
-                    <a class="nav-link" href="#">Profil</a>
+                    <a class="nav-link" th:href="@{/participant/profile}">Profil</a>
                 </li>
                 <li class="nav-item" sec:authorize="hasRole('PARTICIPANT')">
                     <a class="nav-link text-danger" th:href="@{/logout}">Çıxış</a>
@@ -37,7 +35,6 @@
                 <li class="nav-item" sec:authorize="!hasRole('PARTICIPANT')">
                     <a class="nav-link text-danger" th:href="@{/login}">Giriş</a>
                 </li>
-
             </ul>
         </div>
     </div>
@@ -50,12 +47,10 @@
 </div>
 
 <div class="container mt-5">
-
     <div class="table-responsive" sec:authorize="hasRole('PARTICIPANT')">
-
         <form th:action="@{/}" method="get" class="mb-3 d-flex justify-content-center">
             <input type="text" name="name" class="form-control w-50" placeholder="Mövzu axtar"
-                   th:value="${param.name != null} ? ${param.name} : ''"/> <!-- Dəyişməli Yer -->
+                   th:value="${param.name != null} ? ${param.name} : ''"/>
             <button type="submit" class="btn btn-primary ms-2">Axtar</button>
         </form>
 
@@ -74,7 +69,7 @@
                 <td th:text="${topic.name}">Java</td>
                 <td th:text="${topic.questionCount}">0</td>
                 <td>
-                    <a th:href="@{'/exam/' + ${topic.id} + '/question/0'}" class="btn btn-primary">Başla</a>
+                    <a th:href="@{'/quiz/' + ${topic.id} + '/question'}" class="btn btn-primary">Başla</a>
                 </td>
             </tr>
             <tr th:if="${#lists.isEmpty(topics)}">
@@ -84,8 +79,6 @@
         </table>
     </div>
 
-
-    <!-- Pagination -->
     <nav th:if="${totalPages != null and totalPages > 1}">
         <ul class="pagination justify-content-center">
             <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
@@ -100,22 +93,17 @@
             </li>
         </ul>
     </nav>
-
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
 <script>
     setTimeout(function () {
         const welcomeMsg = document.getElementById('welcomeMessage');
         if (welcomeMsg) {
             welcomeMsg.style.opacity = '0';
-            setTimeout(() => welcomeMsg.style.display = 'none', 500); // 0.5 saniyə fade-out üçün
+            setTimeout(() => welcomeMsg.style.display = 'none', 500);
         }
     }, 2000);
 </script>
 
 <th:block th:replace="~{participant/fragments/footer}"></th:block>
-
-</body>
-</html>

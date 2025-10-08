@@ -40,8 +40,8 @@
                     </div>
 
                     <div th:each="answer, iterStat : *{answers}" class="form-row">
-                    <input type="hidden" th:field="*{answers[__${iterStat.index}__].id}"/>
-                    <input type="hidden" th:field="*{answers[__${iterStat.index}__].questionId}" th:value="*{id}"/>
+                        <input type="hidden" th:field="*{answers[__${iterStat.index}__].id}"/>
+                        <input type="hidden" th:field="*{answers[__${iterStat.index}__].questionId}" th:value="*{id}"/>
                         <div class="form-group col-md-1">
                             <input class="form-check-input form-control"
                                    type="radio"
@@ -122,7 +122,7 @@
 
     let answerIndex = /*[[${#lists.size(request.answers)}]]*/ 0;
 
-    console.log("answerIndex: "+answerIndex);
+    console.log("answerIndex: " + answerIndex);
 
     $('.plus').click(function () {
         let answer = `
@@ -171,7 +171,7 @@
 
         $answer.find('.answer-toggle').bootstrapToggle();
         answerIndex++;
-        console.log("answerIndex: "+answerIndex);
+        console.log("answerIndex: " + answerIndex);
     });
 
     $(document).on('click', '.trash', function () {

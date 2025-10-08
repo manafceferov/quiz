@@ -14,7 +14,6 @@ public interface AnswerRepository extends JpaRepository<Answer, Long> {
 
     List<Answer> findByQuestionId(Long questionId);
 
-
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query(value = "DELETE FROM answers WHERE question_id = :questionId AND id NOT IN (:ids)", nativeQuery = true)
     void deleteByIds(@Param("questionId") Long questionId, @Param("ids") List<Long> answerIds);
@@ -29,6 +28,21 @@ public interface AnswerRepository extends JpaRepository<Answer, Long> {
 
     @Query("SELECT a FROM Answer a WHERE a.id = :id")
     Answer findAnswerById(@Param("id") Long id);
+
+    @Query(value = """
+            SELECT 
+              case 
+              when count(*) >= 2 then true else false end as result
+            FROM answers a
+            WHERE a.question_id = :questionId
+              AND a.is_active = true
+            """, nativeQuery = true)
+    Boolean getExsistTwoIsActiveAnswerByQuestionId(@Param("questionId") Long questionId);
+
+    @Query("SELECT COUNT(a) FROM Answer a WHERE a.question.id = :questionId AND a.id=:answerId AND a.isCorrect = true")
+    Long countCorrectAnswersByQuestionId(@Param("questionId") Long questionId,
+                                         @Param("answerId") Long answerId);
+
 
 }
 

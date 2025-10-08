@@ -12,7 +12,8 @@
             </a>
         </div>
         <div class="card-body">
-            <form th:action="@{/admin/users}" th:object="${userIUDRequest}" method="POST" enctype="multipart/form-data" class="text-primary">
+            <form th:action="@{/admin/users}" th:object="${userIUDRequest}" method="POST" enctype="multipart/form-data"
+                  class="text-primary">
                 <div class="form-row">
                     <div class="form-group col-md-3">
                         <label>Ad :</label>
@@ -39,14 +40,15 @@
                     </div>
                     <div class="form-group col-md-6">
                         <label>Şifrəni təstiqlə :</label>
-                        <input type="password" class="form-control password" th:field="*{passwordConfirmation}" required/>
+                        <input type="password" class="form-control password" th:field="*{passwordConfirmation}"
+                               required/>
                     </div>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         <label>Profil Şəkili Yüklə:</label>
-                        <input type="file" class="form-control" th:field="*{file}" />
+                        <input type="file" class="form-control" th:field="*{file}"/>
                     </div>
                 </div>
 

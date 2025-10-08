@@ -1,6 +1,6 @@
 package com.jafarov.quiz.dto
 
-import com.jafarov.quiz.entity.User
+import com.jafarov.quiz.entity.Admin
 import java.time.LocalDateTime
 
 open class BaseDto (
@@ -9,11 +9,11 @@ open class BaseDto (
 
     open var createdById: Long? = null,
 
-    open var createdBy: User? = null,
+    open var createdBy: Admin? = null,
 
     open var lastModifiedById: Long? = null,
 
-    open var lastModifiedBy: User? = null,
+    open var lastModifiedBy: Admin? = null,
 
     open var createdAt: LocalDateTime? = null,
 

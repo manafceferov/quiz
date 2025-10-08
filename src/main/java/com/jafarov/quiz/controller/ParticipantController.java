@@ -5,6 +5,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/participant")
-public class ParticipantController {
+public class ParticipantController extends BaseController {
 
 }

@@ -21,7 +21,7 @@ public class AuditorAwareConfig implements AuditorAware<Long> {
 
         Object principal = auth.getPrincipal();
 
-        if (principal instanceof CustomUserDetails cud) {
+        if (principal instanceof CustomAdminDetails cud) {
             return Optional.of(cud.getId());
         }
 

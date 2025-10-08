@@ -10,7 +10,7 @@ open class AttachmentRelatedEntity @JvmOverloads constructor(
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id", referencedColumnName = "id", insertable = false, updatable = false)
-    open var user: User? = null,
+    open var admin: Admin? = null,
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id", referencedColumnName = "id", insertable = false, updatable = false)

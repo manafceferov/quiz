@@ -4,6 +4,7 @@ interface TopicWithQuestionCountProjection {
 
     var id: Long?
     var name: String?
-    var questionCount: Int?
+    var questionCount: Long?
     var description: String?
+
 }

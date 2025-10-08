@@ -6,6 +6,7 @@ databaseChangeLog:
         - createTable:
             tableName: attachments
             columns:
+
               - column:
                   name: id
                   type: BIGINT
@@ -66,14 +67,14 @@ databaseChangeLog:
         - addForeignKeyConstraint:
             baseTableName: attachments
             baseColumnNames: created_by_id
-            referencedTableName: users
+            referencedTableName: admins
             referencedColumnNames: id
             constraintName: fk_attachment_created_by
 
         - addForeignKeyConstraint:
             baseTableName: attachments
             baseColumnNames: last_modified_by_id
-            referencedTableName: users
+            referencedTableName: admins
             referencedColumnNames: id
             constraintName: fk_attachment_modified_by
 

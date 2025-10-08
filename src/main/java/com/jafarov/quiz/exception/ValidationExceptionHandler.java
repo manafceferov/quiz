@@ -5,7 +5,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-
 import java.util.List;
 import java.util.Locale;
 
@@ -34,7 +33,7 @@ public class ValidationExceptionHandler {
 
         // Burada redirect ediləcək səhifəni qaytarırsan
         // Əgər səhifəni dinamik qaytarmaq istəyirsənsə, əlavə custom annotation və ya parametr lazım olar
-        return "admin/user/create"; // Əgər bu default form səhifəndirsə
+        return "admin/admin/create"; // Əgər bu default form səhifəndirsə
     }
 }
 

@@ -3,16 +3,11 @@ package com.jafarov.quiz.controller;
 import org.springframework.security.core.Authentication;
 import org.springframework.ui.Model;
 import com.jafarov.quiz.service.ParticipantService;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.security.Principal;
 
 @Controller
 public class ParticipantAuthController extends BaseController{
@@ -49,10 +44,4 @@ public class ParticipantAuthController extends BaseController{
             return "/login";
         }
     }
-
-//    @GetMapping("/logout")
-//    public String logout(HttpSession session) {
-//        session.();
-//        return "redirect:/";
-//    }
 }

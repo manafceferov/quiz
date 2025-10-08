@@ -14,7 +14,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.*;
 
 @Service
@@ -26,10 +25,10 @@ public class QuestionService {
     private final AnswerMapper answerMapper;
 
     public QuestionService(
-            QuestionRepository repository,
-            QuestionMapper mapper,
-            AnswerService answerService,
-            AnswerMapper answerMapper
+                           QuestionRepository repository,
+                           QuestionMapper mapper,
+                           AnswerService answerService,
+                           AnswerMapper answerMapper
     ) {
         this.repository = repository;
         this.mapper = mapper;
@@ -63,7 +62,11 @@ public class QuestionService {
 
     @Transactional
     public void update(QuestionUpdateRequest request, int correctAnswerIndex) {
-        Question question = repository.saveAndFlush(mapper.toDboQuestionFromQuestionUpdateRequest(request));
+        Question question = repository.findById(request.getId())
+                .orElseThrow(() -> new EntityNotFoundException("Sual tapılmadı: " + request.getId()));
+        question.setQuestion(request.getQuestion());
+        question.setTopicId(request.getTopicId());
+        repository.save(question);
 
         for (int i = 0; i < request.getAnswers().size(); i++) {
             AnswerUpdateRequest answer = request.getAnswers().get(i);
@@ -85,10 +88,11 @@ public class QuestionService {
                 toInsert.add(insertRequest);
             }
         }
+
         answerService.deleteByIds(question.getId(), existingAnswerIds);
         answerService.updateAll(toUpdate);
         answerService.saveAll(toInsert);
-        chechkQuestionStatus(question.getId());
+        changeStatus(question.getId(), true);
     }
 
     public void chechkQuestionStatus(Long id) {
@@ -123,12 +127,16 @@ public class QuestionService {
     public Boolean changeStatus(Long id,
                                 Boolean status
     ) {
-        Boolean active = repository.getActiveAnswerByQuestionId(id);
-        if (active && status) {
+        Boolean active = answerService.getActiveAnswerByQuestionId(id);
+        if (!active && status) {
             return false;
         }
 
         repository.changeStatus(id, status);
         return true;
+    }
+
+    public Long getQuestionCountByTopicId(Long topicId) {
+        return repository.getCountByTopicId(topicId);
     }
 }

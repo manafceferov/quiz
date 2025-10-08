@@ -1,0 +1,45 @@
+<th:block th:replace="~{participant/fragments/header}"></th:block>
+<!DOCTYPE html>
+<html lang="az" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>İmtahan Nəticəsi</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+</head>
+<body>
+
+<div class="container mt-5">
+
+    <!-- Yuxarı hissə: ümumi nəticə -->
+    <div class="card mb-4">
+        <div class="card-header bg-dark text-white">
+            <h4 th:text="${result.topicName}">Mövzu adı</h4>r
+        </div>
+        <div class="card-body">
+            <p><strong>Doğru cavab sayı:</strong> <span th:text="${result.correctAnswersCount}"></span> / <span th:text="${result.questionCount}"></span></p>
+            <p><strong>Faiz:</strong> <span th:text="${result.correctPercent}"></span>%</p>
+        </div>
+    </div>
+
+    <!-- Aşağı hissə: istifadəçinin suallara cavabları -->
+    <div class="card">
+        <div class="card-header bg-secondary text-white">
+            <h5>Cavabların siyahısı</h5>
+        </div>
+        <div class="card-body">
+            <div th:each="answer, iterStat : ${result.answers}" class="mb-3 border-bottom pb-2">
+                <p><strong>Sual [[${iterStat.index + 1}]]:</strong> <span th:text="${answer.questionText}">Sual mətni</span></p>
+                <p><strong>Sizin cavabınız:</strong> <span th:text="${answer.answerText}">Cavab mətni</span></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <a th:href="@{/quiz/my-exams}" class="btn btn-outline-dark">← İmtahanlara qayıt</a>
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<th:block th:replace="~{participant/fragments/footer}"></th:block>
+

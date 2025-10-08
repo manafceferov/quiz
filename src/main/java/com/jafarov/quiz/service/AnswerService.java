@@ -23,13 +23,15 @@ public class AnswerService {
     private final QuestionMapper questionMapper;
 
 
-    public AnswerService(AnswerRepository repository, AnswerMapper mapper,
-                         QuestionRepository questionRepository, QuestionMapper questionMapper) {
+    public AnswerService(AnswerRepository repository,
+                         AnswerMapper mapper,
+                         QuestionRepository questionRepository,
+                         QuestionMapper questionMapper
+    ) {
         this.repository = repository;
         this.mapper = mapper;
         this.questionRepository = questionRepository;
         this.questionMapper = questionMapper;
-
     }
 
     public List<Answer> getAnswersByQuestionId(Long questionId) {
@@ -74,5 +76,12 @@ public class AnswerService {
         repository.changeStatus(id, status);
     }
 
+    public Boolean getActiveAnswerByQuestionId(Long questionId) {
+        return repository.getExsistTwoIsActiveAnswerByQuestionId(questionId);
+    }
+
+    public Long getCorrectAnswersCountByQuestionId(Long questionId, Long answerId) {
+        return repository.countCorrectAnswersByQuestionId(questionId, answerId);
+    }
 }
 

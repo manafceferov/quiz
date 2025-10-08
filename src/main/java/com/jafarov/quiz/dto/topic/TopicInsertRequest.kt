@@ -9,7 +9,6 @@ open class TopicInsertRequest(
     @field:NotBlank(message = "Mövzu adı boş ola bilməz")
     @field:Size(max = 255)
     var name: String? = null,
-
     var createdAt: LocalDateTime? = null
 
 

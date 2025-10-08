@@ -1,7 +1,7 @@
 package com.jafarov.quiz.config.auth;
 
 import com.jafarov.quiz.service.CustomParticipantDetailService;
-import com.jafarov.quiz.service.CustomUserDetailsService;
+import com.jafarov.quiz.service.CustomAdminDetailsService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,14 +29,14 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
-    private final CustomUserDetailsService userDetailsService;
+    private final CustomAdminDetailsService adminDetailsService;
     private final CustomParticipantDetailService participantDetailsService;
 
     public SecurityConfig(
-            CustomUserDetailsService userDetailsService,
+            CustomAdminDetailsService adminDetailsService,
             CustomParticipantDetailService participantDetailsService
     ) {
-        this.userDetailsService = userDetailsService;
+        this.adminDetailsService = adminDetailsService;
         this.participantDetailsService = participantDetailsService;
     }
 
@@ -108,9 +108,10 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/admin/login", "/admin/sb-admin/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .anyRequest().denyAll()
+                        .anyRequest()
+                        .denyAll()
                 )
-                .userDetailsService(userDetailsService)
+                .userDetailsService(adminDetailsService)
                 .formLogin(form -> form
                         .loginPage("/admin/login")
                         .loginProcessingUrl("/admin/login")
@@ -152,7 +153,8 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/login", "/logout").permitAll()
-                        .anyRequest().permitAll()
+                        .anyRequest()
+                        .permitAll()
                 )
                 .userDetailsService(participantDetailsService)
                 .formLogin(form -> form

@@ -10,7 +10,7 @@ import com.jafarov.quiz.service.TopicService;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/admin/topics")
@@ -72,7 +72,10 @@ public class TopicController extends BaseController{
     }
 
     @GetMapping("/{id}/edit")
-    public String edit(@PathVariable("id") Long id, Model model) {
+    public String edit(@PathVariable("id")
+                       Long id,
+                       Model model
+    ) {
         Topic topic = service.findById(id)
                 .orElseThrow(() -> new RuntimeException("Topic not found: " + id));
 

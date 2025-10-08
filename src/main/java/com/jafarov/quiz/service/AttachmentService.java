@@ -72,4 +72,14 @@ public class AttachmentService {
             file.delete();
         }
     }
+
+    public Attachment uploadAndReturn(Long ownerId, OwnerType ownerType, MultipartFile file) {
+        if (file.isEmpty()) return null;
+
+        upload(ownerId, ownerType, file);
+
+        return attachmentRepository.findByOwnerIdAndOwnerType(ownerId, ownerType.name())
+                .orElse(null);
+    }
+
 }

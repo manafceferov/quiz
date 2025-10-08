@@ -15,7 +15,6 @@ public class AdminAuthController extends BaseController {
         if (principal != null) {
             return "redirect:/admin/home";
         }
-
         return "admin/login";
     }
 }

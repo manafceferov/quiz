@@ -11,27 +11,29 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class TopicService {
+public class TopicService{
 
     private final TopicRepository repository;
     private final TopicMapper mapper;
     private final QuestionRepository questionRepository;
     private final AnswerRepository answerRepository;
+    private final QuestionService questionService;
 
     public TopicService(TopicRepository repository,
                         TopicMapper mapper,
                         QuestionRepository questionRepository,
-                        AnswerRepository answerRepository
+                        AnswerRepository answerRepository,
+                        QuestionService questionService
     ) {
         this.repository = repository;
         this.mapper = mapper;
         this.questionRepository = questionRepository;
         this.answerRepository = answerRepository;
+        this.questionService = questionService;
     }
 
     @Transactional
@@ -57,14 +59,13 @@ public class TopicService {
         return repository.searchByNameWithQuestionCount(name);
     }
 
-    public List<TopicWithQuestionCountProjection> getAllWithQuestionCount() {
-        return repository.searchByNameWithQuestionCount(""); // boş string = hamısı
-    }
+//    public List<TopicWithQuestionCountProjection> getAllWithQuestionCount() {
+//        return repository.searchByNameWithQuestionCount("");
+//    }
 
     @Transactional
     public void update(TopicUpdateRequest request) {
-        Topic updatedTopic = mapper.toDboQuizTopicFromQuizTopicUpdateRequest(request);
-        repository.save(updatedTopic);
+        repository.save(mapper.toDboQuizTopicFromQuizTopicUpdateRequest(request));
     }
 
     public void deleteById(Long id) {
@@ -86,23 +87,11 @@ public class TopicService {
 
     @Transactional
     public void changeStatus(Long id, Boolean status) {
-        // Topic-in statusunu dəyiş
         repository.changeStatus(id, status);
 
-        // Əgər Topic deaktiv edilirsə (status = false), bağlı Question və Answer-ləri də deaktiv et
         if (!status) {
-            // Topic-ə bağlı bütün Question-lərin statusunu false et
             questionRepository.deactivateByTopicId(id);
-
-            // Topic-ə bağlı bütün Answer-lərin statusunu false et
             answerRepository.deactivateByTopicId(id);
         }
     }
-//    public Page<TopicWithQuestionCountProjectionDto> getAllTopicsWithQuestionsCount(Pageable pageable) {
-//        Page<Topic> topics = repository.findAllByIsActiveTrue(pageable);
-//
-//        topics.
-//
-//
-//    }
 }
