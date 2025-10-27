@@ -18,19 +18,25 @@ public interface ParticipantRepository extends JpaRepository<Participant, Long> 
 
     Optional<Participant> findByEmail(String email);
 
-    @Query("select p.id as id, " +
-            "p.firstName as firstName, " +
-            "p.lastName as lastName, " +
-            "p.fatherName as fatherName, " +
-            "p.email as email, " +
-            "p.password as password, " +
-            "p.phoneNumber as phoneNumber, " +
-            "p.birthDate as birthDate, " +
-            "p.gender as gender, " +
-            "p.attachment.id as attachment " +
-            "from Participant p " +
-            "where p.id = :id")
-    Optional<ProfileProjectionEdit> findProfileProjectionById(Long id);
+    @Query("""
+                select
+                    p.id as id,
+                    p.firstName as firstName,
+                    p.lastName as lastName,
+                    p.fatherName as fatherName,
+                    p.email as email,
+                    p.password as password,
+                    p.phoneNumber as phoneNumber,
+                    p.birthDate as birthDate,
+                    p.gender as gender,
+                    a.id as attachmentId,
+                    a.fileUrl as attachmentUrl
+                from Participant p
+                left join p.attachment a
+                where p.id = :id
+            """)
+    Optional<ProfileProjectionEdit> findProfileProjectionById(@Param("id") Long id);
+
 
     @Modifying
     @Query("UPDATE Participant p SET p.status = :status WHERE p.id = :id")

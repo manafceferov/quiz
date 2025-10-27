@@ -16,14 +16,16 @@ import org.springframework.web.multipart.MultipartFile;
 import jakarta.validation.Valid;
 
 @Controller
-@RequestMapping("/admin/users")
 @Validated
+@RequestMapping("/admin/users")
 public class AdminController extends BaseController {
 
     private final AdminService adminService;
     private final ParticipantSessionData participantSessionData;
 
-    public AdminController(AdminService adminService, ParticipantSessionData participantSessionData) {
+    public AdminController(AdminService adminService,
+                           ParticipantSessionData participantSessionData
+    ) {
         this.adminService = adminService;
         this.participantSessionData = participantSessionData;
     }
@@ -34,7 +36,6 @@ public class AdminController extends BaseController {
                         @RequestParam(defaultValue = "0") int page,
                         @RequestParam(defaultValue = "10") int size
     ) {
-
         Pageable pageable = PageRequest.of(page, size);
         model.addAttribute("param", name);
         model.addAttribute("users", adminService.searchUsers(name, pageable));
@@ -49,24 +50,24 @@ public class AdminController extends BaseController {
 
     @PostMapping()
     public String create(@Valid @ModelAttribute("userIUDRequest")
-                             AdminInsertRequest request,
+                         AdminInsertRequest request,
                          BindingResult bindingResult,
                          @RequestParam("file") MultipartFile file,
                          Model model
     ) {
-
         if (bindingResult.hasErrors()) {
             model.addAttribute("errors", bindingResult.getAllErrors());
             return "admin/user/create";
         }
-
         request.setFile(file);
         adminService.save(request);
         return "redirect:/admin/users";
     }
 
     @GetMapping("{id}/edit")
-    public String edit(@PathVariable("id") Long id, Model model) {
+    public String edit(@PathVariable("id") Long id,
+                       Model model
+    ) {
         Admin admin = adminService.edit(id);
         model.addAttribute("userIUDRequest", admin);
         return "admin/user/edit";
@@ -74,11 +75,10 @@ public class AdminController extends BaseController {
 
     @PostMapping("/edit")
     public String edit(@Valid @ModelAttribute("userIUDRequest")
-                           AdminUpdateRequest request,
+                       AdminUpdateRequest request,
                        BindingResult bindingResult,
                        Model model
     ) {
-
         if (bindingResult.hasErrors()) {
             model.addAttribute("errors", bindingResult.getAllErrors());
             model.addAttribute("user", adminService.edit(request.getId()));
@@ -96,9 +96,8 @@ public class AdminController extends BaseController {
     }
 
     @GetMapping("/change-status/user/{id}/status/{status}")
-    public String changeStatus(
-            @PathVariable Long id,
-            @PathVariable Boolean status
+    public String changeStatus(@PathVariable Long id,
+                               @PathVariable Boolean status
     ) {
         adminService.changeStatus(id, status);
         return "redirect:/admin/users";

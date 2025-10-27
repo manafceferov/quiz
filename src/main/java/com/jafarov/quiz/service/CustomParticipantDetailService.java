@@ -11,12 +11,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class CustomParticipantDetailService implements UserDetailsService {
+
     private final ParticipantRepository repository;
     private final ParticipantSessionData participantSessionData;
 
-    public CustomParticipantDetailService(
-            ParticipantRepository repository,
-            ParticipantSessionData participantSessionData
+    public CustomParticipantDetailService(ParticipantRepository repository,
+                                          ParticipantSessionData participantSessionData
     ) {
         this.repository = repository;
         this.participantSessionData = participantSessionData;
@@ -28,7 +28,6 @@ public class CustomParticipantDetailService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("Participant not found with email: " + email));
 
         this.participantSessionData.setParticipant(participant);
-
         return new CustomParticipantDetails(participant);
     }
 }

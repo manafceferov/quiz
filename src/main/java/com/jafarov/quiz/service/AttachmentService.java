@@ -13,7 +13,6 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.UUID;
 
-
 @Service
 public class AttachmentService {
 
@@ -40,7 +39,7 @@ public class AttachmentService {
 
             String fileUrl = "/uploads/" + fileName;
 
-            attachmentRepository.findByOwnerIdAndOwnerType(ownerId, ownerType.name())
+            attachmentRepository.findByOwnerIdAndOwnerType(ownerId, ownerType)
                     .ifPresent(existing -> {
                         deleteFile(existing.getFileUrl());
                         attachmentRepository.delete(existing);
@@ -58,8 +57,47 @@ public class AttachmentService {
         }
     }
 
-    public void deleteByOwner(Long ownerId, OwnerType ownerType) {
-        attachmentRepository.findByOwnerIdAndOwnerType(ownerId, ownerType.name())
+    public Attachment uploadAndReturn(Long ownerId,
+                                      OwnerType ownerType,
+                                      MultipartFile file
+    ) {
+        if (file.isEmpty()) return null;
+
+        try {
+            Path uploadPath = Paths.get(UPLOAD_DIR);
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
+
+            String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+            Path filePath = uploadPath.resolve(fileName);
+            Files.write(filePath, file.getBytes(), StandardOpenOption.CREATE);
+
+            String fileUrl = "/uploads/" + fileName;
+
+            attachmentRepository.findByOwnerIdAndOwnerType(ownerId, ownerType)
+                    .ifPresent(existing -> {
+                        deleteFile(existing.getFileUrl());
+                        attachmentRepository.delete(existing);
+                    });
+
+            Attachment attachment = new Attachment();
+            attachment.setFileName(fileName);
+            attachment.setFileUrl(fileUrl);
+            attachment.setOwnerId(ownerId);
+            attachment.setOwnerType(ownerType);
+            return attachmentRepository.save(attachment);
+
+        } catch (IOException e) {
+            throw new RuntimeException("File upload failed: " + e.getMessage());
+        }
+    }
+
+    // Delete attachment
+    public void deleteByOwner(Long ownerId,
+                              OwnerType ownerType
+    ) {
+        attachmentRepository.findByOwnerIdAndOwnerType(ownerId, ownerType)
                 .ifPresent(attachment -> {
                     deleteFile(attachment.getFileUrl());
                     attachmentRepository.delete(attachment);
@@ -71,15 +109,6 @@ public class AttachmentService {
         if (file.exists()) {
             file.delete();
         }
-    }
-
-    public Attachment uploadAndReturn(Long ownerId, OwnerType ownerType, MultipartFile file) {
-        if (file.isEmpty()) return null;
-
-        upload(ownerId, ownerType, file);
-
-        return attachmentRepository.findByOwnerIdAndOwnerType(ownerId, ownerType.name())
-                .orElse(null);
     }
 
 }

@@ -39,10 +39,8 @@ public interface AnswerRepository extends JpaRepository<Answer, Long> {
             """, nativeQuery = true)
     Boolean getExsistTwoIsActiveAnswerByQuestionId(@Param("questionId") Long questionId);
 
-    @Query("SELECT COUNT(a) FROM Answer a WHERE a.question.id = :questionId AND a.id=:answerId AND a.isCorrect = true")
-    Long countCorrectAnswersByQuestionId(@Param("questionId") Long questionId,
-                                         @Param("answerId") Long answerId);
-
+    @Query("SELECT a FROM Answer a JOIN FETCH a.question q JOIN FETCH q.topic WHERE a.question.topic.id = :topicId AND a.isCorrect = true")
+    List<Answer> findCorrectAnswersByTopicId(@Param("topicId") Long topicId);
 
 }
 

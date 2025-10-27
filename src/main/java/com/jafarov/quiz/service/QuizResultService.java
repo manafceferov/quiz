@@ -1,29 +1,24 @@
 package com.jafarov.quiz.service;
 
-import com.jafarov.quiz.dto.ParticipantQuestionAnswer;
-import com.jafarov.quiz.dto.exam.AnswerExamDto;
 import com.jafarov.quiz.dto.exam.QuestionExamDto;
 import com.jafarov.quiz.dto.paticipantquiz.ParticipantAnswerInsertRequest;
 import com.jafarov.quiz.dto.paticipantquiz.ParticipantQuizResultList;
 import com.jafarov.quiz.dto.paticipantquiz.QuizResultInsertRequest;
-import com.jafarov.quiz.entity.Answer;
-import com.jafarov.quiz.entity.Participant;
-import com.jafarov.quiz.entity.Question;
-import com.jafarov.quiz.entity.QuizResult;
+import com.jafarov.quiz.entity.*;
 import com.jafarov.quiz.mapper.AnswerMapper;
 import com.jafarov.quiz.mapper.ParticipantAnswerMapper;
 import com.jafarov.quiz.mapper.QuestionMapper;
 import com.jafarov.quiz.mapper.QuizResultMapper;
+import com.jafarov.quiz.repository.AnswerRepository;
+import com.jafarov.quiz.repository.ParticipantAnswerRepository;
 import com.jafarov.quiz.repository.QuestionRepository;
 import com.jafarov.quiz.repository.QuizResultRepository;
-import com.jafarov.quiz.util.session.ParticipantSessionData;
+import com.jafarov.quiz.util.session.AuthSessionData;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.*;
 
 @Service
 public class QuizResultService {
@@ -32,65 +27,94 @@ public class QuizResultService {
     private final AnswerService answerService;
     private final QuestionRepository questionRepository;
     private final QuizResultMapper quizResultMapper;
-    private final ParticipantSessionData participantSessionData;
+    private final AuthSessionData authSessionData;
     private final ParticipantAnswerService participantAnswerService;
     private final ParticipantAnswerMapper participantAnswerMapper;
+    private final ParticipantAnswerRepository participantAnswerRepository;
     private final QuestionMapper questionMapper;
     private final AnswerMapper answerMapper;
+    private final AnswerRepository answerRepository;
 
-    public QuizResultService(
-            QuizResultRepository quizResultRepository,
-            AnswerService answerService,
-            QuestionRepository questionRepository,
-            QuizResultMapper quizResultMapper,
-            ParticipantSessionData participantSessionData,
-            ParticipantAnswerService participantAnswerService,
-            ParticipantAnswerMapper participantAnswerMapper,
-            QuestionMapper questionMapper,
-            AnswerMapper answerMapper
+    public QuizResultService(QuizResultRepository quizResultRepository,
+                             AnswerService answerService,
+                             QuestionRepository questionRepository,
+                             QuizResultMapper quizResultMapper,
+                             AuthSessionData authSessionData,
+                             ParticipantAnswerService participantAnswerService,
+                             ParticipantAnswerMapper participantAnswerMapper,
+                             ParticipantAnswerRepository participantAnswerRepository,
+                             QuestionMapper questionMapper,
+                             AnswerMapper answerMapper,
+                             AnswerRepository answerRepository
     ) {
         this.quizResultRepository = quizResultRepository;
         this.answerService = answerService;
         this.questionRepository = questionRepository;
         this.quizResultMapper = quizResultMapper;
-        this.participantSessionData = participantSessionData;
+        this.authSessionData = authSessionData;
         this.participantAnswerService = participantAnswerService;
         this.participantAnswerMapper = participantAnswerMapper;
+        this.participantAnswerRepository = participantAnswerRepository;
         this.questionMapper = questionMapper;
         this.answerMapper = answerMapper;
+        this.answerRepository = answerRepository;
     }
 
     @Transactional
-    public void saveQuizResult(Long topicId, QuizResultInsertRequest request) {
+    public QuizResult saveQuizResult(QuizResultInsertRequest request) {
+        if (request.getParticipantId() == null) {
+            request.setParticipantId(authSessionData.getParticipantSessionData().getId());
+        }
+        Long topicId = request.getTopicId();
+        long totalQuestions = questionRepository.getCountByTopicId(topicId);
+        long correctCount = 0;
 
-        Participant participant = participantSessionData.getParticipant();
+        // Doğru cavabları topicə görə bir dəfə götür
+        List<Answer> correctAnswers = answerRepository.findCorrectAnswersByTopicId(topicId);
 
-        List<ParticipantAnswerInsertRequest> answerInserts = request.getAnswers().stream()
-                .map(ua -> new ParticipantAnswerInsertRequest(ua.getQuestionId(), ua.getAnswerId(), null))
-                .collect(Collectors.toList());
-        request.setAnswers(answerInserts);
-        request.calculateQuestionCount(); // questionCount update
+        Map<Long, Long> correctAnswerMap = new HashMap<>();
+        for (Answer correctAnswer : correctAnswers) {
+            correctAnswerMap.put(correctAnswer.getQuestion().getId(), correctAnswer.getId());
+        }
 
-        long correctCount = answerInserts.stream()
-                .filter(a -> answerService.getCorrectAnswersCountByQuestionId(a.getQuestionId(), a.getAnswerId()) > 0)
-                .count();
+        Map<Long, ParticipantAnswerInsertRequest> processedAnswers = new HashMap<>();
+        for (ParticipantAnswerInsertRequest answerRequest : request.getAnswers()) {
+            Long questionId = answerRequest.getQuestionId();
+            Long answerId = answerRequest.getAnswerId();
+            if (questionId != null && questionRepository.existsById(questionId)
+                    && questionRepository.findById(questionId).get().getTopicId().equals(topicId)) {
+                processedAnswers.put(questionId, answerRequest);
+            }
+        }
+
+        for (ParticipantAnswerInsertRequest answerRequest : processedAnswers.values()) {
+            Long questionId = answerRequest.getQuestionId();
+            Long answerId = answerRequest.getAnswerId();
+            // Doğru cavab siyahısından yoxlama
+            Long correctAnswerId = correctAnswerMap.get(questionId);
+            if (correctAnswerId != null && correctAnswerId.equals(answerId)) {
+                correctCount++;
+            }
+        }
+
+        long percent = totalQuestions == 0 ? 0 : Math.round((double) correctCount / totalQuestions * 100);
+        request.setQuestionsCount(totalQuestions);
         request.setCorrectAnswersCount(correctCount);
-        request.setCorrectPercent(answerInserts.isEmpty() ? 0 : correctCount * 100 / answerInserts.size());
+        request.setCorrectPercent(percent);
+        QuizResult result = quizResultMapper.toDbo(request);
+        QuizResult savedResult = quizResultRepository.save(result);
 
-        QuizResult quizResult = new QuizResult();
-        quizResult.setParticipantId(participant.getId());
-        quizResult.setTopicId(topicId);
-        quizResult.setCorrectAnswersCount(request.getCorrectAnswersCount());
-        quizResult.setCorrectPercent(request.getCorrectPercent());
-        quizResult.setQuestionsCount(request.getQuestionCount());
-
-        QuizResult savedQuizResult = quizResultRepository.saveAndFlush(quizResult);
-
-        answerInserts.forEach(a -> a.setQuizResultId(savedQuizResult.getId()));
-        participantAnswerService.saveAll(participantAnswerMapper.toParticipantAnswerList(answerInserts));
-        quizResultMapper.toParticipantQuizResultList(savedQuizResult);
+        List<ParticipantAnswer> answersToSave = new ArrayList<>();
+        for (ParticipantAnswerInsertRequest answerRequest : request.getAnswers()) {
+            ParticipantAnswer answer = new ParticipantAnswer();
+            answer.setQuizResultId(savedResult.getId());
+            answer.setQuestionId(answerRequest.getQuestionId());
+            answer.setAnswerId(answerRequest.getAnswerId());
+            answersToSave.add(answer);
+        }
+        participantAnswerService.saveAll(answersToSave);
+        return savedResult;
     }
-
 
     public ParticipantQuizResultList showResult(Long id) {
         QuizResult quizResult = quizResultRepository.findById(id)
@@ -99,39 +123,28 @@ public class QuizResultService {
     }
 
     public Long getCurrentParticipantId() {
-        return participantSessionData.getId();
+        return authSessionData.getParticipantSessionData().getId();
     }
 
     public List<ParticipantQuizResultList> getResultsForCurrentParticipant() {
         Long participantId = getCurrentParticipantId();
-        return quizResultRepository.findAllByParticipantId(participantId)
-                .stream()
+        return quizResultRepository.findAllByParticipantId(participantId).stream()
                 .map(quizResultMapper::toParticipantQuizResultList)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Transactional(readOnly = true)
     public List<QuestionExamDto> getAllExamQuestions(Long topicId) {
-        Pageable pageable = Pageable.unpaged();
-        List<Question> questions = questionRepository.findByTopicId(topicId, pageable).getContent();
-
-        List<QuestionExamDto> examDtos = new ArrayList<>();
-        for (Question question : questions) {
-            if (Boolean.TRUE.equals(question.isActive())) {
-                List<Answer> activeAnswers = answerService.getAnswersByQuestionId(question.getId()).stream()
-                        .filter(Answer::isActive)
-                        .collect(Collectors.toList());
-
-                List<AnswerExamDto> answerDtos = activeAnswers.stream()
-                        .map(a -> new AnswerExamDto(a.getId(), a.getAnswer(), a.isCorrect()))
-                        .collect(Collectors.toList());
-
-                QuestionExamDto dto = questionMapper.toQuestionExamDtoFromQuestionDbo(question);
-                dto.setAnswers(answerDtos);
-                examDtos.add(dto);
-            }
-        }
-        return examDtos;
+        return questionRepository.findByTopicId(topicId, Pageable.unpaged())
+                .getContent().stream()
+                .filter(q -> Boolean.TRUE.equals(q.isActive()))
+                .map(q -> {
+                    QuestionExamDto dto = questionMapper.toQuestionExamDtoFromQuestionDbo(q);
+                    List<Answer> activeAnswers = answerService.getAnswersByQuestionId(q.getId())
+                            .stream().filter(Answer::isActive).toList();
+                    dto.setAnswers(answerMapper.toAnswerExamDtoList(activeAnswers));
+                    return dto;
+                })
+                .toList();
     }
-
 }

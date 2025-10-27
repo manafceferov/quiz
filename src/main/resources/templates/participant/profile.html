@@ -1,64 +1,31 @@
 <th:block th:replace="~{participant/fragments/header}"></th:block>
-<!DOCTYPE html>
-<html lang="az" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head>
-    <meta charset="UTF-8"/>
-    <title>Profil</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
-</head>
-<body>
-
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand me-auto" href="#">Quiz App</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-            <ul class="navbar-nav">
-                <li class="nav-item"><a class="nav-link" th:href="@{/}">Ana səhifə</a></li>
-                <li class="nav-item" sec:authorize="hasRole('PARTICIPANT')">
-                    <a class="nav-link" th:href="@{/quiz/my-exams}">İmtahanlarım</a>
-                </li>
-                <li class="nav-item" sec:authorize="hasRole('PARTICIPANT')">
-                    <a class="nav-link active" th:href="@{/participant/profile}">Profil</a>
-                </li>
-                <li class="nav-item" sec:authorize="hasRole('PARTICIPANT')">
-                    <a class="nav-link text-danger" th:href="@{/logout}">Çıxış</a>
-                </li>
-                <li class="nav-item" sec:authorize="!hasRole('PARTICIPANT')">
-                    <a class="nav-link text-danger" th:href="@{/login}">Giriş</a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</nav>
 
 <div class="container mt-5">
     <h2 class="text-center mb-4">Profil Məlumatları</h2>
 
-    <div th:if="${message != null}" class="alert alert-success text-center" th:text="${message}"></div>
-    <div th:if="${error != null}" class="alert alert-danger text-center" th:text="${error}"></div>
+    <div th:if="${message != null}" class="alert alert-success text-center" th:text="${message}"
+         id="successMessage"></div>
+    <div th:if="${error != null}" class="alert alert-danger text-center" th:text="${error}" id="errorMessage"></div>
 
-    <form th:action="@{/participant/profile/update}" th:object="${participantEditDto}" method="post" enctype="multipart/form-data">
+    <form th:action="@{/participants/profile/update}" th:object="${participantEditDto}" method="post"
+          enctype="multipart/form-data">
         <div class="mb-4">
             <div class="text-start">
                 <div style="width: 120px; height: 120px; border: 1px solid #ccc; display: flex; align-items: center; justify-content: center;">
                     <img th:if="${participantEditDto.attachmentUrl != null}"
-                         th:src="${participantEditDto.attachmentUrl}"
+                         th:src="@{${participantEditDto.attachmentUrl}}"
                          alt="Profil şəkli"
                          style="width: 100%; height: 100%; object-fit: cover;"/>
                     <span th:if="${participantEditDto.attachmentUrl == null}">Şəkil</span>
                 </div>
+
                 <div class="mt-2">
                     <label for="attachment" class="form-label">Profil şəkli</label>
-                    <input type="file" class="form-control form-control-sm" id="attachment" name="attachment"/>
+                    <input type="file" class="form-control form-control-sm" id="attachment" name="file"/>
                 </div>
             </div>
         </div>
 
-        <!-- Digər inputlar şəklin altında -->
         <div>
             <div class="row">
                 <div class="col-md-6 mb-3">
@@ -109,13 +76,22 @@
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label for="password" class="form-label">Yeni şifrə</label>
-                    <input type="password" class="form-control" id="password" th:field="*{password}"/>
+                    <input type="password"
+                           class="form-control"
+                           id="password"
+                           th:field="*{password}"
+                           autocomplete="new-password"/>
                 </div>
                 <div class="col-md-6 mb-3">
                     <label for="confirmPassword" class="form-label">Şifrə təsdiqi</label>
-                    <input type="password" class="form-control" id="confirmPassword" th:field="*{confirmPassword}"/>
+                    <input type="password"
+                           class="form-control"
+                           id="confirmPassword"
+                           th:field="*{confirmPassword}"
+                           autocomplete="new-password"/>
                 </div>
             </div>
+
         </div>
 
         <div class="text-center">
@@ -125,10 +101,9 @@
     </form>
 </div>
 
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 <script>
-    // Bootstrap form validation
     (function () {
         'use strict';
         const forms = document.querySelectorAll('.needs-validation');
@@ -142,6 +117,17 @@
             }, false);
         });
     })();
+    setTimeout(function () {
+        const success = document.getElementById('successMessage');
+        const error = document.getElementById('errorMessage');
+        [success, error].forEach(el => {
+            if (el) {
+                el.style.transition = 'opacity 0.5s';
+                el.style.opacity = '0';
+                setTimeout(() => el.remove(), 500);
+            }
+        });
+    }, 2000);
 </script>
 
 <th:block th:replace="~{participant/fragments/footer}"></th:block>

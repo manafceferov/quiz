@@ -2,8 +2,11 @@ package com.jafarov.quiz.controller;
 
 import com.jafarov.quiz.dto.ParticipantQuestionAnswer;
 import com.jafarov.quiz.dto.exam.QuestionExamDto;
+import com.jafarov.quiz.entity.QuizResult;
+import com.jafarov.quiz.util.session.AuthSessionData;
 import com.jafarov.quiz.util.session.ParticipantSessionData;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.http.HttpStatus;
 import org.springframework.ui.Model;
 import com.jafarov.quiz.dto.paticipantquiz.ParticipantQuizResultList;
 import com.jafarov.quiz.dto.paticipantquiz.QuizResultInsertRequest;
@@ -19,11 +22,13 @@ import java.util.stream.Collectors;
 public class QuizResultController extends BaseController {
 
     private final QuizResultService quizResultService;
-    private final ParticipantSessionData participantSessionData;
+    private final AuthSessionData authSessionData;
 
-    public QuizResultController(QuizResultService quizResultService, ParticipantSessionData participantSessionData) {
+    public QuizResultController(QuizResultService quizResultService,
+                                 AuthSessionData authSessionData
+    ) {
         this.quizResultService = quizResultService;
-        this.participantSessionData = participantSessionData;
+        this.authSessionData = authSessionData;
     }
 
 //    @PostMapping("")
@@ -102,13 +107,16 @@ public class QuizResultController extends BaseController {
     }
 
     @PostMapping("/{topicId}/result")
-    public String saveAndShowResult(@PathVariable Long topicId,
-                                    @RequestBody QuizResultInsertRequest request,
-                                    RedirectAttributes redirectAttributes) {
+    @ResponseBody
+    public Long saveResult(@PathVariable Long topicId,
+                           @RequestBody QuizResultInsertRequest request) {
 
-        quizResultService.saveQuizResult(topicId, request);
+        Long participantId = authSessionData.getParticipantSessionData().getId();
+        request.setParticipantId(participantId);
+        request.setTopicId(topicId);
 
-        redirectAttributes.addFlashAttribute("message", "İmtahan nəticəsi uğurla saxlanıldı!");
-        return "redirect:/my-exams";
+        QuizResult savedResult = quizResultService.saveQuizResult(request);
+        return savedResult.getId();
     }
+
 }

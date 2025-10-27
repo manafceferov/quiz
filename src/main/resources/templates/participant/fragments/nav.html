@@ -1,0 +1,25 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark" xmlns:sec="http://www.w3.org/1999/xhtml">
+    <div class="container-fluid">
+        <a class="navbar-brand me-auto" href="#">Quiz App</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link active" th:href="@{/}" aria-current="page">Ana səhifə</a></li>
+                <li class="nav-item" sec:authorize="hasRole('PARTICIPANT')">
+                    <a class="nav-link" th:href="@{/quiz/my-exams}">İmtahanlarım</a>
+                </li>
+                <li class="nav-item" sec:authorize="hasRole('PARTICIPANT')">
+                    <a class="nav-link" th:href="@{/participants/profile}">Profil</a>
+                </li>
+                <li class="nav-item" sec:authorize="hasRole('PARTICIPANT')">
+                    <a class="nav-link text-danger" th:href="@{/logout}">Çıxış</a>
+                </li>
+                <li class="nav-item" sec:authorize="!hasRole('PARTICIPANT')">
+                    <a class="nav-link text-danger" th:href="@{/login}">Giriş</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>

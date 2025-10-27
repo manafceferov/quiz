@@ -51,4 +51,5 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
 
     @Query("select count(*) from Question q where q.topicId = :topicId and q.isActive = true")
     Long getCountByTopicId(Long topicId);
+
 }

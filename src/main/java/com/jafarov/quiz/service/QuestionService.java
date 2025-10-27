@@ -24,8 +24,7 @@ public class QuestionService {
     private final AnswerService answerService;
     private final AnswerMapper answerMapper;
 
-    public QuestionService(
-                           QuestionRepository repository,
+    public QuestionService(QuestionRepository repository,
                            QuestionMapper mapper,
                            AnswerService answerService,
                            AnswerMapper answerMapper
@@ -37,15 +36,15 @@ public class QuestionService {
     }
 
     @Transactional
-    public void save(QuestionInsertRequest request, int correctAnswerIndex) {
+    public void save(QuestionInsertRequest request,
+                     int correctAnswerIndex
+    ) {
         Question question = repository.saveAndFlush(mapper.toDboQuestionFromQuestionInsertRequest(request));
-
         Objects.requireNonNull(request.getAnswers()).forEach(
                 x -> {
                     x.setQuestionId(question.getId());
                     x.setCorrect(correctAnswerIndex == request.getAnswers().indexOf(x));
                 });
-
         answerService.saveAll(request.getAnswers());
     }
 
@@ -55,13 +54,16 @@ public class QuestionService {
         return mapper.toQuestionEditDtoFromQuestionDbo(entity);
     }
 
-    public Page<Question> getQuestionsByTopicId(Long topicId, Pageable pageable) {
-
+    public Page<Question> getQuestionsByTopicId(Long topicId,
+                                                Pageable pageable
+    ) {
         return repository.findByTopicId(topicId, pageable);
     }
 
     @Transactional
-    public void update(QuestionUpdateRequest request, int correctAnswerIndex) {
+    public void update(QuestionUpdateRequest request,
+                       int correctAnswerIndex
+    ) {
         Question question = repository.findById(request.getId())
                 .orElseThrow(() -> new EntityNotFoundException("Sual tapılmadı: " + request.getId()));
         question.setQuestion(request.getQuestion());
@@ -72,11 +74,9 @@ public class QuestionService {
             AnswerUpdateRequest answer = request.getAnswers().get(i);
             answer.setIsCorrect(i == correctAnswerIndex);
         }
-
         List<Long> existingAnswerIds = new ArrayList<>();
         List<AnswerUpdateRequest> toUpdate = new ArrayList<>();
         List<AnswerInsertRequest> toInsert = new ArrayList<>();
-
         for (AnswerUpdateRequest answer : request.getAnswers()) {
             if (answer.getId() != null) {
                 existingAnswerIds.add(answer.getId());
@@ -88,7 +88,6 @@ public class QuestionService {
                 toInsert.add(insertRequest);
             }
         }
-
         answerService.deleteByIds(question.getId(), existingAnswerIds);
         answerService.updateAll(toUpdate);
         answerService.saveAll(toInsert);

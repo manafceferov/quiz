@@ -10,8 +10,11 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface QuizResultMapper {
 
+    @Mapping(target = "createdAt", expression = "java(java.time.LocalDateTime.now())")
+    @Mapping(target = "questionsCount", source = "questionsCount")
     QuizResult toDbo(QuizResultInsertRequest request);
 
+    @Mapping(target = "questionCount", source = "questionsCount")
     ParticipantQuizResultList toParticipantQuizResultList(QuizResult quizResult);
 
 }

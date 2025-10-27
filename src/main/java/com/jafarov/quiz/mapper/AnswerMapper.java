@@ -23,4 +23,7 @@ public interface AnswerMapper {
     AnswerEditDto toDto(Answer from);
 
     AnswerExamDto toAnswerExamDto(Answer from);
+
+    List<AnswerExamDto> toAnswerExamDtoList(List<Answer> answers);
+
 }

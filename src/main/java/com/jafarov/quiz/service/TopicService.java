@@ -78,7 +78,9 @@ public class TopicService{
         return repository.findById(id);
     }
 
-    public Page<Topic> getAll(String name, Pageable pageable) {
+    public Page<Topic> getAll(String name,
+                              Pageable pageable
+    ) {
         if (name == null || name.isBlank()) {
             return repository.findAll(pageable);
         }
@@ -86,9 +88,10 @@ public class TopicService{
     }
 
     @Transactional
-    public void changeStatus(Long id, Boolean status) {
+    public void changeStatus(Long id,
+                             Boolean status
+    ) {
         repository.changeStatus(id, status);
-
         if (!status) {
             questionRepository.deactivateByTopicId(id);
             answerRepository.deactivateByTopicId(id);

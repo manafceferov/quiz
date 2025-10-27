@@ -8,9 +8,8 @@ class QuizResultInsertRequest @JvmOverloads constructor(
     var correctAnswersCount: Long? = null,
     var correctPercent: Long? = null,
     var answers: List<ParticipantAnswerInsertRequest> = mutableListOf(),
-    var questionCount: Long? = null,
-) : BaseDto() {
-    fun calculateQuestionCount() {
-        this.questionCount = answers.size.toLong()
-    }
-}
+    var questionsCount: Long? = null
+) : BaseDto()
+
+
+

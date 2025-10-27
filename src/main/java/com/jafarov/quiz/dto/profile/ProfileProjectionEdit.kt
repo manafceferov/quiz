@@ -1,5 +1,8 @@
 package com.jafarov.quiz.dto.profile
 
+import com.jafarov.quiz.entity.Attachment
+import org.springframework.web.multipart.MultipartFile
+
 interface ProfileProjectionEdit {
     var id: Long?
     var firstName: String?
@@ -11,6 +14,7 @@ interface ProfileProjectionEdit {
     var phoneNumber: String?
     var birthDate: String?
     var gender: String?
-    var attachment: Long?
+    var file: MultipartFile?
+    var attachmentId: Long?
     var attachmentUrl: String?
 }

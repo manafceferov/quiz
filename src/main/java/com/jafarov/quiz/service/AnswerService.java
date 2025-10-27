@@ -80,8 +80,8 @@ public class AnswerService {
         return repository.getExsistTwoIsActiveAnswerByQuestionId(questionId);
     }
 
-    public Long getCorrectAnswersCountByQuestionId(Long questionId, Long answerId) {
-        return repository.countCorrectAnswersByQuestionId(questionId, answerId);
-    }
+//    public Long getCorrectAnswersCountByQuestionId(Long questionId, Long answerId) {
+//        return repository.countCorrectAnswersByQuestionId(questionId, answerId);
+//    }
 }
 

@@ -9,6 +9,7 @@ import com.jafarov.quiz.entity.Participant;
 import com.jafarov.quiz.enums.OwnerType;
 import com.jafarov.quiz.mapper.ParticipantMapper;
 import com.jafarov.quiz.repository.ParticipantRepository;
+import com.jafarov.quiz.util.session.AuthSessionData;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,18 +25,21 @@ public class ParticipantService {
     private final AttachmentService attachmentService;
     private final TopicService topicService;
     private final ParticipantMapper participantMapper;
+    private final AuthSessionData authSessionData;
 
     public ParticipantService(ParticipantRepository participantRepository,
                               PasswordEncoder passwordEncoder,
                               AttachmentService attachmentService,
                               TopicService topicService,
-                              ParticipantMapper participantMapper
+                              ParticipantMapper participantMapper,
+                              AuthSessionData authSessionData
     ) {
         this.participantRepository = participantRepository;
         this.passwordEncoder = passwordEncoder;
         this.attachmentService = attachmentService;
         this.topicService = topicService;
         this.participantMapper = participantMapper;
+        this.authSessionData = authSessionData;
     }
 
     public Participant register(String firstName,
@@ -69,60 +73,48 @@ public class ParticipantService {
     }
 
     @Transactional
-    public void updateProfile(Long id,
-                              ProfileProjectionEditDto dto,
-                              MultipartFile file
-    ) {
-        Participant participant = participantRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Participant not found with ID: " + id));
+    public void updateProfile(ProfileProjectionEditDto dto) {
+        Long participantId = authSessionData.getParticipantSessionData().getId();
+        Participant participant = participantRepository.findById(participantId)
+                .orElseThrow(() -> new RuntimeException("İstifadəçi tapılmadı: " + participantId));
 
-        participant.setFirstName(dto.getFirstName());
-        participant.setLastName(dto.getLastName());
-        participant.setFatherName(dto.getFatherName());
-        participant.setEmail(dto.getEmail());
-        participant.setPhoneNumber(dto.getPhoneNumber());
-        participant.setBirthDate(dto.getBirthDate());
-        participant.setGender(dto.getGender());
-
+        participantMapper.updateParticipantFromProfileProjectionEditDto(dto, participant);
         if (dto.getPassword() != null && !dto.getPassword().isEmpty()) {
-            if (!dto.getPassword().equals(dto.getConfirmPassword())) {
+            if (dto.getConfirmPassword() == null || !dto.getPassword().equals(dto.getConfirmPassword())) {
                 throw new IllegalArgumentException("Şifrə və təsdiq uyğun gəlmir");
             }
             participant.setPassword(passwordEncoder.encode(dto.getPassword()));
         }
 
-
-        if (file != null && !file.isEmpty()) {
+        if (dto.getFile() != null && !dto.getFile().isEmpty()) {
             attachmentService.deleteByOwner(participant.getId(), OwnerType.PARTICIPANT);
-            Attachment newAttachment = attachmentService.uploadAndReturn(participant.getId(), OwnerType.PARTICIPANT, file);
-            participant.setAttachment(newAttachment);
+            Attachment attachment = attachmentService.uploadAndReturn(participant.getId(), OwnerType.PARTICIPANT, dto.getFile());
+//            attachment.setParticipant(participant);
+//            participant.setAttachment(attachment);
         }
-
         participantRepository.save(participant);
     }
+
 
     public ProfileProjectionEditDto getProfile(Long participantId) {
         ProfileProjectionEdit projection = participantRepository.findProfileProjectionById(participantId)
                 .orElseThrow(() -> new IllegalArgumentException("Participant not found with ID: " + participantId));
 
-        ProfileProjectionEditDto dto = new ProfileProjectionEditDto(
-                projection.getId(),
-                projection.getFirstName(),
-                projection.getLastName(),
-                projection.getFatherName(),
-                projection.getEmail(),
-                projection.getPassword(),
-                projection.getConfirmPassword(),
-                projection.getPhoneNumber(),
-                projection.getBirthDate(),
-                projection.getGender(),
-                projection.getAttachment(),
-                projection.getAttachmentUrl()
-        );
+        ProfileProjectionEditDto dto = new ProfileProjectionEditDto();
+        dto.setId(projection.getId());
+        dto.setFirstName(projection.getFirstName());
+        dto.setLastName(projection.getLastName());
+        dto.setFatherName(projection.getFatherName());
+        dto.setEmail(projection.getEmail());
+        dto.setPhoneNumber(projection.getPhoneNumber());
+        dto.setBirthDate(projection.getBirthDate());
+        dto.setGender(projection.getGender());
+        dto.setAttachmentId(projection.getAttachmentId());
+        dto.setAttachmentUrl(projection.getAttachmentUrl());
 
-        if (projection.getAttachment() != null) {
-            dto.setAttachmentUrl("/attachments/" + projection.getAttachment());
-        }
+//        if (projection.getAttachment() != null) {
+//            dto.setAttachment("/attachments/" + projection.getAttachment());
+//        }
 
         return dto;
     }
@@ -133,7 +125,9 @@ public class ParticipantService {
     }
 
     @Transactional
-    public void changeStatus(Long id, Boolean status) {
+    public void changeStatus(Long id,
+                             Boolean status
+    ) {
         participantRepository.changeStatus(id, status);
     }
 
@@ -142,7 +136,9 @@ public class ParticipantService {
                 .map(participantMapper::toListDto);
     }
 
-    public Page<Participant> searchUsers(String name, Pageable pageable) {
+    public Page<Participant> searchUsers(String name,
+                                         Pageable pageable
+    ) {
         if (name != null && !name.trim().isEmpty()) {
             return participantRepository.searchByFullName(name.trim(), pageable);
         }

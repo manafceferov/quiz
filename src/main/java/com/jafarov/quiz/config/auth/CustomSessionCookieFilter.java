@@ -16,8 +16,10 @@ public class CustomSessionCookieFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-            throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain) throws ServletException, IOException
+    {
         HttpSession session = request.getSession(false);
         if (session != null) {
             response.addHeader("Set-Cookie", cookieName + "=" + session.getId() + "; Path=/; HttpOnly; SameSite=Lax");

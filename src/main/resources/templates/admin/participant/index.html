@@ -51,7 +51,7 @@
                     <td>
                         <div class="badge badge-pill badge-dark">[[${stat.count}]]</div>
                     </td>
-                    <td th:text="${p.firstName} + ' ' + ${p.lastName} + ' ' + ${p.fatherName}"></td>
+                    <td th:text="${p.firstName} + (${p.lastName != null ? ' ' + p.lastName : ''}) + (${p.fatherName != null ? ' ' + p.fatherName : ''})"></td>
                     <td>
                         <form th:action="@{/admin/participants/{id}/status(id=${p.id})}" method="post"
                               class="d-inline-block m-0 p-0 align-middle">

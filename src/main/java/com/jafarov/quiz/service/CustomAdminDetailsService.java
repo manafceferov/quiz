@@ -15,18 +15,15 @@ public class CustomAdminDetailsService implements UserDetailsService {
     private final AdminRepository repository;
     private final AdminSessionData adminSessionData;
 
-    public CustomAdminDetailsService(
-            AdminRepository repository,
-            AdminSessionData adminSessionData
+    public CustomAdminDetailsService(AdminRepository repository,
+                                     AdminSessionData adminSessionData
     ) {
         this.repository = repository;
         this.adminSessionData = adminSessionData;
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username)
-            throws UsernameNotFoundException {
-
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Admin admin = repository.findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 

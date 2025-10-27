@@ -152,9 +152,8 @@ public class SecurityConfig {
                 )
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/logout").permitAll()
-                        .anyRequest()
-                        .permitAll()
+                        .requestMatchers("/login", "/register", "/css/**", "/js/**", "/images/**").permitAll()
+                        .anyRequest().authenticated()
                 )
                 .userDetailsService(participantDetailsService)
                 .formLogin(form -> form
@@ -166,9 +165,9 @@ public class SecurityConfig {
                 )
                 .logout(logout -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"))
-                        .logoutSuccessUrl("/")
+                        .logoutSuccessUrl("/login?logout=true")
                         .addLogoutHandler(customLogoutHandler)
-                        .invalidateHttpSession(false)
+                        .invalidateHttpSession(true)
                         .clearAuthentication(true)
                         .permitAll()
                 )
@@ -176,6 +175,7 @@ public class SecurityConfig {
 
         return http.build();
     }
+
 
     @Bean
     public HttpSessionEventPublisher httpSessionEventPublisher() {
