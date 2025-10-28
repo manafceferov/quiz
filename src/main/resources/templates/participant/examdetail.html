@@ -1,0 +1,30 @@
+<th:block th:replace="~{participant/fragments/header}"></th:block>
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4" th:text="${detail.topicName}">Mövzu Adı</h2>
+
+    <div th:each="q : ${detail.questions}" class="mb-4">
+        <h5 th:text="${#strings.replace(q.question, '<p>', '').replace('</p>', '')}">Sual mətni</h5>
+
+        <ul class="list-group">
+            <li th:each="a : ${q.answers}"
+                class="list-group-item d-flex justify-content-between align-items-center"
+                th:classappend="(${a.selected && a.correct} ? 'list-group-item-success' :
+                     (${a.selected && !a.correct} ? 'list-group-item-danger' :
+                      (${!a.selected && a.correct} ? 'list-group-item-warning' : '')))">
+
+                <span th:text="${#strings.replace(a.answer, '<p>', '').replace('</p>', '')}">Cavab</span>
+
+                <span th:if="${a.selected && !a.correct}"
+                      class="fw-bold"
+                      style="color: black;">Səhv</span>
+
+                <span th:if="${!a.selected && a.correct}"
+                      class="fw-bold"
+                      style="color: black;">Düzgün</span>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<th:block th:replace="~{participant/fragments/footer}"></th:block>

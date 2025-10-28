@@ -4,18 +4,30 @@
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
+
         <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-            <ul class="navbar-nav">
+            <ul class="navbar-nav align-items-center">
+
                 <li class="nav-item"><a class="nav-link active" th:href="@{/}" aria-current="page">Ana səhifə</a></li>
+
                 <li class="nav-item" sec:authorize="hasRole('PARTICIPANT')">
                     <a class="nav-link" th:href="@{/quiz/my-exams}">İmtahanlarım</a>
                 </li>
+
                 <li class="nav-item" sec:authorize="hasRole('PARTICIPANT')">
                     <a class="nav-link" th:href="@{/participants/profile}">Profil</a>
                 </li>
-                <li class="nav-item" sec:authorize="hasRole('PARTICIPANT')">
-                    <a class="nav-link text-danger" th:href="@{/logout}">Çıxış</a>
+
+                <!-- 🔘 Dark Mode Toggle Button (icon dəyişdi) -->
+                <li class="nav-item ms-3">
+                    <button id="darkModeToggle" class="btn btn-secondary btn-sm" title="Dark Mode">🌑</button>
                 </li>
+
+                <li class="nav-item" sec:authorize="hasRole('PARTICIPANT')">
+                    <a class="nav-link btn btn-danger btn-sm ms-2" th:href="@{/logout}">Çıxış</a>
+                </li>
+
+
                 <li class="nav-item" sec:authorize="!hasRole('PARTICIPANT')">
                     <a class="nav-link text-danger" th:href="@{/login}">Giriş</a>
                 </li>

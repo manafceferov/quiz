@@ -14,21 +14,25 @@ public class ParticipantDetailsController {
 
     private final ParticipantService participantService;
 
-    public ParticipantDetailsController(ParticipantService participantService) {
+    public ParticipantDetailsController(ParticipantService participantService
+    ) {
         this.participantService = participantService;
     }
 
     @GetMapping
-    public String index(Model model, Pageable pageable) {
+    public String index(Model model,
+                        Pageable pageable
+    ) {
         Page<ParticipantListDto> participants = participantService.getAll(pageable);
         model.addAttribute("participants", participants);
         return "admin/participant/index";
     }
 
     @PostMapping("/{id}/status")
-    public String changeStatus(@PathVariable Long id, @RequestParam Boolean status) {
+    public String changeStatus(@PathVariable Long id,
+                               @RequestParam Boolean status
+    ) {
         participantService.changeStatus(id, status);
         return "redirect:/admin/participants";
     }
-
 }

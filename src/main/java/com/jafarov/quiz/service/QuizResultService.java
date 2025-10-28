@@ -1,6 +1,9 @@
 package com.jafarov.quiz.service;
 
 import com.jafarov.quiz.dto.exam.QuestionExamDto;
+import com.jafarov.quiz.dto.examdetail.ParticipantAnswerDetail;
+import com.jafarov.quiz.dto.examdetail.ParticipantQuestionWithAnswers;
+import com.jafarov.quiz.dto.examdetail.ParticipantQuizResultDetail;
 import com.jafarov.quiz.dto.paticipantquiz.ParticipantAnswerInsertRequest;
 import com.jafarov.quiz.dto.paticipantquiz.ParticipantQuizResultList;
 import com.jafarov.quiz.dto.paticipantquiz.QuizResultInsertRequest;
@@ -69,7 +72,6 @@ public class QuizResultService {
         long totalQuestions = questionRepository.getCountByTopicId(topicId);
         long correctCount = 0;
 
-        // Doğru cavabları topicə görə bir dəfə götür
         List<Answer> correctAnswers = answerRepository.findCorrectAnswersByTopicId(topicId);
 
         Map<Long, Long> correctAnswerMap = new HashMap<>();
@@ -90,7 +92,6 @@ public class QuizResultService {
         for (ParticipantAnswerInsertRequest answerRequest : processedAnswers.values()) {
             Long questionId = answerRequest.getQuestionId();
             Long answerId = answerRequest.getAnswerId();
-            // Doğru cavab siyahısından yoxlama
             Long correctAnswerId = correctAnswerMap.get(questionId);
             if (correctAnswerId != null && correctAnswerId.equals(answerId)) {
                 correctCount++;
@@ -147,4 +148,47 @@ public class QuizResultService {
                 })
                 .toList();
     }
+
+    @Transactional(readOnly = true)
+    public ParticipantQuizResultDetail getExamDetail(Long quizResultId) {
+        QuizResult quizResult = quizResultRepository.findById(quizResultId)
+                .orElseThrow(() -> new IllegalArgumentException("Quiz result not found: " + quizResultId));
+
+        ParticipantQuizResultDetail detail = new ParticipantQuizResultDetail();
+        detail.setParticipantId(quizResult.getParticipantId());
+        detail.setTopicName(quizResult.getTopic().getName());
+        detail.setCorrectAnswersCount(quizResult.getCorrectAnswersCount());
+        detail.setCorrectPercent(quizResult.getCorrectPercent());
+        detail.setQuestionCount(quizResult.getQuestionsCount());
+
+        List<ParticipantAnswer> participantAnswers = participantAnswerRepository.findByQuizResultId(quizResultId);
+        Map<Long, ParticipantQuestionWithAnswers> questionMap = new LinkedHashMap<>();
+
+        for (ParticipantAnswer pa : participantAnswers) {
+            Long questionId = pa.getQuestionId();
+            Question question = pa.getQuestion();
+
+            ParticipantQuestionWithAnswers pq = questionMap.computeIfAbsent(questionId, k -> {
+                ParticipantQuestionWithAnswers newQ = new ParticipantQuestionWithAnswers();
+                newQ.setQuestion(question.getQuestion());
+                return newQ;
+            });
+
+            List<Answer> allAnswers = question.getAnswers().stream()
+                    .filter(Answer::isActive)
+                    .toList();
+
+            for (Answer ans : allAnswers) {
+                ParticipantAnswerDetail det = new ParticipantAnswerDetail();
+                det.setAnswer(ans.getAnswer());
+                det.setCorrect(ans.isCorrect());
+                det.setSelected(pa.getAnswerId() != null && pa.getAnswerId().equals(ans.getId()));
+                pq.getAnswers().add(det);
+            }
+        }
+
+        detail.setQuestions(new ArrayList<>(questionMap.values()));
+        return detail;
+    }
+
 }

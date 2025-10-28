@@ -7,7 +7,6 @@ import com.jafarov.quiz.util.session.ParticipantSessionData;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 @RequestMapping("/participants/profile")

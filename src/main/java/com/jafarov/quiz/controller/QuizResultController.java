@@ -2,6 +2,7 @@ package com.jafarov.quiz.controller;
 
 import com.jafarov.quiz.dto.ParticipantQuestionAnswer;
 import com.jafarov.quiz.dto.exam.QuestionExamDto;
+import com.jafarov.quiz.dto.examdetail.ParticipantQuizResultDetail;
 import com.jafarov.quiz.entity.QuizResult;
 import com.jafarov.quiz.util.session.AuthSessionData;
 import com.jafarov.quiz.util.session.ParticipantSessionData;
@@ -56,7 +57,9 @@ public class QuizResultController extends BaseController {
     }
 
     @GetMapping("/result/{id}")
-    public String showResult(@PathVariable Long id, Model model) {
+    public String showResult(@PathVariable Long id,
+                             Model model
+    ) {
         ParticipantQuizResultList result = quizResultService.showResult(id);
         model.addAttribute("result", result);
         return "participant/result";
@@ -65,7 +68,8 @@ public class QuizResultController extends BaseController {
     @GetMapping("/{topicId}/question/{questionIndex}")
     public String showQuizWithIndex(@PathVariable Long topicId,
                                     @PathVariable int questionIndex,
-                                    Model model) {
+                                    Model model
+    ) {
         List<QuestionExamDto> questions = quizResultService.getAllExamQuestions(topicId);
         if (questionIndex < 0 || questionIndex >= questions.size()) {
             return "redirect:/participant/" + topicId + "/question/0";
@@ -93,7 +97,6 @@ public class QuizResultController extends BaseController {
         if (questions.isEmpty()) {
             return "redirect:/";
         }
-
         QuestionExamDto question = questions.get(0);
 
         model.addAttribute("question", question);
@@ -109,14 +112,23 @@ public class QuizResultController extends BaseController {
     @PostMapping("/{topicId}/result")
     @ResponseBody
     public Long saveResult(@PathVariable Long topicId,
-                           @RequestBody QuizResultInsertRequest request) {
-
+                           @RequestBody QuizResultInsertRequest request
+    ) {
         Long participantId = authSessionData.getParticipantSessionData().getId();
         request.setParticipantId(participantId);
         request.setTopicId(topicId);
 
         QuizResult savedResult = quizResultService.saveQuizResult(request);
         return savedResult.getId();
+    }
+
+    @GetMapping("/participant/exam-detail/{quizResultId}")
+    public String examDetail(@PathVariable Long quizResultId,
+                             Model model
+    ) {
+        ParticipantQuizResultDetail detail = quizResultService.getExamDetail(quizResultId);
+        model.addAttribute("detail", detail);
+        return "participant/examdetail";
     }
 
 }

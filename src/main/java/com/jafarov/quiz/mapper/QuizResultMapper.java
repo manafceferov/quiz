@@ -15,6 +15,7 @@ public interface QuizResultMapper {
     QuizResult toDbo(QuizResultInsertRequest request);
 
     @Mapping(target = "questionCount", source = "questionsCount")
+    @Mapping(target = "topicName", source = "topic.name")
     ParticipantQuizResultList toParticipantQuizResultList(QuizResult quizResult);
 
 }
