@@ -1,7 +1,7 @@
 <th:block th:replace="~{participant/fragments/header}"></th:block>
 
 <div class="container mt-5">
-    <h2 class="mb-4">Keçmiş İmtahanlarım</h2>
+    <h2 class="mb-4">Keçmiş İmtahanlar</h2>
 
     <div th:if="${#lists.isEmpty(results)}" class="alert alert-info text-center">
         Hələ ki, keçmiş imtahan nəticələriniz yoxdur.
@@ -13,19 +13,24 @@
             <tr>
                 <th>#</th>
                 <th>Mövzu</th>
+                <th>Ümumi Sual Sayı</th>
                 <th>Doğru Cavab Sayı</th>
                 <th>Faiz</th>
-                <th>Əməliyyat</th>
+                <th>Ətraflı</th>
             </tr>
             </thead>
             <tbody>
             <tr th:each="result, iterStat : ${results}">
                 <td th:text="${iterStat.index + 1}">1</td>
                 <td th:text="${result.topicName}">Mövzu</td>
+                <td th:text="${result.questionCount}">0</td>
                 <td th:text="${result.correctAnswersCount}">0</td>
                 <td th:text="${result.correctPercent} + ' %'">0%</td>
                 <td>
-                    <a th:href="@{'/quiz/participant/exam-detail/' + ${result.id}}" class="btn btn-primary btn-sm">Detallar</a>
+                    <a th:href="@{'/quiz/participant/exam-detail/' + ${result.id}}"
+                       class="btn btn-primary btn-sm">
+                        Detallar
+                    </a>
                 </td>
             </tr>
             </tbody>

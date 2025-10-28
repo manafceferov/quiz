@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class QuizResultService {
@@ -158,37 +159,43 @@ public class QuizResultService {
         detail.setParticipantId(quizResult.getParticipantId());
         detail.setTopicName(quizResult.getTopic().getName());
         detail.setCorrectAnswersCount(quizResult.getCorrectAnswersCount());
-        detail.setCorrectPercent(quizResult.getCorrectPercent());
         detail.setQuestionCount(quizResult.getQuestionsCount());
+        detail.setCorrectPercent(quizResult.getCorrectPercent());
 
         List<ParticipantAnswer> participantAnswers = participantAnswerRepository.findByQuizResultId(quizResultId);
-        Map<Long, ParticipantQuestionWithAnswers> questionMap = new LinkedHashMap<>();
 
-        for (ParticipantAnswer pa : participantAnswers) {
-            Long questionId = pa.getQuestionId();
-            Question question = pa.getQuestion();
+        Map<Question, List<ParticipantAnswer>> groupByQuestion = participantAnswers.stream()
+                .collect(Collectors.groupingBy(ParticipantAnswer::getQuestion,
+                        LinkedHashMap::new, Collectors.toList()));
 
-            ParticipantQuestionWithAnswers pq = questionMap.computeIfAbsent(questionId, k -> {
-                ParticipantQuestionWithAnswers newQ = new ParticipantQuestionWithAnswers();
-                newQ.setQuestion(question.getQuestion());
-                return newQ;
-            });
+        List<ParticipantQuestionWithAnswers> questionDTOs = groupByQuestion.entrySet().stream()
+                .map(entry -> {
+                    Question question = entry.getKey();
+                    List<ParticipantAnswer> answersForQuestion = entry.getValue();
 
-            List<Answer> allAnswers = question.getAnswers().stream()
-                    .filter(Answer::isActive)
-                    .toList();
+                    ParticipantQuestionWithAnswers participantQuestionWithAnswers = new ParticipantQuestionWithAnswers();
+                    participantQuestionWithAnswers.setQuestion(question.getQuestion());
 
-            for (Answer ans : allAnswers) {
-                ParticipantAnswerDetail det = new ParticipantAnswerDetail();
-                det.setAnswer(ans.getAnswer());
-                det.setCorrect(ans.isCorrect());
-                det.setSelected(pa.getAnswerId() != null && pa.getAnswerId().equals(ans.getId()));
-                pq.getAnswers().add(det);
-            }
-        }
+                    List<Answer> allAnswers = question.getAnswers().stream()
+                            .filter(Answer::isActive)
+                            .toList();
 
-        detail.setQuestions(new ArrayList<>(questionMap.values()));
+                    List<ParticipantAnswerDetail> answerDetails = allAnswers.stream()
+                            .map(answer -> {
+                                boolean selected = answersForQuestion.stream()
+                                        .anyMatch(pa -> pa.getAnswerId() != null && pa.getAnswerId().equals(answer.getId()));
+                                ParticipantAnswerDetail participantAnswerDetail = new ParticipantAnswerDetail();
+                                participantAnswerDetail.setAnswer(answer.getAnswer());
+                                participantAnswerDetail.setCorrect(answer.isCorrect());
+                                participantAnswerDetail.setSelected(selected);
+                                return participantAnswerDetail;
+                            })
+                            .toList();
+                    participantQuestionWithAnswers.setAnswers(answerDetails);
+                    return participantQuestionWithAnswers;
+                })
+                .toList();
+        detail.setQuestions(questionDTOs);
         return detail;
     }
-
 }

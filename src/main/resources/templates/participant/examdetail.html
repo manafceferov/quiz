@@ -4,7 +4,7 @@
     <h2 class="text-center mb-4" th:text="${detail.topicName}">Mövzu Adı</h2>
 
     <div th:each="q : ${detail.questions}" class="mb-4">
-        <h5 th:text="${#strings.replace(q.question, '<p>', '').replace('</p>', '')}">Sual mətni</h5>
+        <h5 th:utext="${q.question}">Sual mətni</h5>
 
         <ul class="list-group">
             <li th:each="a : ${q.answers}"
@@ -13,7 +13,7 @@
                      (${a.selected && !a.correct} ? 'list-group-item-danger' :
                       (${!a.selected && a.correct} ? 'list-group-item-warning' : '')))">
 
-                <span th:text="${#strings.replace(a.answer, '<p>', '').replace('</p>', '')}">Cavab</span>
+                <span th:utext="${a.answer}">Cavab</span>
 
                 <span th:if="${a.selected && !a.correct}"
                       class="fw-bold"

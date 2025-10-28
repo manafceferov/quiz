@@ -61,18 +61,24 @@ public class AnswerService {
         return mapper.toDto(answer);
     }
 
-    public void deleteById(Long id, List<Long> answerDeleteIds) {
+    public void deleteById(Long id,
+                           List<Long> answerDeleteIds
+    ) {
         repository.deleteByIds(id, answerDeleteIds);
 
     }
 
     @Transactional
-    public void deleteByIds(Long questionId, List<Long> ids) {
+    public void deleteByIds(Long questionId,
+                            List<Long> ids
+    ) {
         repository.deleteByIds(questionId, ids);
     }
 
     @Transactional
-    public void changeStatus(Long id, Boolean status) {
+    public void changeStatus(Long id,
+                             Boolean status
+    ) {
         repository.changeStatus(id, status);
     }
 
@@ -80,8 +86,5 @@ public class AnswerService {
         return repository.getExsistTwoIsActiveAnswerByQuestionId(questionId);
     }
 
-//    public Long getCorrectAnswersCountByQuestionId(Long questionId, Long answerId) {
-//        return repository.countCorrectAnswersByQuestionId(questionId, answerId);
-//    }
 }
 

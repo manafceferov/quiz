@@ -5,10 +5,10 @@ import jakarta.validation.constraints.Size
 
 open class TopicUpdateRequest @JvmOverloads constructor(
 
-    var id: Long,
+    var id: Long? = null,
     @field:NotBlank
     @field:Size(max = 255)
-    var name: String,
+    var name: String? = null
 )
 
 

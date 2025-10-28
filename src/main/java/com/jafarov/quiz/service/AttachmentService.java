@@ -24,7 +24,10 @@ public class AttachmentService {
         this.attachmentRepository = attachmentRepository;
     }
 
-    public void upload(Long ownerId, OwnerType ownerType, MultipartFile file) {
+    public void upload(Long ownerId,
+                       OwnerType ownerType,
+                       MultipartFile file
+    ) {
         if (file.isEmpty()) return;
 
         try {
@@ -36,7 +39,6 @@ public class AttachmentService {
             String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
             Path filePath = uploadPath.resolve(fileName);
             Files.write(filePath, file.getBytes(), StandardOpenOption.CREATE);
-
             String fileUrl = "/uploads/" + fileName;
 
             attachmentRepository.findByOwnerIdAndOwnerType(ownerId, ownerType)
@@ -93,7 +95,6 @@ public class AttachmentService {
         }
     }
 
-    // Delete attachment
     public void deleteByOwner(Long ownerId,
                               OwnerType ownerType
     ) {
