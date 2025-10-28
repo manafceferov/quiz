@@ -16,7 +16,7 @@ import java.util.UUID;
 @Service
 public class AttachmentService {
 
-    private static final String UPLOAD_DIR = "src/main/resources/static/uploads/";
+    private static final String UPLOAD_DIR = "uploads/";
 
     private final AttachmentRepository attachmentRepository;
 
