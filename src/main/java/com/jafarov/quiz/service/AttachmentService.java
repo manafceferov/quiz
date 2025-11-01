@@ -24,40 +24,40 @@ public class AttachmentService {
         this.attachmentRepository = attachmentRepository;
     }
 
-    public void upload(Long ownerId,
-                       OwnerType ownerType,
-                       MultipartFile file
-    ) {
-        if (file.isEmpty()) return;
-
-        try {
-            Path uploadPath = Paths.get(UPLOAD_DIR);
-            if (!Files.exists(uploadPath)) {
-                Files.createDirectories(uploadPath);
-            }
-
-            String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
-            Path filePath = uploadPath.resolve(fileName);
-            Files.write(filePath, file.getBytes(), StandardOpenOption.CREATE);
-            String fileUrl = "/uploads/" + fileName;
-
-            attachmentRepository.findByOwnerIdAndOwnerType(ownerId, ownerType)
-                    .ifPresent(existing -> {
-                        deleteFile(existing.getFileUrl());
-                        attachmentRepository.delete(existing);
-                    });
-
-            Attachment attachment = new Attachment();
-            attachment.setFileName(fileName);
-            attachment.setFileUrl(fileUrl);
-            attachment.setOwnerId(ownerId);
-            attachment.setOwnerType(OwnerType.valueOf(ownerType.name()));
-            attachmentRepository.save(attachment);
-
-        } catch (IOException e) {
-            throw new RuntimeException("File upload failed: " + e.getMessage());
-        }
-    }
+//    public void upload(Long ownerId,
+//                       OwnerType ownerType,
+//                       MultipartFile file
+//    ) {
+//        if (file.isEmpty()) return;
+//
+//        try {
+//            Path uploadPath = Paths.get(UPLOAD_DIR);
+//            if (!Files.exists(uploadPath)) {
+//                Files.createDirectories(uploadPath);
+//            }
+//
+//            String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+//            Path filePath = uploadPath.resolve(fileName);
+//            Files.write(filePath, file.getBytes(), StandardOpenOption.CREATE);
+//            String fileUrl = "/uploads/" + fileName;
+//
+//            attachmentRepository.findByOwnerIdAndOwnerType(ownerId, ownerType)
+//                    .ifPresent(existing -> {
+//                        deleteFile(existing.getFileUrl());
+//                        attachmentRepository.delete(existing);
+//                    });
+//
+//            Attachment attachment = new Attachment();
+//            attachment.setFileName(fileName);
+//            attachment.setFileUrl(fileUrl);
+//            attachment.setOwnerId(ownerId);
+//            attachment.setOwnerType(OwnerType.valueOf(ownerType.name()));
+//            attachmentRepository.save(attachment);
+//
+//        } catch (IOException e) {
+//            throw new RuntimeException("File upload failed: " + e.getMessage());
+//        }
+//    }
 
     public Attachment uploadAndReturn(Long ownerId,
                                       OwnerType ownerType,

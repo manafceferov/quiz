@@ -90,8 +90,11 @@
                             <!-- Login Form -->
                             <form id="login-form" th:action="@{/login}" method="post" role="form"
                                   style="display: block;">
-                                <div th:if="${param.error}" class="alert alert-danger">Email və ya şifrə yanlışdır!
+                                <div th:if="${param.message}" class="alert alert-danger" th:text="${param.message}"></div>
+                                <div th:if="${param.error} and ${param.message == null}" class="alert alert-danger">
+                                    Email və ya şifrə yanlışdır!
                                 </div>
+
                                 <div th:if="${param.logout}" class="alert alert-success">Uğurla çıxış etdiniz!</div>
                                 <div class="form-group">
                                     <input type="text" name="username" id="login-email" class="form-control"

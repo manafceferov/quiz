@@ -1,9 +1,7 @@
 package com.jafarov.quiz.service;
 
 import com.jafarov.quiz.dto.participant.ParticipantListDto;
-import com.jafarov.quiz.dto.profile.ProfileProjectionEdit;
 import com.jafarov.quiz.dto.profile.ProfileProjectionEditDto;
-import com.jafarov.quiz.entity.Admin;
 import com.jafarov.quiz.entity.Attachment;
 import com.jafarov.quiz.entity.Participant;
 import com.jafarov.quiz.enums.OwnerType;
@@ -15,7 +13,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class ParticipantService {
@@ -23,21 +20,18 @@ public class ParticipantService {
     private final ParticipantRepository participantRepository;
     private final PasswordEncoder passwordEncoder;
     private final AttachmentService attachmentService;
-    private final TopicService topicService;
     private final ParticipantMapper participantMapper;
     private final AuthSessionData authSessionData;
 
     public ParticipantService(ParticipantRepository participantRepository,
                               PasswordEncoder passwordEncoder,
                               AttachmentService attachmentService,
-                              TopicService topicService,
                               ParticipantMapper participantMapper,
                               AuthSessionData authSessionData
     ) {
         this.participantRepository = participantRepository;
         this.passwordEncoder = passwordEncoder;
         this.attachmentService = attachmentService;
-        this.topicService = topicService;
         this.participantMapper = participantMapper;
         this.authSessionData = authSessionData;
     }
@@ -89,34 +83,29 @@ public class ParticipantService {
         if (dto.getFile() != null && !dto.getFile().isEmpty()) {
             attachmentService.deleteByOwner(participant.getId(), OwnerType.PARTICIPANT);
             Attachment attachment = attachmentService.uploadAndReturn(participant.getId(), OwnerType.PARTICIPANT, dto.getFile());
-//            attachment.setParticipant(participant);
-//            participant.setAttachment(attachment);
+            attachment.setParticipant(participant);
+            participant.setAttachment(attachment);
         }
         participantRepository.save(participant);
     }
 
-
     public ProfileProjectionEditDto getProfile(Long participantId) {
-        ProfileProjectionEdit projection = participantRepository.findProfileProjectionById(participantId)
+        return participantRepository.findProfileProjectionById(participantId)
+                .map(projection -> {
+                    ProfileProjectionEditDto dto = new ProfileProjectionEditDto();
+                    dto.setId(projection.getId());
+                    dto.setFirstName(projection.getFirstName());
+                    dto.setLastName(projection.getLastName());
+                    dto.setFatherName(projection.getFatherName());
+                    dto.setEmail(projection.getEmail());
+                    dto.setPhoneNumber(projection.getPhoneNumber());
+                    dto.setBirthDate(projection.getBirthDate());
+                    dto.setGender(projection.getGender());
+                    dto.setAttachmentId(projection.getAttachmentId());
+                    dto.setAttachmentUrl(projection.getAttachmentUrl());
+                    return dto;
+                })
                 .orElseThrow(() -> new IllegalArgumentException("Participant not found with ID: " + participantId));
-
-        ProfileProjectionEditDto dto = new ProfileProjectionEditDto();
-        dto.setId(projection.getId());
-        dto.setFirstName(projection.getFirstName());
-        dto.setLastName(projection.getLastName());
-        dto.setFatherName(projection.getFatherName());
-        dto.setEmail(projection.getEmail());
-        dto.setPhoneNumber(projection.getPhoneNumber());
-        dto.setBirthDate(projection.getBirthDate());
-        dto.setGender(projection.getGender());
-        dto.setAttachmentId(projection.getAttachmentId());
-        dto.setAttachmentUrl(projection.getAttachmentUrl());
-
-//        if (projection.getAttachment() != null) {
-//            dto.setAttachment("/attachments/" + projection.getAttachment());
-//        }
-
-        return dto;
     }
 
     public Participant findById(Long id) {

@@ -1,7 +1,7 @@
 package com.jafarov.quiz.config.auth;
 
-import com.jafarov.quiz.service.CustomParticipantDetailService;
 import com.jafarov.quiz.service.CustomAdminDetailsService;
+import com.jafarov.quiz.service.CustomParticipantDetailService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,9 +32,8 @@ public class SecurityConfig {
     private final CustomAdminDetailsService adminDetailsService;
     private final CustomParticipantDetailService participantDetailsService;
 
-    public SecurityConfig(
-            CustomAdminDetailsService adminDetailsService,
-            CustomParticipantDetailService participantDetailsService
+    public SecurityConfig(CustomAdminDetailsService adminDetailsService,
+                          CustomParticipantDetailService participantDetailsService
     ) {
         this.adminDetailsService = adminDetailsService;
         this.participantDetailsService = participantDetailsService;
@@ -53,6 +52,16 @@ public class SecurityConfig {
     }
 
     @Bean
+    public SessionRegistry adminSessionRegistry() {
+        return new SessionRegistryImpl();
+    }
+
+    @Bean
+    public SessionAuthenticationStrategy adminSessionAuthenticationStrategy(SessionRegistry adminSessionRegistry) {
+        return new CustomSessionAuthenticationStrategy("ADMIN_JSESSIONID", adminSessionRegistry);
+    }
+
+    @Bean
     public SecurityContextRepository participantSecurityContextRepository() {
         HttpSessionSecurityContextRepository repository = new HttpSessionSecurityContextRepository();
         repository.setSpringSecurityContextKey("PARTICIPANT_SECURITY_CONTEXT");
@@ -60,18 +69,13 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SessionRegistry sessionRegistry() {
+    public SessionRegistry participantSessionRegistry() {
         return new SessionRegistryImpl();
     }
 
     @Bean
-    public SessionAuthenticationStrategy adminSessionAuthenticationStrategy(SessionRegistry sessionRegistry) {
-        return new CustomSessionAuthenticationStrategy("ADMIN_JSESSIONID", sessionRegistry);
-    }
-
-    @Bean
-    public SessionAuthenticationStrategy participantSessionAuthenticationStrategy(SessionRegistry sessionRegistry) {
-        return new CustomSessionAuthenticationStrategy("PARTICIPANT_JSESSIONID", sessionRegistry);
+    public SessionAuthenticationStrategy participantSessionAuthenticationStrategy(SessionRegistry participantSessionRegistry) {
+        return new CustomSessionAuthenticationStrategy("PARTICIPANT_JSESSIONID", participantSessionRegistry);
     }
 
     @Bean
@@ -79,8 +83,12 @@ public class SecurityConfig {
         return (request, response, authentication) -> {
             HttpSession session = request.getSession(false);
             if (session != null) {
-                String contextKey = request.getRequestURI().startsWith("/admin") ? "ADMIN_SECURITY_CONTEXT" : "PARTICIPANT_SECURITY_CONTEXT";
-                session.removeAttribute(contextKey);
+                String uri = request.getRequestURI();
+                if (uri.startsWith("/admin")) {
+                    session.removeAttribute("ADMIN_SECURITY_CONTEXT");
+                } else {
+                    session.removeAttribute("PARTICIPANT_SECURITY_CONTEXT");
+                }
             }
         };
     }
@@ -91,88 +99,94 @@ public class SecurityConfig {
                                                         SessionAuthenticationStrategy adminSessionAuthenticationStrategy,
                                                         LogoutHandler customLogoutHandler
     ) throws Exception {
+
         http
                 .securityMatcher("/admin/**")
-                .securityContext(context -> context
-                        .securityContextRepository(adminSecurityContextRepository())
-                )
+                .securityContext(context -> context.securityContextRepository(adminSecurityContextRepository()))
                 .sessionManagement(session -> session
-                        .sessionFixation().migrateSession()
+                        .sessionFixation()
+                        .migrateSession()
                         .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                         .sessionAuthenticationStrategy(adminSessionAuthenticationStrategy)
                         .maximumSessions(1)
-                        .sessionRegistry(sessionRegistry())
+                        .sessionRegistry(adminSessionRegistry())
                         .expiredUrl("/admin/login?expired")
                 )
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/admin/login", "/admin/sb-admin/**").permitAll()
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .anyRequest()
-                        .denyAll()
+                        .requestMatchers("/admin/login", "/admin/sb-admin/**")
+                        .permitAll()
+                        .requestMatchers("/admin/**")
+                        .hasRole("ADMIN")
+                        .anyRequest().denyAll()
                 )
                 .userDetailsService(adminDetailsService)
                 .formLogin(form -> form
                         .loginPage("/admin/login")
                         .loginProcessingUrl("/admin/login")
                         .defaultSuccessUrl("/admin/home", true)
-                        .failureUrl("/admin/login?error=true")
+                        .failureHandler(new CustomAuthenticationFailureHandler("/admin/login"))
                         .permitAll()
                 )
                 .logout(logout -> logout
                         .logoutUrl("/admin/logout")
                         .logoutSuccessUrl("/admin/login?logout=true")
                         .addLogoutHandler(customLogoutHandler)
-                        .invalidateHttpSession(false) // Sessiyanı tam ləğv etmə
+                        .invalidateHttpSession(false)
                         .clearAuthentication(true)
                         .permitAll()
                 )
                 .addFilterAfter(new CustomSessionCookieFilter("ADMIN_JSESSIONID"), UsernamePasswordAuthenticationFilter.class);
-
         return http.build();
     }
 
     @Bean
     @Order(2)
-    public SecurityFilterChain publicSecurityFilterChain(HttpSecurity http,
-                                                         SessionAuthenticationStrategy participantSessionAuthenticationStrategy,
-                                                         LogoutHandler customLogoutHandler
+    public SecurityFilterChain participantSecurityFilterChain(HttpSecurity http,
+                                                              SessionAuthenticationStrategy participantSessionAuthenticationStrategy,
+                                                              LogoutHandler customLogoutHandler
     ) throws Exception {
+
         http
-                .securityContext(context -> context
-                        .securityContextRepository(participantSecurityContextRepository())
-                )
+                .securityContext(context -> context.securityContextRepository(participantSecurityContextRepository()))
                 .sessionManagement(session -> session
-                        .sessionFixation().migrateSession()
+                        .sessionFixation()
+                        .migrateSession()
                         .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                         .sessionAuthenticationStrategy(participantSessionAuthenticationStrategy)
                         .maximumSessions(1)
-                        .sessionRegistry(sessionRegistry())
+                        .sessionRegistry(participantSessionRegistry())
                         .expiredUrl("/login?expired")
                 )
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/register", "/css/**", "/js/**", "/images/**").permitAll()
-                        .anyRequest().authenticated()
+                        .requestMatchers(
+                                "/",
+                                "/login",
+                                "/register",
+                                "/css/**", "/js/**", "/images/**", "/files/**",
+                                "/participant/css/**", "/participant/js/**", "/participant/images/**"
+                        ).permitAll()
+                        .anyRequest()
+                        .authenticated()
                 )
                 .userDetailsService(participantDetailsService)
                 .formLogin(form -> form
                         .loginPage("/login")
                         .loginProcessingUrl("/login")
                         .defaultSuccessUrl("/", true)
-                        .failureUrl("/login?error=true")
+                        .failureHandler(new CustomAuthenticationFailureHandler("/login"))
                         .permitAll()
                 )
                 .logout(logout -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"))
-                        .logoutSuccessUrl("/login?logout=true")
+                        .logoutSuccessUrl("/")
                         .addLogoutHandler(customLogoutHandler)
                         .invalidateHttpSession(true)
                         .clearAuthentication(true)
                         .permitAll()
                 )
                 .addFilterAfter(new CustomSessionCookieFilter("PARTICIPANT_JSESSIONID"), UsernamePasswordAuthenticationFilter.class);
-
         return http.build();
     }
 

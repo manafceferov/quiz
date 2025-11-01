@@ -1,5 +1,15 @@
 <th:block th:replace="~{participant/fragments/header}"></th:block>
 
+
+<!DOCTYPE html>
+<html lang="az" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Ana Səhifə</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="transition-bg">
+
 <div class="container mt-4" th:if="${participant != null}">
     <div id="welcomeMessage" class="alert alert-success text-center welcome-alert">
         <h4>Xoş gəlmisiniz, <span th:text="${participant.firstName}">İstifadəçi</span>!</h4>
@@ -7,7 +17,8 @@
 </div>
 
 <div class="container mt-5">
-    <div class="table-responsive" sec:authorize="hasRole('PARTICIPANT')">
+
+    <div class="table-responsive">
         <form th:action="@{/}" method="get" class="mb-3 d-flex justify-content-center">
             <input type="text" name="name" class="form-control w-50" placeholder="Mövzu axtar"
                    th:value="${param.name != null} ? ${param.name} : ''"/>
@@ -29,7 +40,13 @@
                 <td th:text="${topic.name}">Java</td>
                 <td th:text="${topic.questionCount}">0</td>
                 <td>
-                    <a th:href="@{'/quiz/' + ${topic.id} + '/question'}" class="btn btn-primary">Başla</a>
+                    <a th:if="${#authorization.expression('isAuthenticated()')}"
+                       th:href="@{'/quiz/' + ${topic.id} + '/question'}"
+                       class="btn btn-primary">Başla</a>
+
+                    <a th:if="${!#authorization.expression('isAuthenticated()')}"
+                       th:href="@{/login}"
+                       class="btn btn-outline-primary">Başla</a>
                 </td>
             </tr>
             <tr th:if="${#lists.isEmpty(topics)}">
@@ -56,6 +73,7 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 <script>
     setTimeout(function () {
         const welcomeMsg = document.getElementById('welcomeMessage');
@@ -67,3 +85,6 @@
 </script>
 
 <th:block th:replace="~{participant/fragments/footer}"></th:block>
+
+</body>
+</html>

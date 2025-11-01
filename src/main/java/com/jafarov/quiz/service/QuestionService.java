@@ -6,7 +6,6 @@ import com.jafarov.quiz.dto.question.QuestionEditDto;
 import com.jafarov.quiz.dto.question.QuestionInsertRequest;
 import com.jafarov.quiz.dto.question.QuestionUpdateRequest;
 import com.jafarov.quiz.entity.Question;
-import com.jafarov.quiz.mapper.AnswerMapper;
 import com.jafarov.quiz.mapper.QuestionMapper;
 import com.jafarov.quiz.repository.QuestionRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -22,17 +21,14 @@ public class QuestionService {
     private final QuestionRepository repository;
     private final QuestionMapper mapper;
     private final AnswerService answerService;
-    private final AnswerMapper answerMapper;
 
     public QuestionService(QuestionRepository repository,
                            QuestionMapper mapper,
-                           AnswerService answerService,
-                           AnswerMapper answerMapper
+                           AnswerService answerService
     ) {
         this.repository = repository;
         this.mapper = mapper;
         this.answerService = answerService;
-        this.answerMapper = answerMapper;
     }
 
     @Transactional

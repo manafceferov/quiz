@@ -2,23 +2,26 @@ document.addEventListener("DOMContentLoaded", function () {
     const body = document.body;
     const toggleButton = document.getElementById("darkModeToggle");
 
-    function updateIcon() {
-        if (body.classList.contains("dark-mode")) {
-            toggleButton.textContent = "☀️"; // Dark mode aktivdirsə gün simvolu
-        } else {
-            toggleButton.textContent = "🌑"; // Dark mode deaktivdirsə ay simvolu
-        }
-    }
-
-    // LocalStorage-dan state oxu
+    // 🌙 Dark mode-u localStorage-dan oxu və tətbiq et
     if (localStorage.getItem("darkMode") === "enabled") {
         body.classList.add("dark-mode");
     } else {
         body.classList.remove("dark-mode");
     }
-    updateIcon();
 
+    // 🔁 İkonu yenilə
+    function updateIcon() {
+        if (body.classList.contains("dark-mode")) {
+            toggleButton.textContent = "☀️"; // Gün simvolu — dark aktivdirsə
+        } else {
+            toggleButton.textContent = "🌑"; // Ay simvolu — light aktivdirsə
+        }
+    }
+
+    // 🧠 Əgər düymə varsa (login olmadan da işləsin)
     if (toggleButton) {
+        updateIcon();
+
         toggleButton.addEventListener("click", function () {
             body.classList.toggle("dark-mode");
 
@@ -27,9 +30,10 @@ document.addEventListener("DOMContentLoaded", function () {
             } else {
                 localStorage.setItem("darkMode", "disabled");
             }
+
             updateIcon();
         });
     } else {
-        console.log("Dark mode toggle button not found!");
+        console.warn("⚠️ Dark mode düyməsi tapılmadı, amma səhifə işləməyə davam edəcək.");
     }
 });
