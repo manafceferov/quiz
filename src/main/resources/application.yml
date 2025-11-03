@@ -5,10 +5,12 @@ gg:
 spring:
   application:
     name: quiz
+
   security:
     user:
       name: admin
       password: 123456
+
   threads:
     virtual:
       enabled: true
@@ -21,6 +23,7 @@ spring:
     url: jdbc:postgresql://localhost:5433/quizdb
     username: quizuser
     password: quizpassword
+    driver-class-name: org.postgresql.Driver
 
   jpa:
     hibernate:

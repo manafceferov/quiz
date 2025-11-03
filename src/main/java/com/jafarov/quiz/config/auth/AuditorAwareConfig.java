@@ -1,5 +1,6 @@
 package com.jafarov.quiz.config.auth;
 
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
