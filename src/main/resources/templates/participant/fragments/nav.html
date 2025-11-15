@@ -1,0 +1,52 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark" xmlns:sec="http://www.w3.org/1999/xhtml">
+    <div class="container-fluid">
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+            <ul class="navbar-nav align-items-center">
+
+                <!-- Ana səhifə -->
+                <li class="nav-item">
+                    <a class="nav-link active" th:href="@{/}" aria-current="page">Ana səhifə</a>
+                </li>
+
+                <!-- İmtahanlarım (yalnız login olanda) -->
+                <li class="nav-item" sec:authorize="hasRole('PARTICIPANT')">
+                    <a class="nav-link" th:href="@{/quiz/my-exams}">İmtahanlar</a>
+                </li>
+
+                <li class="nav-item" sec:authorize="hasRole('PARTICIPANT')">
+                    <a class="nav-link" th:href="@{/participant/topics}">Mövzular</a>
+                </li>
+
+<!--                <li class="nav-item" sec:authorize="hasRole('PARTICIPANT')">-->
+<!--                    <a class="nav-link" href="#" onclick="alert('Mövzular səhifəsi hələki hazır deyil'); return false;">Mövzular</a>-->
+<!--                </li>-->
+
+                <!-- Profil (yalnız login olanda) -->
+                <li class="nav-item" sec:authorize="hasRole('PARTICIPANT')">
+                    <a class="nav-link" th:href="@{/participants/profile}">Profil</a>
+                </li>
+
+                <!-- 🌑 / ☀️ Dark Mode (hər kəs üçün görünür) -->
+                <li class="nav-item ms-3">
+                    <button id="darkModeToggle" class="btn btn-secondary btn-sm" type="button" title="Dark Mode">🌑</button>
+                </li>
+
+                <!-- Logout (yalnız login olanda) -->
+                <li class="nav-item" sec:authorize="hasRole('PARTICIPANT')">
+                    <a class="nav-link btn btn-danger btn-sm ms-2" th:href="@{/logout}">Çıxış</a>
+                </li>
+
+                <!-- Login (yalnız login olmayanda) -->
+                <li class="nav-item" sec:authorize="!hasRole('PARTICIPANT')">
+                    <a class="nav-link text-danger" th:href="@{/login}">Giriş</a>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+</nav>

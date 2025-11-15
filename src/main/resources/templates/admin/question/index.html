@@ -1,0 +1,170 @@
+<th:block th:replace="~{admin/fragments/header}"></th:block>
+
+<div th:replace="~{admin/fragments/messages :: successMsg(${success})}"></div>
+<div th:replace="~{admin/fragments/errorsMessage :: errorsMsg(${errors})}"></div>
+
+<div class="card border border-dark shadow mb-5">
+    <div class="card-body bg-light mt-2">
+        <form th:action="@{/admin/questions/topic/{topicId}(topicId=${topicId})}" method="get" class="form-row mb-3">
+            <div class="col-md-6">
+                <input type="text" name="keyword" class="form-control" placeholder="Sual mətni ilə axtar"
+                       th:value="${keyword}">
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-outline-primary w-100">
+                    <i class="fas fa-search"></i> Axtar
+                </button>
+            </div>
+            <div class="col-md-2">
+                <a th:href="@{/admin/questions/topic/{topicId}(topicId=${topicId})}"
+                   class="btn btn-outline-warning w-100">
+                    <i class="fas fa-sync"></i> Axtarışı Sıfırla
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card shadow mb-4">
+    <div class="card-header">
+        <a th:href="@{/admin/topics}"
+           class="btn btn-dark float-right">
+            <i class="fa fa-arrow-left "></i> Geri
+        </a>
+        <a th:href="@{/admin/questions/topic/{topicId}/create(topicId=${topicId})}"
+           class="btn btn-dark float-right mr-2">
+            <i class="fa fa-plus"></i>Əlavə Et</a>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead class="text-center">
+                <tr>
+                    <th>No</th>
+                    <th>İmtahan Suallarrı</th>
+                    <th>Daxil Edilmə Tarixi</th>
+                    <th>Əməliyyatlar</th>
+                </tr>
+                </thead>
+                <tbody class="text-center">
+                <tr th:each="question, stat : ${questions}">
+                    <th class="align-middle">
+                        <div class="badge badge-pill badge-dark">
+                            [[${stat.count}]]
+                        </div>
+                    </th>
+
+                    <td th:utext="${question.question}"></td>
+                    <th class="" th:title="${question.createdAt}"
+                        th:text="${@diffForHumans.getTime(question.createdAt)}"></th>
+                    <th class="align-middle">
+                        <a th:href="@{/admin/questions/{id}/edit(id=${question.id})}"
+                           class="btn btn-info d-inline btn-sm"
+                           type="button"><i class="fas fa-pencil-alt"></i></a>
+
+                        <a href="#"
+                           th:data-url="@{/admin/questions/{id}/delete(id=${question.id}, topicId=${topicId})}"
+                           class="btn btn-danger btn-sm btn-circle delete-btn">
+                            <i class="far fa-trash-alt"></i>
+                        </a>
+                        <form
+                                th:action="@{/admin/questions/change-status/question/{id}/status/{status}(id=${question.id}, status=${question.isActive == true ? 0 : 1})}"
+                                method="GET"
+                                enctype="multipart/form-data"
+                                class="d-inline-block m-0 p-0 align-middle">
+
+                            <input type="hidden" name="topicId" th:value="${topicId}"/>
+
+                            <input type="checkbox"
+                                   th:name="questions.isActive"
+                                   th:attr="checked=${question.isActive} ? 'checked' : null"
+                                   data-toggle="toggle"
+                                   data-on="On" data-off="Off"
+                                   data-onstyle="success" data-offstyle="danger"
+                                   data-size="sm"
+                                   class="form-check-input"
+                                   onchange='this.form.submit()'
+                            />
+                        </form>
+                    </th>
+                </tr>
+                </tbody>
+            </table>
+            <div th:replace="~{admin/fragments/pagination :: paginationFragment(${questions}, '/admin/questions')}"></div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog"
+     aria-labelledby="deleteModalLabel" aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content border-danger">
+            <div class="modal-header">
+                <h5 class="modal-title text-danger" id="deleteModalLabel">Silinsin?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                Bu qeydi silmək istədiyinizə əminsiniz?
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Çıx</button>
+                <!-- ↓↓↓ URL run‑time‑da JS ilə yerləşdiriləcək -->
+                <button type="button" class="btn btn-danger" id="modal-confirm_delete">Sil</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<link href="{{asset('back/')}}/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+
+
+<script src="{{asset('back/')}}/vendor/datatables/jquery.dataTables.min.js"></script>
+<script src="{{asset('back/')}}/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+<script src="{{asset('back/')}}/js/demo/datatables-demo.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+
+<script>
+    setTimeout(function () {
+
+        $(".alert").hide("2000")
+
+    }, 3000);
+
+</script>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    document.addEventListener('DOMContentLoaded', () => {
+
+        /* Alert‑i gizlətmə hissəsi eyni qalır */
+        setTimeout(() => $(".alert").hide(2000), 3000);
+
+        /*  --- Silmə modalı --- */
+        // Bütün qırmızı zibil‑qutu düymələrinə qulaq as
+        document.querySelectorAll('.delete-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();                 // # href‑ə getməsin
+                const url = btn.dataset.url;        // th:data-url
+                $('#modal-confirm_delete').data('url', url);
+                $('#deleteModal').modal('show');
+            });
+        });
+
+        // Modal içindəki “Sil” düyməsi
+        $('#modal-confirm_delete').on('click', function () {
+            const url = $(this).data('url');
+            window.location.href = url;           // GET → controller silir
+        });
+
+    });
+    /*]]>*/
+</script>
+
+<th:block th:replace="~{admin/fragments/footer}"></th:block>

@@ -1,0 +1,71 @@
+<th:block th:replace="~{participant/fragments/header}"></th:block>
+
+<div class="container-fluid mt-5">
+    <h2 class="mb-4 text-center">Keçmiş İmtahanlar</h2>
+
+    <div th:if="${#lists.isEmpty(results)}" class="alert alert-info text-center">
+        Hələ ki, keçmiş imtahan nəticələriniz yoxdur.
+    </div>
+
+    <div class="search-wrapper mb-4 w-50 mx-auto">
+        <form th:action="@{/quiz/my-exams}" method="get" class="d-flex">
+            <input type="text" name="name" class="form-control"
+                   placeholder="Mövzu axtar"
+                   th:value="${param.name != null} ? ${param.name} : ''"/>
+            <button type="submit" class="btn btn-primary ms-2">Axtar</button>
+        </form>
+    </div>
+
+
+    <div class="table-responsive" th:if="${!#lists.isEmpty(results)}">
+        <table class="table table-bordered table-hover align-middle text-center">
+            <thead class="table-dark">
+            <tr>
+                <th>#</th>
+                <th>Mövzu</th>
+                <th>Ümumi Sual Sayı</th>
+                <th>Doğru Cavab Sayı</th>
+                <th>Faiz</th>
+                <th>Ətraflı</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="result, iterStat : ${results}">
+                <td th:text="${iterStat.index + 1}">1</td>
+                <td th:text="${result.topicName}">Mövzu</td>
+                <td th:text="${result.questionCount}">0</td>
+                <td th:text="${result.correctAnswersCount}">0</td>
+                <td th:text="${result.correctPercent} + ' %'">0%</td>
+                <td>
+                    <a th:href="@{'/quiz/participant/exam-detail/' + ${result.id}}"
+                       class="btn btn-primary btn-sm">
+                        Detallar
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Gələcəkdə Pagination əlavə edilə bilər -->
+    <!--
+    <nav th:if="${totalPages != null and totalPages > 1}">
+        <ul class="pagination justify-content-center">
+            <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                <a class="page-link" th:href="@{|/participant/my-exams?page=${currentPage - 1}|}">Əvvəlki</a>
+            </li>
+            <li class="page-item" th:each="pageNum : ${#numbers.sequence(0, totalPages -1)}"
+                th:classappend="${pageNum == currentPage} ? 'active'">
+                <a class="page-link" th:href="@{|/participant/my-exams?page=${pageNum}|}" th:text="${pageNum + 1}">1</a>
+            </li>
+            <li class="page-item" th:classappend="${currentPage + 1 == totalPages} ? 'disabled'">
+                <a class="page-link" th:href="@{|/participant/my-exams?page=${currentPage + 1}|}">Növbəti</a>
+            </li>
+        </ul>
+    </nav>
+    -->
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<th:block th:replace="~{participant/fragments/footer}"></th:block>

@@ -1,0 +1,20 @@
+databaseChangeLog:
+  - changeSet:
+      id: 11
+      author: jafarov
+      changes:
+        - addColumn:
+            tableName: answers
+            columns:
+              - column:
+                  name: by_participant
+                  type: BIGINT
+                  constraints:
+                    nullable: true
+
+        - addForeignKeyConstraint:
+            baseTableName: answers
+            baseColumnNames: by_participant
+            referencedTableName: participants
+            referencedColumnNames: id
+            constraintName: fk_answers_by_participant

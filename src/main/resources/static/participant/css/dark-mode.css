@@ -1,0 +1,246 @@
+/* Ümumi body üçün dark mode */
+body.dark-mode {
+    background-color: #121212 !important;
+    color: #e0e0e0 !important;
+}
+
+/* Wrapper və container hissələri */
+body.dark-mode #wrapper,
+body.dark-mode #content-wrapper,
+body.dark-mode #content,
+body.dark-mode .container,
+body.dark-mode .container-fluid,
+body.dark-mode .content {
+    background-color: #121212 !important;
+    color: #e0e0e0 !important;
+}
+
+/* Kartlar, cədvəllər, form sahələri, modallar və digər elementlər qaranlıq */
+body.dark-mode .card,
+body.dark-mode .card-header,
+body.dark-mode .card-body,
+body.dark-mode .table,
+body.dark-mode .table td,
+body.dark-mode .table th,
+body.dark-mode .modal-content,
+body.dark-mode .modal-header,
+body.dark-mode .modal-footer,
+body.dark-mode .form-row,
+body.dark-mode .answers,
+body.dark-mode .form-group,
+body.dark-mode .pagination {
+    background-color: #1e1e1e !important;
+    color: #e0e0e0 !important;
+    border-color: #333 !important;
+}
+
+/* ✅ Alert mesajları */
+body.dark-mode .alert {
+    background-color: #1e1e1e !important;
+    color: #e0e0e0 !important;
+    border-color: #333 !important;
+}
+
+/* Success (yaşıl) */
+body.dark-mode .alert-success {
+    background-color: #0f5132 !important;
+    border-color: #198754 !important;
+    color: #d1e7dd !important;
+}
+
+/* Danger (qırmızı) */
+body.dark-mode .alert-danger {
+    background-color: #842029 !important;
+    border-color: #dc3545 !important;
+    color: #f8d7da !important;
+}
+
+/* Warning (sarı) */
+body.dark-mode .alert-warning {
+    background-color: #664d03 !important;
+    border-color: #ffc107 !important;
+    color: #fff3cd !important;
+}
+
+/* Info (mavi) */
+body.dark-mode .alert-info {
+    background-color: #055160 !important;
+    border-color: #0dcaf0 !important;
+    color: #cff4fc !important;
+}
+
+/* Pagination */
+body.dark-mode .pagination .page-link {
+    background-color: #1e1e1e !important;
+    color: #e0e0e0 !important;
+    border-color: #333 !important;
+}
+
+body.dark-mode .pagination .page-link:hover {
+    background-color: #222 !important;
+    color: #fff !important;
+    border-color: #444 !important;
+}
+
+body.dark-mode .pagination .page-link:focus {
+    box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25) !important;
+}
+
+body.dark-mode .pagination .page-item.active .page-link {
+    background-color: #4e73df !important;
+    color: #fff !important;
+    border-color: #4e73df !important;
+}
+
+body.dark-mode .pagination .page-item.disabled .page-link {
+    background-color: #1e1e1e !important;
+    color: #858796 !important;
+    border-color: #333 !important;
+}
+
+/* Form elementləri */
+body.dark-mode select,
+body.dark-mode input,
+body.dark-mode textarea,
+body.dark-mode .form-control,
+body.dark-mode .form-check-input {
+    background-color: #2a2a2a !important;
+    color: #e0e0e0 !important;
+    border-color: #444 !important;
+}
+
+/* Cədvəl şeritləri */
+body.dark-mode .table-striped tbody tr:nth-of-type(odd) {
+    background-color: #222 !important;
+}
+
+/* Dropdown */
+body.dark-mode .dropdown-menu,
+body.dark-mode .dropdown-item:hover {
+    background-color: #333 !important;
+    color: #fff !important;
+}
+
+/* Navbar tam qara */
+body.dark-mode .navbar {
+    background-color: #000000 !important; /* Tam qara */
+    background-image: none !important;    /* Gradienti ləğv et */
+    border: none !important;
+}
+
+/* Navbar linkləri və marka */
+body.dark-mode .navbar .nav-link,
+body.dark-mode .navbar .navbar-brand {
+    color: #ffffff !important;
+}
+
+body.dark-mode .navbar .nav-link:hover {
+    color: #e0e0e0 !important;
+    background-color: #111 !important;
+}
+
+/* Toggle button (🌑 / ☀️) */
+body.dark-mode #darkModeToggle {
+    background-color: #2a2a2a !important;
+    color: #ffffff !important;
+    border: none !important;
+}
+
+body.dark-mode #darkModeToggle:hover {
+    background-color: #444 !important;
+    color: #ffffff !important;
+}
+
+/* Çıxış düyməsi həmişə qırmızı */
+body.dark-mode .btn-danger {
+    background-color: #dc3545 !important;
+    border-color: #dc3545 !important;
+    color: #fff !important;
+}
+
+body.dark-mode .btn-danger:hover {
+    background-color: #c82333 !important;
+    border-color: #bd2130 !important;
+    color: #fff !important;
+}
+
+/* LIGHT MODE BADGE FIX */
+body:not(.dark-mode) .badge {
+    background-color: #f1f1f1 !important;
+    color: #000 !important;
+    border: 1px solid #ccc !important;
+}
+
+
+/* Summernote editor */
+body.dark-mode .summernote,
+body.dark-mode .note-editor.note-frame,
+body.dark-mode .note-editable,
+body.dark-mode .note-toolbar {
+    background-color: #fff !important;
+    color: #333 !important;
+    border-color: #ccc !important;
+}
+
+/* Label-lar */
+body.dark-mode .question-label,
+body.dark-mode .answer-label,
+body.dark-mode label {
+    color: #e0e0e0 !important;
+}
+
+/* Ümumi topbar/sidebar */
+body.dark-mode .bg-gradient-dark,
+body.dark-mode .sidebar,
+body.dark-mode .sidebar-dark,
+body.dark-mode .topbar {
+    background-color: #000000 !important;
+    background-image: none !important;
+    color: #ffffff !important;
+}
+
+/* Bütün btn hover-ları (btn-danger hələ default qalır) */
+body.dark-mode .btn:hover,
+body.dark-mode .btn-info:hover,
+body.dark-mode .btn-success:hover,
+body.dark-mode .btn-warning:hover,
+body.dark-mode .btn-dark:hover,
+body.dark-mode .btn-outline-primary:hover,
+body.dark-mode .btn-outline-warning:hover,
+body.dark-mode .btn-outline-success:hover,
+body.dark-mode .btn-outline-danger:hover,
+body.dark-mode .btn-outline-info:hover,
+body.dark-mode .btn-outline-secondary:hover {
+    background-color: unset !important;
+    border-color: unset !important;
+    color: unset !important;
+}
+
+/* 🔘 "← İmtahanlara qayıt" düyməsi üçün həm dark, həm light mode düzəlişi */
+
+/* Light mode */
+.btn-outline-light {
+    color: #000000 !important; /* Qara mətn */
+    border-color: #000000 !important; /* Qara sərhəd */
+    background-color: transparent !important;
+}
+
+.btn-outline-light:hover {
+    background-color: #000000 !important;
+    color: #ffffff !important;
+    border-color: #000000 !important;
+}
+
+/* Dark mode */
+body.dark-mode .btn-outline-light {
+    color: #ffffff !important; /* Ağ mətn */
+    border-color: #ffffff !important; /* Ağ sərhəd */
+    background-color: transparent !important;
+}
+
+body.dark-mode .btn-outline-light:hover {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    border-color: #ffffff !important;
+}
+

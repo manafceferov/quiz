@@ -1,0 +1,42 @@
+<th:block th:replace="~{participant/fragments/header}"></th:block>
+
+<div class="container">
+    <th:block th:replace="~{participant/fragments/validation :: formErrors(${errors})}"/>
+</div>
+
+<div class="container">
+    <div class="card shadow mb-4 border border-dark">
+        <div class="card-header">
+            <a th:href="@{/participant/topics}" class="btn btn-dark float-end">
+                Geri
+            </a>
+        </div>
+        <div class="card-body">
+            <form th:action="@{/participant/topics}" th:object="${request}" method="POST" class="text-primary">
+
+                <div class="form-group">
+                    <label>Mövzu adı:</label>
+                    <input type="text" class="form-control" th:field="*{name}" required/>
+                </div>
+
+                <div class="form-group">
+                    <label>A/P</label>
+                    <select class="form-control" name="is_active" required>
+                        <option value="1" selected>Aktiv</option>
+                        <option value="0">Passiv</option>
+                    </select>
+                </div>
+
+                <!-- Əlavə Et düyməsini sağa yığmaq -->
+                <div class="form-group mt-4 d-flex justify-content-end">
+                    <button type="submit" class="btn btn-success">
+                        Əlavə Et
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<th:block th:replace="~{participant/fragments/footer}"></th:block>

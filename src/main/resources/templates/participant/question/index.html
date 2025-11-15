@@ -1,0 +1,123 @@
+<th:block th:replace="~{participant/fragments/header}"></th:block>
+
+<div class="px-4 mt-4 w-100">
+    <div class="alert alert-success shadow border border-success text-center" th:if="${success}">
+        <i class="fa fa-check mr-2"></i> [[${success}]]
+    </div>
+
+    <div class="card border border-dark shadow mb-5 w-100">
+        <div class="card-body bg-light mt-2">
+            <form th:action="@{/participant/questions/topic/{topicId}(topicId=${topicId})}"
+                  method="get" class="d-flex align-items-center">
+                <input type="text" name="keyword" class="form-control" placeholder="Sual mətni ilə axtar" th:value="${keyword}"
+                       style="flex: 0 0 40%; margin-right: 4px;">
+                <div class="d-flex" style="flex: 0 0 auto;">
+                    <button type="submit" class="btn btn-outline-primary" style="margin-right: 4px;">
+                        <i class="fas fa-search"></i> Axtar
+                    </button>
+                    <a th:href="@{/participant/questions/topic/{topicId}(topicId=${topicId})}" class="btn btn-outline-warning">
+                        <i class="fas fa-sync"></i> Sıfırla
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card shadow mb-4 w-100">
+        <div class="card-header d-flex justify-content-between align-items-center bg-dark text-white">
+            <h5 class="m-0">Sual Siyahısı</h5>
+            <div>
+                <th:block th:if="${topic.byParticipant == currentParticipantId}">
+                    <a th:href="@{/participant/questions/topic/{topicId}/create(topicId=${topicId})}" class="btn btn-success mr-2">Əlavə Et</a>
+                </th:block>
+                <a th:href="@{/participant/topics}" class="btn btn-secondary">Geri</a>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered text-center table-hover align-middle">
+                    <thead class="thead-dark">
+                    <tr>
+                        <th style="width: 5%">No</th>
+                        <th style="width: 55%">Sual</th>
+                        <th style="width: 20%">Tarix</th>
+                        <th style="width: 20%">Əməliyyatlar</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="question, stat : ${questions}">
+                        <td><div class="badge badge-pill badge-dark">[[${stat.count}]]</div></td>
+                        <td th:utext="${question.question}"></td>
+                        <td th:text="${@diffForHumans.getTime(question.createdAt)}"></td>
+                        <td class="align-middle">
+                            <!-- EMƏLİYYATLAR: Yalnız sualı yaradıbsa göstər -->
+                            <th:block th:if="${question.byParticipant == currentParticipantId}">
+                                <a th:href="@{/participant/questions/{id}/edit(id=${question.id})}" class="btn btn-info btn-sm btn-circle">
+                                    <i class="fas fa-pencil-alt"></i>
+                                </a>
+                                <a href="#" th:data-url="@{/participant/questions/{id}/delete(id=${question.id}, topicId=${topicId})}" class="btn btn-danger btn-sm btn-circle delete-btn">
+                                    <i class="far fa-trash-alt"></i>
+                                </a>
+                                <form th:action="@{/participant/questions/change-status/question/{id}/status/{status}(id=${question.id}, status=${question.isActive ? 0 : 1})}" method="GET" class="d-inline-block m-0 p-0">
+                                    <input type="hidden" name="topicId" th:value="${topicId}"/>
+                                    <input type="checkbox" th:checked="${question.isActive}"
+                                           data-toggle="toggle" data-on='<i class="fas fa-check"></i> On'
+                                           data-off='<i class="fas fa-times"></i> Off'
+                                           data-onstyle="success" data-offstyle="danger"
+                                           data-size="sm" onchange="this.form.submit()"/>
+                                </form>
+                            </th:block>
+                            <th:block th:unless="${question.byParticipant == currentParticipantId}">
+                                <span>—</span>
+                            </th:block>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <div th:replace="~{participant/fragments/pagination :: paginationFragment(${questions}, '/participant/questions/topic/' + ${topicId})}"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" data-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-danger">
+            <div class="modal-header">
+                <h5 class="modal-title text-danger">Silinsin?</h5>
+                <button type="button" class="close" data-dismiss="modal">×</button>
+            </div>
+            <div class="modal-body">Bu qeydi silmək istədiyinizə əminsiniz?</div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Çıx</button>
+                <button type="button" class="btn btn-danger" id="modal-confirm_delete">Sil</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:inline="javascript">
+    document.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => $(".alert").hide(2000), 3000);
+
+        $('[data-toggle="toggle"]').bootstrapToggle({
+            on: '<i class="fas fa-check"></i> On',
+            off: '<i class="fas fa-times"></i> Off',
+            onstyle: 'success',
+            offstyle: 'danger'
+        });
+
+        $('.delete-btn').on('click', e => {
+            e.preventDefault();
+            $('#modal-confirm_delete').data('url', e.currentTarget.dataset.url);
+            $('#deleteModal').modal('show');
+        });
+
+        $('#modal-confirm_delete').on('click', () => {
+            window.location.href = $('#modal-confirm_delete').data('url');
+        });
+    });
+</script>
+
+<th:block th:replace="~{participant/fragments/footer}"></th:block>

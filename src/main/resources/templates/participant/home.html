@@ -1,0 +1,100 @@
+<th:block th:replace="~{participant/fragments/header}"></th:block>
+
+<!DOCTYPE html>
+<html lang="az" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Ana Səhifə</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Formu kiçik mərkəzləşdirilmiş blokda saxlamaq üçün */
+        .search-wrapper {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body class="transition-bg">
+
+<div class="container-fluid mt-4" th:if="${participant != null}">
+    <div id="welcomeMessage" class="alert alert-success text-center welcome-alert">
+        <h4>Xoş gəlmisiniz, <span th:text="${participant.firstName}">İstifadəçi</span>!</h4>
+    </div>
+</div>
+
+<div class="container-fluid mt-5">
+
+    <div class="search-wrapper mb-4 w-50 mx-auto">
+        <form th:action="@{/}" method="get" class="d-flex">
+            <input type="text" name="name" class="form-control"
+                   placeholder="Mövzu axtar"
+                   th:value="${param.name != null} ? ${param.name} : ''"/>
+            <button type="submit" class="btn btn-primary ms-2">Axtar</button>
+        </form>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover align-middle text-center">
+            <thead class="table-dark">
+            <tr>
+                <th>#</th>
+                <th>Mövzu</th>
+                <th>Sual sayı</th>
+                <th>Əməliyyat</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="topic, iterStat : ${topics}">
+                <td th:text="${iterStat.index + 1}">1</td>
+                <td th:text="${topic.name}">Java</td>
+                <td th:text="${topic.questionCount}">0</td>
+                <td>
+                    <a th:if="${#authorization.expression('isAuthenticated()')}"
+                       th:href="@{'/quiz/' + ${topic.id} + '/question'}"
+                       class="btn btn-primary">Başla</a>
+
+                    <a th:if="${!#authorization.expression('isAuthenticated()')}"
+                       th:href="@{/login}"
+                       class="btn btn-outline-primary">Başla</a>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(topics)}">
+                <td colspan="4">Hazırda heç bir mövzu mövcud deyil</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <nav th:if="${totalPages != null and totalPages > 1}">
+        <ul class="pagination justify-content-center">
+            <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                <a class="page-link" th:href="@{|/?page=${currentPage - 1}|}">Əvvəlki</a>
+            </li>
+            <li class="page-item" th:each="pageNum : ${#numbers.sequence(0, totalPages -1)}"
+                th:classappend="${pageNum == currentPage} ? 'active'">
+                <a class="page-link" th:href="@{|/?page=${pageNum}|}" th:text="${pageNum + 1}">1</a>
+            </li>
+            <li class="page-item" th:classappend="${currentPage + 1 == totalPages} ? 'disabled'">
+                <a class="page-link" th:href="@{|/?page=${currentPage + 1}|}">Növbəti</a>
+            </li>
+        </ul>
+    </nav>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    setTimeout(function () {
+        const welcomeMsg = document.getElementById('welcomeMessage');
+        if (welcomeMsg) {
+            welcomeMsg.style.opacity = '0';
+            setTimeout(() => welcomeMsg.style.display = 'none', 500);
+        }
+    }, 2000);
+</script>
+
+<th:block th:replace="~{participant/fragments/footer}"></th:block>
+
+</body>
+</html>

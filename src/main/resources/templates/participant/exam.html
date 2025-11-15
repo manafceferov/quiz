@@ -1,0 +1,119 @@
+<th:block th:replace="~{participant/fragments/header}"></th:block>
+<head>
+    <meta charset="UTF-8">
+    <title>İmtahan</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .text-correct {
+            color: green !important;
+        }
+
+        .text-wrong {
+            color: red !important;
+        }
+
+        .answer-list li p {
+            display: inline;
+            margin: 0;
+        }
+
+        .answer-list li {
+            list-style: none;
+            padding: 5px 10px;
+            margin-bottom: 3px;
+            border-radius: 5px;
+        }
+
+        .btn-right {
+            float: right;
+        }
+    </style>
+</head>
+<body>
+<div class="container mt-5">
+    <div class="card">
+        <div class="card-body">
+            <h4 class="mb-4" th:text="'Sual ' + (${questionIndex} + 1) + ' / ' + ${totalQuestions}"></h4>
+
+            <p class="lead" th:utext="${question.question}"></p>
+
+            <form id="answerForm"
+                  th:data-topic-id="${topicId}"
+                  th:data-question-id="${question.id}"
+                  th:data-question-index="${questionIndex}"
+                  th:data-total-questions="${totalQuestions}">
+
+                <div class="form-check mb-2" th:each="answer : ${question.answers}">
+                    <input class="form-check-input" type="radio" name="answerId"
+                           th:value="${answer.id}" th:id="'answer_' + ${answer.id}" required>
+                    <label class="form-check-label" th:for="'answer_' + ${answer.id}"
+                           th:utext="${answer.answer}"></label>
+                </div>
+
+                <button type="submit" class="btn btn-primary mt-3 btn-right"
+                        th:text="${questionIndex + 1 == totalQuestions} ? 'Nəticə' : 'Növbəti'">
+                    Növbəti
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    const topicId = /*[[${topicId}]]*/ 0; // Thymeleaf ilə topicId-ni daxil edin, varsayılan 0
+    let collectedAnswers = [];
+    try {
+        const storedAnswers = localStorage.getItem(`collectedAnswers_${topicId}`);
+        collectedAnswers = storedAnswers ? JSON.parse(storedAnswers) : [];
+    } catch (e) {
+        console.error("JSON parse error:", e);
+        collectedAnswers = [];
+        localStorage.removeItem(`collectedAnswers_${topicId}`);
+    }
+
+    document.getElementById("answerForm").addEventListener("submit", function (e) {
+        e.preventDefault();
+        const form = e.target;
+        const topicId = form.dataset.topicId;
+        const questionId = parseInt(form.dataset.questionId);
+        const questionIndex = parseInt(form.dataset.questionIndex);
+        const totalQuestions = parseInt(form.dataset.totalQuestions);
+
+        const selected = form.querySelector('input[name="answerId"]:checked');
+        if (!selected) return;
+
+        const selectedId = parseInt(selected.value);
+
+        // Yalnız cari sualı əlavə et və təkrarlamaları qarşılamaq
+        let existingIndex = collectedAnswers.findIndex(item => item.questionId === questionId);
+        if (existingIndex !== -1) {
+            collectedAnswers[existingIndex] = { questionId: questionId, answerId: selectedId };
+        } else {
+            collectedAnswers.push({ questionId: questionId, answerId: selectedId });
+        }
+
+        // Cavabları topic-a uyğun saxla
+        localStorage.setItem(`collectedAnswers_${topicId}`, JSON.stringify(collectedAnswers));
+
+        if (questionIndex + 1 === totalQuestions) {
+            fetch(`/quiz/${topicId}/result`, {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({
+                    topicId: parseInt(topicId),
+                    answers: collectedAnswers
+                })
+            })
+                .then(response => response.json())
+                .then(quizResultId => {
+                    window.location.href = `/quiz/result/${quizResultId}`;
+                });
+        } else {
+            window.location.href = `/quiz/${topicId}/question/${questionIndex + 1}`;
+        }
+    });
+    /*]]>*/
+</script>
+
+<th:block th:replace="~{participant/fragments/footer}"></th:block>

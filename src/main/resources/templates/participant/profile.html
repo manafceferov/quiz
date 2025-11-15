@@ -1,0 +1,134 @@
+<th:block th:replace="~{participant/fragments/header}"></th:block>
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Profil Məlumatları</h2>
+
+    <div th:if="${message != null}" class="alert alert-success text-center" th:text="${message}"
+         id="successMessage"></div>
+    <div th:if="${error != null}" class="alert alert-danger text-center" th:text="${error}" id="errorMessage"></div>
+
+    <form class="needs-validation" th:action="@{/participants/profile/update}" th:object="${participantEditDto}" method="post" enctype="multipart/form-data" novalidate>
+
+
+    <div class="mb-4">
+            <div class="text-start">
+                <div style="width: 120px; height: 120px; border: 1px solid #ccc; display: flex; align-items: center; justify-content: center;">
+                    <img th:if="${participantEditDto.attachmentUrl != null}"
+                         th:src="@{${participantEditDto.attachmentUrl}}"
+                         alt="Profil şəkli"
+                         style="width: 100%; height: 100%; object-fit: cover;"/>
+                    <span th:if="${participantEditDto.attachmentUrl == null}">Şəkil</span>
+                </div>
+
+                <div class="mt-2">
+                    <label for="attachment" class="form-label">Profil şəkli</label>
+                    <input type="file" class="form-control form-control-sm" id="attachment" name="file"/>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="firstName" class="form-label">Ad</label>
+                    <input type="text" class="form-control" id="firstName" th:field="*{firstName}" required/>
+                    <div class="invalid-feedback" th:errors="*{firstName}"></div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="lastName" class="form-label">Soyad</label>
+                    <input type="text" class="form-control" id="lastName" th:field="*{lastName}" required/>
+                    <div class="invalid-feedback" th:errors="*{lastName}"></div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="fatherName" class="form-label">Ata adı</label>
+                    <input type="text" class="form-control" id="fatherName" th:field="*{fatherName}"/>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="email" th:field="*{email}" readonly/>
+                    <div class="invalid-feedback" th:errors="*{email}"></div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="phoneNumber" class="form-label">Telefon nömrəsi</label>
+                    <input type="text" class="form-control" id="phoneNumber" th:field="*{phoneNumber}"/>
+                    <div class="invalid-feedback" th:errors="*{phoneNumber}"></div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="birthDate" class="form-label">Doğum tarixi</label>
+                    <input type="text" class="form-control" id="birthDate" th:field="*{birthDate}"/>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="gender" class="form-label">Cins</label>
+                <select class="form-select" id="gender" th:field="*{gender}">
+                    <option value="">Seçin</option>
+                    <option value="MALE">Kişi</option>
+                    <option value="FEMALE">Qadın</option>
+                </select>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="password" class="form-label">Yeni şifrə</label>
+                    <input type="password"
+                           class="form-control"
+                           id="password"
+                           th:field="*{password}"
+                           autocomplete="new-password"/>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="confirmPassword" class="form-label">Şifrə təsdiqi</label>
+                    <input type="password"
+                           class="form-control"
+                           id="confirmPassword"
+                           th:field="*{confirmPassword}"
+                           autocomplete="new-password"/>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary">Yadda saxla</button>
+            <a th:href="@{/}" class="btn btn-secondary">Geri</a>
+        </div>
+    </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    (function () {
+        'use strict';
+        const forms = document.querySelectorAll('.needs-validation');
+        Array.from(forms).forEach(form => {
+            form.addEventListener('submit', event => {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    })();
+    setTimeout(function () {
+        const success = document.getElementById('successMessage');
+        const error = document.getElementById('errorMessage');
+        [success, error].forEach(el => {
+            if (el) {
+                el.style.transition = 'opacity 0.5s';
+                el.style.opacity = '0';
+                setTimeout(() => el.remove(), 500);
+            }
+        });
+    }, 2000);
+</script>
+
+<th:block th:replace="~{participant/fragments/footer}"></th:block>

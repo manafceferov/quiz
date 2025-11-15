@@ -1,0 +1,65 @@
+<th:block th:replace="~{admin/fragments/header}"></th:block>
+
+<div class="container">
+    <th:block th:replace="~{admin/fragments/validation :: formErrors(${errors})}"/>
+</div>
+
+<div class="container">
+    <div class="card shadow mb-4 border border-dark">
+        <div class="card-header">
+            <a th:href="@{/admin/users}" class="btn btn-dark float-right">
+                <i class="fa fa-arrow-left"></i> Geri
+            </a>
+        </div>
+        <div class="card-body">
+            <form th:action="@{/admin/users}" th:object="${userIUDRequest}" method="POST" enctype="multipart/form-data"
+                  class="text-primary">
+                <div class="form-row">
+                    <div class="form-group col-md-3">
+                        <label>Ad :</label>
+                        <input type="text" class="form-control" th:field="*{firstName}" required/>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label>Soyad :</label>
+                        <input type="text" class="form-control" th:field="*{lastName}" required/>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label>Ata Adı :</label>
+                        <input type="text" class="form-control" th:field="*{fatherName}" required/>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label>Email :</label>
+                        <input type="email" class="form-control" th:field="*{email}" required/>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label>Şifrə :</label>
+                        <input type="password" class="form-control password" th:field="*{password}" required/>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label>Şifrəni təstiqlə :</label>
+                        <input type="password" class="form-control password" th:field="*{passwordConfirmation}"
+                               required/>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label>Profil Şəkili Yüklə:</label>
+                        <input type="file" class="form-control" th:field="*{file}"/>
+                    </div>
+                </div>
+
+                <div class="form-group mt-4">
+                    <button type="submit" class="btn btn-success btn-block">
+                        <i class="fa fa-plus"></i> Əlavə Et
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<th:block th:replace="~{admin/fragments/footer}"></th:block>

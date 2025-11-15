@@ -1,0 +1,162 @@
+<th:block th:replace="~{admin/fragments/header}"></th:block>
+
+<div class="container">
+    <th:block th:replace="~{admin/fragments/validation :: formErrors(${errors})}"/>
+</div>
+
+<div class="container">
+    <div class="card shadow mb-4 border border-dark">
+        <div class="card-header">
+            <a th:href="@{/admin/questions/topic/{topicId}(topicId=${request.topicId})}"
+               class="btn btn-dark float-right">
+                <i class="fa fa-arrow-left"></i> Geri
+            </a>
+        </div>
+        <div class="card-body">
+            <form th:action="@{/admin/questions}"
+                  th:object="${request}"
+                  method="POST"
+                  enctype="multipart/form-data"
+                  class="text-primary">
+
+                <input type="hidden" th:field="*{topicId}"/>
+
+                <div class="form-row">
+                    <div class="form-group col-md-12">
+                        <label for="questionEditor" style="font-weight: bold; color: black;">Sual:</label>
+                        <textarea id="questionEditor"
+                                  class="form-control summernote"
+                                  th:field="*{question}"
+                                  required></textarea>
+                    </div>
+                </div>
+
+                <div class="answers">
+                    <div class="form-row">
+                        <div class="form-group col-md-12">
+                            <label style="font-weight: bold; color: black;">Cavablar:</label>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+
+                        <div class="form-group col-md-1">
+                            <input class="form-check-input form-control" type="radio" name="correctAnswerIndex" id="0"
+                                   value="0" required>
+                        </div>
+
+                        <div class="form-group col-md-9">
+                            <textarea class="form-control summernote" name="answers[0].answer"
+                                      placeholder="Cavab mətnini yazın..." required></textarea>
+                        </div>
+
+                        <div class="form-group col-md-1">
+                            <input type="checkbox" name="answers[0].isActive" value="true"
+                                   data-toggle="toggle"
+                                   data-on="On" data-off="Off"
+                                   data-onstyle="success" data-offstyle="danger"
+                                   class="form-control answer-toggle"/>
+                            <input type="hidden" name="answers[0].isActive" value="false"/>
+                        </div>
+
+                        <div class="form-group col-md-1">
+                            <button type="button" class="btn btn-danger btn-sm form-control trash">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-md-3">
+                        <button type="button" class="btn btn-primary form-control plus">
+                            <i class="fa fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-group mt-4">
+                    <button type="submit" class="btn btn-success btn-block">
+                        <i class="fa fa-check"></i> Əlavə Et
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<th:block th:replace="~{admin/fragments/footer}"></th:block>
+
+<script th:inline="javascript">
+    window.addEventListener('load', function () {
+        $('.summernote').summernote({
+            height: 250,
+            placeholder: 'Sual mətnini yazın...',
+            callbacks: {
+                onInit: function () {
+                    $('.note-editable').css({
+                        'color': '#333',
+                        'font-family': 'Arial, sans-serif'
+                    });
+                }
+            }
+        });
+    });
+    let answerIndex = 1;
+
+    $('.plus').click(function () {
+        let answer = `
+            <div class="form-row">
+                    <div class="form-check form-group col-md-1">
+                        <input class="form-check-input form-control" type="radio"
+                        name="correctAnswerIndex" id="${answerIndex}" value="${answerIndex}" required>
+                    </div>
+
+                    <div class="form-group col-md-9">
+                            <textarea class="form-control summernote" name="answers[${answerIndex}].answer" required></textarea>
+                    </div>
+
+                    <div class="form-group col-md-1">
+                        <input type="checkbox" name="answers[${answerIndex}].isActive" value="true"
+                               data-toggle="toggle"
+                               data-on="On" data-off="Off"
+                               data-onstyle="success" data-offstyle="danger"
+                               class="form-control answer-toggle"/>
+                        <input type="hidden" name="answers[${answerIndex}].isActive" value="false" />
+                    </div>
+
+                    <div class="form-group col-md-1">
+                        <button type="button" class="btn btn-danger btn-sm form-control trash">
+                            <i class="fa fa-trash"></i>
+                        </button>
+                    </div>
+
+                </div>
+        `;
+        const $answer = $(answer);
+        $('.answers').append($answer);
+
+        $answer.find('.summernote').summernote({
+            height: 250,
+            placeholder: 'Cavab mətnini yazın...',
+            callbacks: {
+                onInit: function () {
+                    $('.note-editable').css({
+                        'color': '#333',
+                        'font-family': 'Arial, sans-serif'
+                    });
+                }
+            }
+        });
+
+        $answer.find('.answer-toggle').bootstrapToggle();
+        answerIndex++;
+    })
+
+    $(document).on('click', '.trash', function () {
+        $(this).parent().parent().remove();
+    })
+</script>

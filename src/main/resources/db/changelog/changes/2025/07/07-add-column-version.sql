@@ -1,0 +1,1 @@
+ALTER TABLE questions ADD version INT DEFAULT 0 NOT NULL;
