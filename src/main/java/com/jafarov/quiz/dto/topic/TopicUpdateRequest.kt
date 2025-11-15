@@ -8,7 +8,9 @@ open class TopicUpdateRequest @JvmOverloads constructor(
     var id: Long? = null,
     @field:NotBlank
     @field:Size(max = 255)
-    var name: String? = null
+    var name: String? = null,
+    var byParticipant: Long? = null
+
 )
 
 

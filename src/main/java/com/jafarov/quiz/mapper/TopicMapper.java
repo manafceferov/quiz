@@ -5,10 +5,12 @@ import com.jafarov.quiz.dto.topic.TopicInsertRequest;
 import com.jafarov.quiz.dto.topic.TopicUpdateRequest;
 import com.jafarov.quiz.entity.Topic;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface TopicMapper {
 
+    @Mapping(target = "byParticipant", source = "byParticipant")
     Topic toDboQuizTopicFromQuizTopicInsertRequest(TopicInsertRequest dto);
 
     Topic toDboQuizTopicFromQuizTopicUpdateRequest(TopicUpdateRequest dto);

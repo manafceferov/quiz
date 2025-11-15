@@ -1,11 +1,21 @@
 <th:block th:replace="~{participant/fragments/header}"></th:block>
 
-<div class="container mt-5">
-    <h2 class="mb-4">Keçmiş İmtahanlar</h2>
+<div class="container-fluid mt-5">
+    <h2 class="mb-4 text-center">Keçmiş İmtahanlar</h2>
 
     <div th:if="${#lists.isEmpty(results)}" class="alert alert-info text-center">
         Hələ ki, keçmiş imtahan nəticələriniz yoxdur.
     </div>
+
+    <div class="search-wrapper mb-4 w-50 mx-auto">
+        <form th:action="@{/quiz/my-exams}" method="get" class="d-flex">
+            <input type="text" name="name" class="form-control"
+                   placeholder="Mövzu axtar"
+                   th:value="${param.name != null} ? ${param.name} : ''"/>
+            <button type="submit" class="btn btn-primary ms-2">Axtar</button>
+        </form>
+    </div>
+
 
     <div class="table-responsive" th:if="${!#lists.isEmpty(results)}">
         <table class="table table-bordered table-hover align-middle text-center">

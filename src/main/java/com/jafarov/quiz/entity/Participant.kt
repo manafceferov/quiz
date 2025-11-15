@@ -49,4 +49,4 @@ open class Participant @JvmOverloads constructor (
     @OneToOne(mappedBy = "participant", fetch = FetchType.LAZY)
     open var attachment: Attachment? = null,
 
-    ): BaseEntity()
+): BaseEntity()

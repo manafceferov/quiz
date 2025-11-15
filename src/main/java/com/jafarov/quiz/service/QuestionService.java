@@ -131,6 +131,19 @@ public class QuestionService {
         return true;
     }
 
+    public Page<QuestionEditDto> getQuestionsWithParticipantByTopic(Long topicId, String keyword, Pageable pageable) {
+        Page<Question> questions;
+        if (keyword == null || keyword.trim().isEmpty()) {
+            questions = repository.findByTopicId(topicId, pageable);
+        } else {
+            questions = repository.findByTopicIdAndQuestionContainingIgnoreCase(topicId, keyword.trim(), pageable);
+        }
+
+        // Entity -> DTO
+        return questions.map(mapper::toQuestionEditDtoFromQuestionDbo);
+    }
+
+
     public Long getQuestionCountByTopicId(Long topicId) {
         return repository.getCountByTopicId(topicId);
     }

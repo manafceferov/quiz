@@ -7,6 +7,8 @@ open class QuestionUpdateRequest @JvmOverloads constructor (
 
     var question: String? = null,
     var topicId: Long? = null,
-    var answers: List<AnswerUpdateRequest> = mutableListOf()
+    var answers: List<AnswerUpdateRequest> = mutableListOf(),
+    var byParticipant: Long? = null
+
 
 ): BaseDto()

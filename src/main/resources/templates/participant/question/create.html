@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="az" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{participant/fragments/header :: head}"></head>
+<body>
+
+<th:block th:replace="~{participant/fragments/nav}"></th:block>
+
+<div class="container">
+    <th:block th:replace="~{participant/fragments/validation :: formErrors(${errors})}"/>
+</div>
+
+<div class="container">
+    <div class="card shadow mb-4 border border-dark">
+        <div class="card-header">
+            <a th:href="@{/participant/questions/topic/{topicId}(topicId=${request.topicId})}"
+               class="btn btn-dark float-end">
+                Geri
+            </a>
+        </div>
+
+        <div class="card-body">
+            <form th:action="@{/participant/questions}"
+                  th:object="${request}"
+                  method="POST"
+                  enctype="multipart/form-data"
+                  class="text-primary">
+
+                <input type="hidden" th:field="*{topicId}"/>
+
+                <!-- Sual -->
+                <div class="form-row mb-3">
+                    <div class="form-group col-md-12">
+                        <label for="questionEditor" style="font-weight: bold; color: black;">Sual:</label>
+                        <textarea id="questionEditor"
+                                  class="form-control summernote"
+                                  th:field="*{question}"
+                                  required></textarea>
+                    </div>
+                </div>
+
+                <!-- Cavablar -->
+                <div class="answers" id="answerList">
+
+                    <div class="form-row">
+                        <div class="form-group col-md-12">
+                            <label style="font-weight: bold; color: black;">Cavablar:</label>
+                        </div>
+                    </div>
+
+                    <!-- İlk cavab (default) -->
+                    <div class="mb-4">
+
+                        <div class="d-flex align-items-start gap-3">
+
+                            <!-- Sol: Cavab Summernote -->
+                            <div class="flex-grow-1">
+                                <textarea class="form-control summernote"
+                                          name="answers[0].answer"
+                                          placeholder="Cavab mətnini yazın..."
+                                          required></textarea>
+                            </div>
+
+                            <!-- Sağ: radio + toggle + sil -->
+                            <div class="d-flex align-items-center" style="gap: 12px;">
+
+                                <!-- Doğru cavab -->
+                                <input class="form-check-input"
+                                       type="radio"
+                                       name="correctAnswerIndex"
+                                       id="answer0"
+                                       value="0"
+                                       required>
+
+                                <!-- Aktiv -->
+                                <input type="checkbox"
+                                       name="answers[0].isActive"
+                                       data-toggle="toggle"
+                                       data-on="On" data-off="Off"
+                                       data-onstyle="success" data-offstyle="danger"
+                                       class="answer-toggle"/>
+
+                                <input type="hidden" name="answers[0].isActive" value="false"/>
+
+                                <!-- Sil -->
+                                <button type="button" class="btn btn-danger btn-sm trash">
+                                    Sil
+                                </button>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Yeni cavab əlavə et -->
+                <div class="form-row mt-3">
+                    <div class="form-group col-md-3">
+                        <button type="button" class="btn btn-primary plus">+</button>
+                    </div>
+                </div>
+
+                <!-- Əlavə Et düyməsi -->
+                <div class="form-group mt-4 d-flex justify-content-end">
+                    <button type="submit" class="btn btn-success">
+                        Əlavə Et
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<script th:inline="javascript">
+    $(document).ready(function () {
+        $('.summernote').summernote({
+            height: 250,
+            placeholder: 'Sual mətnini yazın...'
+        });
+
+        $('.answer-toggle').bootstrapToggle();
+    });
+
+    let answerIndex = 1;
+
+    $('.plus').click(function () {
+
+        let answer = `
+        <div class="mb-4">
+
+            <div class="d-flex align-items-start gap-3">
+
+                <div class="flex-grow-1">
+                    <textarea class="form-control summernote"
+                              name="answers[${answerIndex}].answer"
+                              placeholder="Cavab mətnini yazın..."
+                              required></textarea>
+                </div>
+
+                <div class="d-flex align-items-center" style="gap: 12px;">
+
+                    <input class="form-check-input"
+                           type="radio"
+                           name="correctAnswerIndex"
+                           id="answer${answerIndex}"
+                           value="${answerIndex}">
+
+                    <input type="checkbox"
+                           name="answers[${answerIndex}].isActive"
+                           data-toggle="toggle"
+                           data-on="On" data-off="Off"
+                           data-onstyle="success" data-offstyle="danger"
+                           class="answer-toggle"/>
+
+                    <input type="hidden" name="answers[${answerIndex}].isActive" value="false"/>
+
+                    <button type="button" class="btn btn-danger btn-sm trash">
+                        Sil
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>`;
+
+        const $answer = $(answer);
+        $('.answers').append($answer);
+
+        $answer.find('.summernote').summernote({ height: 250 });
+        $answer.find('.answer-toggle').bootstrapToggle();
+
+        answerIndex++;
+    });
+
+
+    $(document).on('click', '.trash', function () {
+        $(this).closest('div.mb-4').remove();
+    });
+</script>
+
+
+<th:block th:replace="~{participant/fragments/footer}"></th:block>
+
+</body>
+</html>

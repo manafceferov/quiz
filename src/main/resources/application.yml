@@ -43,4 +43,7 @@ spring:
       max-request-size: 10MB
 
 server:
-  port: 2121
+  port: 2123
+  servlet:
+    session:
+      timeout: 999999m

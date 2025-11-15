@@ -1,10 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-
-</body>
-</html>
+<div th:fragment="formErrors(errors)">
+    <div th:if="${errors != null and #lists.size(errors) > 0}" class="alert alert-danger">
+        <ul>
+            <li th:each="err : ${errors}" th:text="${err.defaultMessage}"></li>
+        </ul>
+    </div>
+</div>

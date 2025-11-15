@@ -6,5 +6,4 @@ interface TopicWithQuestionCountProjection {
     var name: String?
     var questionCount: Long?
     var description: String?
-
 }

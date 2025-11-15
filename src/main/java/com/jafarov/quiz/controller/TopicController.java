@@ -28,7 +28,6 @@ public class TopicController extends BaseController{
                         @RequestParam(defaultValue = "10") int size,
                         Model model
     ) {
-
         Pageable pageable = PageRequest.of(page, size);
         model.addAttribute("topics", service.getAll(name, pageable));
         model.addAttribute("param", name);
@@ -42,7 +41,9 @@ public class TopicController extends BaseController{
     }
 
     @GetMapping("/edit/{id}")
-    public String showEditForm(@PathVariable Long id, Model model) {
+    public String showEditForm(@PathVariable Long id,
+                               Model model
+    ) {
         model.addAttribute("topic",
                 service.getById(id));
         return "admin/topic/edit";
@@ -61,7 +62,6 @@ public class TopicController extends BaseController{
                          BindingResult bindingResult,
                          Model model
     ) {
-
         if (bindingResult.hasErrors()) {
             model.addAttribute("errors", bindingResult.getAllErrors());
             return "admin/topic/create";
@@ -89,7 +89,6 @@ public class TopicController extends BaseController{
                        BindingResult bindingResult,
                        Model model
     ) {
-
         if (bindingResult.hasErrors()) {
             model.addAttribute("errors", bindingResult.getAllErrors());
             model.addAttribute("topic", service.getById(request.getId()));
@@ -107,9 +106,8 @@ public class TopicController extends BaseController{
     }
 
     @GetMapping("/change-status/topic/{id}/status/{status}")
-    public String changeStatus(
-            @PathVariable Long id,
-            @PathVariable Boolean status
+    public String changeStatus(@PathVariable Long id,
+                               @PathVariable Boolean status
     ) {
         service.changeStatus(id, status);
         return "redirect:/admin/topics";

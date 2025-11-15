@@ -15,8 +15,16 @@
 
                 <!-- İmtahanlarım (yalnız login olanda) -->
                 <li class="nav-item" sec:authorize="hasRole('PARTICIPANT')">
-                    <a class="nav-link" th:href="@{/quiz/my-exams}">İmtahanlarım</a>
+                    <a class="nav-link" th:href="@{/quiz/my-exams}">İmtahanlar</a>
                 </li>
+
+                <li class="nav-item" sec:authorize="hasRole('PARTICIPANT')">
+                    <a class="nav-link" th:href="@{/participant/topics}">Mövzular</a>
+                </li>
+
+<!--                <li class="nav-item" sec:authorize="hasRole('PARTICIPANT')">-->
+<!--                    <a class="nav-link" href="#" onclick="alert('Mövzular səhifəsi hələki hazır deyil'); return false;">Mövzular</a>-->
+<!--                </li>-->
 
                 <!-- Profil (yalnız login olanda) -->
                 <li class="nav-item" sec:authorize="hasRole('PARTICIPANT')">

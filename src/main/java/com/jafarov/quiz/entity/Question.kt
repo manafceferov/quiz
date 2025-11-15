@@ -6,6 +6,7 @@ import jakarta.persistence.FetchType
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.OneToMany
+import jakarta.persistence.OneToOne
 import jakarta.persistence.Table
 import jakarta.persistence.Version
 import org.hibernate.annotations.DynamicUpdate
@@ -38,6 +39,13 @@ open class Question @JvmOverloads constructor(
 
     @Version
     @Column(name = "version", nullable = false)
-    open var version: Int? = null
+    open var version: Int? = null,
+
+    @Column(name = "by_participant", nullable = false)
+    open var byParticipant: Long? = null,
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "by_participant", referencedColumnName = "id", insertable = false, updatable = false)
+    open var participant: Participant? = null,
 
 ) : BaseEntity()

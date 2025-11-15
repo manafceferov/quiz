@@ -26,7 +26,6 @@ public class AnswerService {
     }
 
     public List<Answer> getAnswersByQuestionId(Long questionId) {
-
         return repository.findByQuestionId(questionId);
     }
 
@@ -56,7 +55,6 @@ public class AnswerService {
                            List<Long> answerDeleteIds
     ) {
         repository.deleteByIds(id, answerDeleteIds);
-
     }
 
     @Transactional
@@ -76,6 +74,5 @@ public class AnswerService {
     public Boolean getActiveAnswerByQuestionId(Long questionId) {
         return repository.getExsistTwoIsActiveAnswerByQuestionId(questionId);
     }
-
 }
 
