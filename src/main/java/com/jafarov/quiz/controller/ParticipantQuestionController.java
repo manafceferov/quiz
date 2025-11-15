@@ -43,8 +43,8 @@ public class ParticipantQuestionController {
                         @PathVariable Long topicId,
                         @RequestParam(defaultValue = "0") int page,
                         @RequestParam(defaultValue = "10") int size,
-                        @RequestParam(required = false) String keyword) {
-
+                        @RequestParam(required = false) String keyword
+    ) {
         Pageable pageable = PageRequest.of(page, size);
         Page<QuestionEditDto> questions = service.getQuestionsWithParticipantByTopic(topicId, keyword, pageable);
         model.addAttribute("questions", questions);
@@ -56,7 +56,9 @@ public class ParticipantQuestionController {
     }
 
     @GetMapping("/topic/{topicId}/create")
-    public String create(@PathVariable Long topicId, Model model) {
+    public String create(@PathVariable Long topicId,
+                         Model model
+    ) {
         QuestionInsertRequest request = new QuestionInsertRequest();
         request.setTopicId(topicId);
         model.addAttribute("request", request);
@@ -81,11 +83,11 @@ public class ParticipantQuestionController {
         return "redirect:/participant/questions/topic/{topicId}";
     }
 
-
     @GetMapping("/{id}/edit")
-    public String edit(@PathVariable Long id, Model model) {
+    public String edit(@PathVariable Long id,
+                       Model model
+    ) {
         QuestionEditDto data = service.getQuestionWithAnswersById(id);
-        // participant yoxlaması
         if (!data.getByParticipant().equals(authSessionData.getParticipantSessionData().getId())) {
             return "redirect:/participant/questions/topic/" + data.getTopicId();
         }
@@ -104,7 +106,6 @@ public class ParticipantQuestionController {
         if (!data.getByParticipant().equals(authSessionData.getParticipantSessionData().getId())) {
             return "redirect:/participant/questions/topic/" + data.getTopicId();
         }
-
         if (bindingResult.hasErrors()) {
             model.addAttribute("errors", bindingResult.getAllErrors());
             return "participant/question/edit";
@@ -118,13 +119,13 @@ public class ParticipantQuestionController {
     @GetMapping("/{id}/delete")
     public String delete(@PathVariable Long id,
                          @RequestParam Long topicId,
-                         RedirectAttributes redirect) {
+                         RedirectAttributes redirect
+    ) {
         QuestionEditDto data = service.getQuestionWithAnswersById(id);
         if (!data.getByParticipant().equals(authSessionData.getParticipantSessionData().getId())) {
             redirect.addAttribute("topicId", topicId);
             return "redirect:/participant/questions/topic/{topicId}";
         }
-
         service.deleteById(id);
         redirect.addFlashAttribute("success", "Sual silindi");
         redirect.addAttribute("topicId", topicId);
@@ -135,13 +136,13 @@ public class ParticipantQuestionController {
     public String changeStatus(@PathVariable Long id,
                                @PathVariable Boolean status,
                                @RequestParam Long topicId,
-                               RedirectAttributes redirect) {
+                               RedirectAttributes redirect
+    ) {
         QuestionEditDto data = service.getQuestionWithAnswersById(id);
         if (!data.getByParticipant().equals(authSessionData.getParticipantSessionData().getId())) {
             redirect.addAttribute("topicId", topicId);
             return "redirect:/participant/questions/topic/{topicId}";
         }
-
         service.changeStatus(id, status);
         redirect.addAttribute("topicId", topicId);
         return "redirect:/participant/questions/topic/{topicId}";
