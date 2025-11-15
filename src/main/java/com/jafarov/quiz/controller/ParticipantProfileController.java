@@ -1,7 +1,6 @@
 package com.jafarov.quiz.controller;
 
 import com.jafarov.quiz.dto.profile.ProfileProjectionEditDto;
-import com.jafarov.quiz.mapper.ParticipantMapper;
 import com.jafarov.quiz.service.ParticipantService;
 import com.jafarov.quiz.util.session.ParticipantSessionData;
 import org.springframework.stereotype.Controller;

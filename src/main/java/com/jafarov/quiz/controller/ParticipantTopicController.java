@@ -14,8 +14,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
-
 @Controller
 @RequestMapping("/participant/topics")
 public class ParticipantTopicController {
@@ -34,7 +32,8 @@ public class ParticipantTopicController {
     public String index(@RequestParam(required = false) String name,
                         @RequestParam(defaultValue = "0") int page,
                         @RequestParam(defaultValue = "10") int size,
-                        Model model) {
+                        Model model
+    ) {
         Pageable pageable = PageRequest.of(page, size);
         model.addAttribute("topics", service.getAll(name, pageable));
         model.addAttribute("name", name);
@@ -52,7 +51,8 @@ public class ParticipantTopicController {
     public String create(@Valid @ModelAttribute("request") TopicInsertRequest request,
                          BindingResult bindingResult,
                          Model model,
-                         RedirectAttributes redirect) {
+                         RedirectAttributes redirect
+    ) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("errors", bindingResult.getAllErrors());
             return "participant/topic/create";
@@ -64,7 +64,9 @@ public class ParticipantTopicController {
     }
 
     @GetMapping("/{id}/edit")
-    public String edit(@PathVariable Long id, Model model) {
+    public String edit(@PathVariable Long id,
+                       Model model
+    ) {
         Topic t = service.findById(id).orElseThrow();
         if (!t.getByParticipant().equals(authSessionData.getParticipantSessionData().getId())) {
             return "redirect:/participant/topics";
@@ -77,9 +79,9 @@ public class ParticipantTopicController {
     public String edit(@Valid @ModelAttribute("request") TopicUpdateRequest request,
                        BindingResult bindingResult,
                        Model model,
-                       RedirectAttributes redirect) {
+                       RedirectAttributes redirect
+    ) {
         Topic topic = service.findById(request.getId()).orElseThrow();
-
         if (!topic.getByParticipant().equals(authSessionData.getParticipantSessionData().getId())) {
             return "redirect:/participant/topics";
         }
@@ -88,17 +90,16 @@ public class ParticipantTopicController {
             model.addAttribute("errors", bindingResult.getAllErrors());
             return "participant/topic/edit";
         }
-
         request.setByParticipant(authSessionData.getParticipantSessionData().getId());
-
         service.update(request);
         redirect.addFlashAttribute("success", "Mövzu yeniləndi");
         return "redirect:/participant/topics";
     }
 
-
     @GetMapping("/{id}/delete")
-    public String delete(@PathVariable Long id, RedirectAttributes redirect) {
+    public String delete(@PathVariable Long id,
+                         RedirectAttributes redirect
+    ) {
         Topic t = service.findById(id).orElseThrow();
         if (!t.getByParticipant().equals(authSessionData.getParticipantSessionData().getId())) {
             return "redirect:/participant/topics";
@@ -109,7 +110,10 @@ public class ParticipantTopicController {
     }
 
     @GetMapping("/change-status/topic/{id}/status/{status}")
-    public String changeStatus(@PathVariable Long id, @PathVariable Boolean status, RedirectAttributes redirect) {
+    public String changeStatus(@PathVariable Long id,
+                               @PathVariable Boolean status,
+                               RedirectAttributes redirect
+    ) {
         Topic t = service.findById(id).orElseThrow();
         if (!t.getByParticipant().equals(authSessionData.getParticipantSessionData().getId())) {
             return "redirect:/participant/topics";
