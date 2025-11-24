@@ -50,7 +50,6 @@
                         <td th:utext="${question.question}"></td>
                         <td th:text="${@diffForHumans.getTime(question.createdAt)}"></td>
                         <td class="align-middle">
-                            <!-- EMƏLİYYATLAR: Yalnız sualı yaradıbsa göstər -->
                             <th:block th:if="${question.byParticipant == currentParticipantId}">
                                 <a th:href="@{/participant/questions/{id}/edit(id=${question.id})}" class="btn btn-info btn-sm btn-circle">
                                     <i class="fas fa-pencil-alt"></i>
@@ -68,7 +67,7 @@
                                 </form>
                             </th:block>
                             <th:block th:unless="${question.byParticipant == currentParticipantId}">
-                                <span>—</span>
+                                <span>İcazəniz yoxdur</span>
                             </th:block>
                         </td>
                     </tr>

@@ -25,6 +25,7 @@ public class ParticipantProfileController extends BaseController{
 
     @GetMapping
     public String getProfile(Model model) {
+        System.out.println("Thread : " + Thread.currentThread());
         ProfileProjectionEditDto dto = participantService.getProfile(participantSessionData.getId());
         model.addAttribute("participantEditDto", dto);
         return "participant/profile";
