@@ -11,9 +11,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-
 import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -32,8 +30,6 @@ class CustomParticipantDetailServiceTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
     }
-
-    // ================= SUCCESS =================
 
     @Test
     void loadUserByUsername_success() {
@@ -55,8 +51,6 @@ class CustomParticipantDetailServiceTest {
         verify(participantSessionData, times(1))
                 .setParticipant(participant);
     }
-
-    // ================= NOT FOUND =================
 
     @Test
     void loadUserByUsername_notFound() {

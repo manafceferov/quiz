@@ -15,17 +15,13 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -53,8 +49,6 @@ class ParticipantServiceTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
     }
-
-    // ================= REGISTER =================
 
     @Test
     void register_success() {
@@ -88,8 +82,6 @@ class ParticipantServiceTest {
                 participantService.register("Ali", "Veli", "a@mail.com", "1", "1"));
     }
 
-    // ================= FIND BY EMAIL =================
-
     @Test
     void findByEmail_success() {
         Participant p = new Participant();
@@ -107,8 +99,6 @@ class ParticipantServiceTest {
         assertThrows(IllegalArgumentException.class,
                 () -> participantService.findByEmail("x@mail.com"));
     }
-
-    // ================= UPDATE PROFILE =================
 
     private void mockSession(Long id) {
         Participant participant = new Participant();
@@ -191,8 +181,6 @@ class ParticipantServiceTest {
         verify(participantRepository).save(participant);
     }
 
-    // ================= GET PROFILE =================
-
     @Test
     void getProfile_success() {
         ProfileProjectionEdit projection = mock(ProfileProjectionEdit.class);
@@ -214,7 +202,6 @@ class ParticipantServiceTest {
         assertEquals("Ali", result.getFirstName());
     }
 
-
     @Test
     void getProfile_notFound() {
         when(participantRepository.findProfileProjectionById(1L))
@@ -223,8 +210,6 @@ class ParticipantServiceTest {
         assertThrows(IllegalArgumentException.class,
                 () -> participantService.getProfile(1L));
     }
-
-    // ================= FIND BY ID =================
 
     @Test
     void findById_success() {
@@ -244,15 +229,11 @@ class ParticipantServiceTest {
                 () -> participantService.findById(1L));
     }
 
-    // ================= CHANGE STATUS =================
-
     @Test
     void changeStatus() {
         participantService.changeStatus(1L, false);
         verify(participantRepository).changeStatus(1L, false);
     }
-
-    // ================= GET ALL =================
 
     @Test
     void getAll() {
@@ -270,8 +251,6 @@ class ParticipantServiceTest {
 
         assertEquals(1, result.getTotalElements());
     }
-
-    // ================= SEARCH =================
 
     @Test
     void searchUsers_withName() {

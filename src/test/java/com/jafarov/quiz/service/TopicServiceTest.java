@@ -10,11 +10,9 @@ import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.*;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -45,7 +43,6 @@ class TopicServiceTest {
         );
     }
 
-    // ---------- save ----------
     @Test
     void testSave() {
         TopicInsertRequest request = new TopicInsertRequest();
@@ -58,7 +55,6 @@ class TopicServiceTest {
         verify(topicRepository).save(topic);
     }
 
-    // ---------- getById ----------
     @Test
     void testGetById_Found() {
         Topic topic = new Topic();
@@ -78,7 +74,6 @@ class TopicServiceTest {
                 () -> topicService.getById(1L));
     }
 
-    // ---------- getAll(Pageable) ----------
     @Test
     void testGetAll_Pageable() {
         Page<Topic> page = new PageImpl<>(List.of(new Topic()));
@@ -88,7 +83,6 @@ class TopicServiceTest {
         assertEquals(1, result.getTotalElements());
     }
 
-    // ---------- getAllTopics ----------
     @Test
     void testGetAllTopics() {
         Page<TopicWithQuestionCountProjection> page =
@@ -103,7 +97,6 @@ class TopicServiceTest {
         assertNotNull(result);
     }
 
-    // ---------- searchTopicsWithQuestionCount ----------
     @Test
     void testSearchTopicsWithQuestionCount() {
         when(topicRepository.searchByNameWithQuestionCount("java"))
@@ -115,7 +108,6 @@ class TopicServiceTest {
         assertNotNull(result);
     }
 
-    // ---------- update ----------
     @Test
     void testUpdate() {
         TopicUpdateRequest request = new TopicUpdateRequest();
@@ -128,14 +120,12 @@ class TopicServiceTest {
         verify(topicRepository).save(topic);
     }
 
-    // ---------- deleteById ----------
     @Test
     void testDeleteById() {
         topicService.deleteById(1L);
         verify(topicRepository).deleteById(1L);
     }
 
-    // ---------- findById ----------
     @Test
     void testFindById() {
         Topic topic = new Topic();
@@ -145,7 +135,6 @@ class TopicServiceTest {
         assertTrue(result.isPresent());
     }
 
-    // ---------- getAll(name, pageable) ----------
     @Test
     void testGetAll_WithBlankName() {
         Page<Topic> page = new PageImpl<>(List.of(new Topic()));
@@ -165,7 +154,6 @@ class TopicServiceTest {
         assertEquals(1, result.getTotalElements());
     }
 
-    // ---------- changeStatus ----------
     @Test
     void testChangeStatus_Deactivate() {
         topicService.changeStatus(1L, false);
@@ -184,7 +172,6 @@ class TopicServiceTest {
         verify(answerRepository, never()).deactivateByTopicId(anyLong());
     }
 
-    // ---------- getAllByParticipant ----------
     @Test
     void testGetAllByParticipant_WithoutName() {
         Page<Topic> page = new PageImpl<>(List.of(new Topic()));

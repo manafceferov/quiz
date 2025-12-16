@@ -24,41 +24,27 @@ ext {
 }
 
 dependencies {
-    // SPRING
+
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6:3.1.2.RELEASE'
-
-    // DATABASE
     runtimeOnly 'org.postgresql:postgresql'
     implementation 'org.liquibase:liquibase-core:4.20.0'
-
-    // MAPPER (əgər istifadə edirsinizsə)
     implementation 'org.mapstruct:mapstruct:1.6.0'
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.0'
-
-    // KOTLIN
     implementation 'org.jetbrains.kotlin:kotlin-reflect'
     implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.9.24'
-
-    // SECURITY + MAIL
     implementation 'org.springframework.boot:spring-boot-starter-mail'
     implementation 'org.springframework.session:spring-session-core'
-
-    // UTILS
     implementation 'org.jsoup:jsoup:1.17.1'
     implementation 'org.modelmapper:modelmapper:3.1.1'
     implementation 'org.ocpsoft.prettytime:prettytime:5.0.3.Final'
-
-    // TEST
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-
-    // LIQUIBASE RUNTIME
     liquibaseRuntime 'org.liquibase:liquibase-core:4.20.0'
     liquibaseRuntime 'org.postgresql:postgresql'
     liquibaseRuntime 'info.picocli:picocli:4.7.4'
