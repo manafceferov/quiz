@@ -5,24 +5,32 @@
         <i class="fa fa-check mr-2"></i> [[${success}]]
     </div>
 
-    <div class="card border border-dark shadow mb-5 w-100">
-        <div class="card-body bg-light mt-2">
-            <form th:action="@{/participant/topics}" method="get" class="d-flex align-items-center">
-                <input type="text" name="name" class="form-control" placeholder="Ad" th:value="${param.name}"
-                       style="flex: 0 0 40%; margin-right: 4px;">
-                <div class="d-flex" style="flex: 0 0 auto;">
-                    <button type="submit" class="btn btn-outline-primary" style="margin-right: 4px;">
-                        <i class="fas fa-search"></i> Axtar
-                    </button>
-                    <a th:href="@{/participant/topics}" class="btn btn-outline-warning">
-                        <i class="fas fa-sync"></i> Sıfırla
-                    </a>
-                </div>
-            </form>
-        </div>
+    <div class="mb-4">
+        <form th:action="@{/participant/topics}"
+              method="get"
+              class="d-flex align-items-center justify-content-center">
+
+            <input type="text"
+                   name="name"
+                   class="form-control"
+                   placeholder="Mövzu..."
+                   th:value="${param.name}"
+                   style="width: 300px; margin-right: 4px;">
+
+            <div class="d-flex">
+                <button type="submit" class="btn btn-outline-primary" style="margin-right: 4px;">
+                    <i class="fas fa-search"></i> Axtar
+                </button>
+
+                <a th:href="@{/participant/topics}" class="btn btn-outline-warning">
+                    <i class="fas fa-sync"></i> Sıfırla
+                </a>
+            </div>
+        </form>
     </div>
 
     <div class="card shadow mb-4 w-100">
+
         <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="m-0">İmtahan Mövzuları</h5>
             <a th:href="@{/participant/topics/create}" class="btn btn-dark">Əlavə Et</a>

@@ -78,13 +78,11 @@ public class TopicService{
         return repository.findById(id);
     }
 
-    public Page<Topic> getAll(String name,
-                              Pageable pageable
-    ) {
+    public Page<Topic> getAll(String name, Pageable pageable) {
         if (name == null || name.isBlank()) {
             return repository.findAll(pageable);
         }
-        return repository.findByNameContainingIgnoreCase(name.trim(), pageable);
+        return repository.searchByNameOrParticipant(name.trim(), pageable);
     }
 
     @Transactional
@@ -97,4 +95,16 @@ public class TopicService{
             answerRepository.deactivateByTopicId(id);
         }
     }
+
+    public Page<Topic> getAllByParticipant(Long participantId,
+                                           String name,
+                                           Pageable pageable
+    ) {
+        if (name == null || name.isBlank()) {
+            return repository.findByByParticipant(participantId, pageable);
+        }
+        return repository.findByByParticipantAndNameContainingIgnoreCase(participantId, name.trim(), pageable);
+    }
+
+
 }

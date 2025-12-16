@@ -30,7 +30,7 @@ public class TopicController extends BaseController{
     ) {
         Pageable pageable = PageRequest.of(page, size);
         model.addAttribute("topics", service.getAll(name, pageable));
-        model.addAttribute("param", name);
+        model.addAttribute("name", name);
         return "admin/topic/index";
     }
 

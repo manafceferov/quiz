@@ -34,7 +34,7 @@ class AttachmentServiceTest {
 
         when(attachmentRepository.findByOwnerIdAndOwnerType(1L, OwnerType.USER)).thenReturn(Optional.empty());
 
-        attachmentService.upload(1L, OwnerType.USER, file);
+        attachmentService.uploadAndReturn(1L, OwnerType.USER, file);
 
         verify(attachmentRepository, times(1)).save(any(Attachment.class));
     }
@@ -50,7 +50,7 @@ class AttachmentServiceTest {
         when(attachmentRepository.findByOwnerIdAndOwnerType(1L, OwnerType.USER))
                 .thenReturn(Optional.of(existing));
 
-        attachmentService.upload(1L, OwnerType.USER, file);
+        attachmentService.uploadAndReturn(1L, OwnerType.USER, file);
 
         verify(attachmentRepository, times(1)).delete(existing);
         verify(attachmentRepository, times(1)).save(any(Attachment.class));

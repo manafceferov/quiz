@@ -244,3 +244,80 @@ body.dark-mode .btn-outline-light:hover {
     border-color: #ffffff !important;
 }
 
+/* List group wrapper */
+body.dark-mode .list-group {
+    background-color: #1e1e1e !important;
+}
+
+/* Normal cavab */
+body.dark-mode .list-group-item {
+    background-color: #1e1e1e !important;
+    color: #ffffff !important;
+    border-color: #333 !important;
+}
+
+/* Hover olmasın ağ */
+body.dark-mode .list-group-item:hover {
+    background-color: #1e1e1e !important;
+    color: #ffffff !important;
+}
+
+/* DÜZGÜN cavab (yaşıl) */
+body.dark-mode .list-group-item-success {
+    background-color: #0f5132 !important;
+    color: #ffffff !important;
+    border-color: #198754 !important;
+}
+
+/* SƏHV cavab (qırmızı) */
+body.dark-mode .list-group-item-danger {
+    background-color: #842029 !important;
+    color: #ffffff !important;
+    border-color: #dc3545 !important;
+}
+
+/* Seçilməmiş amma düzgün cavab (sarı) */
+body.dark-mode .list-group-item-warning {
+    background-color: #664d03 !important;
+    color: #ffffff !important;
+    border-color: #ffc107 !important;
+}
+
+/* Düzgün / Səhv yazılarının oxunaqlılığı */
+body.dark-mode .list-group-item span {
+    color: #ffffff !important;
+    font-weight: 600;
+}
+
+/* Card içindəki başlıqlar (Ümumi sual, Düzgün cavab, Nəticə) */
+body.dark-mode .card h6,
+body.dark-mode .card .text-muted {
+    color: #ffffff !important;
+    opacity: 0.85;
+}
+
+/* Card içindəki rəqəmlər */
+body.dark-mode .card h2,
+body.dark-mode .card h1,
+body.dark-mode .card span {
+    color: #ffffff !important;
+}
+
+.card h6,
+.card h2,
+.card span,
+.text-success,
+.text-primary {
+    color: #000000 !important;
+}
+
+/* Dark mode – hamısı AĞ */
+body.dark-mode .card h6,
+body.dark-mode .card h2,
+body.dark-mode .card span,
+body.dark-mode .text-success,
+body.dark-mode .text-primary {
+    color: #ffffff !important;
+}
+
+

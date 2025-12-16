@@ -56,4 +56,18 @@ public interface TopicRepository extends JpaRepository<Topic, Long> {
             """)
     List<TopicWithQuestionCountProjection> searchByNameWithQuestionCount(@Param("keyword") String keyword);
 
+    Page<Topic> findByByParticipant(Long byParticipant, Pageable pageable);
+
+    Page<Topic> findByByParticipantAndNameContainingIgnoreCase(Long byParticipant, String name, Pageable pageable);
+
+    @Query("""
+                SELECT t FROM Topic t
+                LEFT JOIN t.participant p
+                WHERE (:keyword IS NULL OR LOWER(t.name) LIKE LOWER(CONCAT('%', :keyword, '%'))
+                   OR LOWER(p.firstName) LIKE LOWER(CONCAT('%', :keyword, '%'))
+                   OR LOWER(p.lastName) LIKE LOWER(CONCAT('%', :keyword, '%'))
+                   OR LOWER(p.fatherName) LIKE LOWER(CONCAT('%', :keyword, '%')))
+            """)
+    Page<Topic> searchByNameOrParticipant(String keyword, Pageable pageable);
+
 }

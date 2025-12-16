@@ -10,6 +10,49 @@
 <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
 <script th:src="@{/admin/sb-admin/js/darkMode.js}"></script>
 
+<!-- Scroll To Top Button -->
+<style>
+    #scrollTopBtn {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        z-index: 999;
+        background-color: #343a40;
+        color: white;
+        border: none;
+        padding: 12px 15px;
+        border-radius: 50%;
+        font-size: 18px;
+        cursor: pointer;
+        display: none;
+        transition: opacity 0.3s ease;
+    }
 
+    #scrollTopBtn:hover {
+        background-color: #212529;
+    }
+</style>
+
+<button id="scrollTopBtn" title="Yuxarı qalx">
+    <i class="fa-solid fa-chevron-up"></i>
+</button>
+
+<script>
+    // Düyməni göstər/gizlət
+    const scrollBtn = document.getElementById("scrollTopBtn");
+
+    window.onscroll = function () {
+        if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+            scrollBtn.style.display = "block";
+        } else {
+            scrollBtn.style.display = "none";
+        }
+    };
+
+    // Kliklə yuxarı qaldır
+    scrollBtn.addEventListener("click", function () {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+</script>
 </body>
 </html>

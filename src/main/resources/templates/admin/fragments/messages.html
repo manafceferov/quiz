@@ -1,7 +1,18 @@
 <div th:fragment="successMsg(success)" class="container">
     <div th:if="${success != null}"
-         class="alert alert-success shadow border border-success text-center">
+         id="flash-message"
+         class="alert alert-success shadow border border-success text-center show">
         <i class="fa fa-check mr-2"></i>
         <span th:text="${success}">Əməliyyat uğurla yerinə yetirildi</span>
     </div>
 </div>
+
+<script th:inline="javascript">
+    /* 2 saniyə sonra mesaj yox olsun */
+    setTimeout(function() {
+        var flash = document.getElementById('flash-message');
+        if(flash){
+            flash.style.display = 'none';
+        }
+    }, 2000);
+</script>
