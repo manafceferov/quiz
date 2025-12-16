@@ -20,11 +20,9 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -49,8 +47,6 @@ class QuizResultServiceTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
     }
-
-    // ---------------- SAVE QUIZ RESULT ----------------
 
     @Test
     void saveQuizResult_participantFromSession() {
@@ -92,8 +88,6 @@ class QuizResultServiceTest {
         verify(participantAnswerService).saveAll(anyList());
     }
 
-    // ---------------- SHOW RESULT ----------------
-
     @Test
     void showResult_found() {
         QuizResult quizResult = new QuizResult();
@@ -111,8 +105,6 @@ class QuizResultServiceTest {
         when(quizResultRepository.findById(1L)).thenReturn(Optional.empty());
         assertThrows(IllegalArgumentException.class, () -> service.showResult(1L));
     }
-
-    // ---------------- CURRENT PARTICIPANT ----------------
 
     @Test
     void getCurrentParticipantId() {
@@ -136,8 +128,6 @@ class QuizResultServiceTest {
         assertEquals(1, result.size());
     }
 
-    // ---------------- EXAM QUESTIONS ----------------
-
     @Test
     void getAllExamQuestions_onlyActive() {
         Question question = new Question();
@@ -159,8 +149,6 @@ class QuizResultServiceTest {
         List<QuestionExamDto> result = service.getAllExamQuestions(1L);
         assertEquals(1, result.size());
     }
-
-    // ---------------- EXAM DETAIL ----------------
 
     @Test
     void getExamDetail_success() {

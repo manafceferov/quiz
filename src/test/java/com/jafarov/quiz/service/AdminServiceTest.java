@@ -58,7 +58,6 @@ class AdminServiceTest {
         when(mapper.toDboUserFromUserInsertRequest(request)).thenReturn(admin);
         when(repository.save(admin)).thenReturn(admin);
 
-        // Mock MultipartFile yaradılır
         MockMultipartFile file = new MockMultipartFile(
                 "file", "test.txt", "text/plain", "Hello".getBytes()
         );
@@ -227,7 +226,6 @@ class AdminServiceTest {
         Boolean status = true;
 
         adminService.changeStatus(id, status);
-
         verify(repository, times(1)).changeStatus(id, status);
     }
 }

@@ -15,9 +15,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.*;
-
 import java.util.*;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -40,7 +38,6 @@ class QuestionServiceTest {
         MockitoAnnotations.openMocks(this);
     }
 
-    // ---------- save() ----------
     @Test
     void testSave() {
         QuestionInsertRequest request = new QuestionInsertRequest();
@@ -62,7 +59,6 @@ class QuestionServiceTest {
         assertFalse(a2.isCorrect());
     }
 
-    // ---------- getById ----------
     @Test
     void testGetById_Found() {
         Question q = new Question();
@@ -82,7 +78,6 @@ class QuestionServiceTest {
                 () -> questionService.getById(1L));
     }
 
-    // ---------- getQuestionsByTopicId ----------
     @Test
     void testGetQuestionsByTopicId() {
         Page<Question> page = new PageImpl<>(List.of(new Question()));
@@ -92,7 +87,6 @@ class QuestionServiceTest {
         assertEquals(page, result);
     }
 
-    // ---------- update ----------
     @Test
     void testUpdate() {
         QuestionUpdateRequest request = new QuestionUpdateRequest();
@@ -127,21 +121,18 @@ class QuestionServiceTest {
         assertFalse(a2.isCorrect());
     }
 
-    // ---------- chechkQuestionStatus ----------
     @Test
     void testCheckQuestionStatus() {
         questionService.chechkQuestionStatus(1L);
         verify(repository).deactivateIfAnyAnswerIsInactive(1L);
     }
 
-    // ---------- deleteById ----------
     @Test
     void testDeleteById() {
         questionService.deleteById(1L);
         verify(repository).deleteById(1L);
     }
 
-    // ---------- findById ----------
     @Test
     void testFindById() {
         Question q = new Question();
@@ -151,7 +142,6 @@ class QuestionServiceTest {
         assertTrue(result.isPresent());
     }
 
-    // ---------- searchQuestionsByTopicAndKeyword ----------
     @Test
     void testSearch_WithKeyword() {
         Page<Question> page = new PageImpl<>(List.of(new Question()));
@@ -175,7 +165,6 @@ class QuestionServiceTest {
         assertEquals(page, result);
     }
 
-    // ---------- getQuestionWithAnswersById ----------
     @Test
     void testGetQuestionWithAnswersById() {
         Question q = new Question();
@@ -188,7 +177,6 @@ class QuestionServiceTest {
         assertEquals(dto, result);
     }
 
-    // ---------- changeStatus ----------
     @Test
     void testChangeStatus_ReturnFalse_WhenNoActiveAnswer() {
         when(answerService.getActiveAnswerByQuestionId(1L)).thenReturn(false);
@@ -209,7 +197,6 @@ class QuestionServiceTest {
         verify(repository).changeStatus(1L, true);
     }
 
-    // ---------- getQuestionsWithParticipantByTopic ----------
     @Test
     void testGetQuestionsWithParticipant_WithoutKeyword() {
         Question q = new Question();
@@ -241,7 +228,6 @@ class QuestionServiceTest {
         assertEquals(1, result.getContent().size());
     }
 
-    // ---------- getQuestionCountByTopicId ----------
     @Test
     void testGetQuestionCountByTopicId() {
         when(repository.getCountByTopicId(1L)).thenReturn(10L);
