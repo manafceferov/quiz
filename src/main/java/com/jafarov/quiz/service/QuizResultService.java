@@ -4,12 +4,10 @@ import com.jafarov.quiz.dto.exam.QuestionExamDto;
 import com.jafarov.quiz.dto.examdetail.ParticipantAnswerDetail;
 import com.jafarov.quiz.dto.examdetail.ParticipantQuestionWithAnswers;
 import com.jafarov.quiz.dto.examdetail.ParticipantQuizResultDetail;
-import com.jafarov.quiz.dto.paticipantquiz.ParticipantAnswerInsertRequest;
 import com.jafarov.quiz.dto.paticipantquiz.ParticipantQuizResultList;
 import com.jafarov.quiz.dto.paticipantquiz.QuizResultInsertRequest;
 import com.jafarov.quiz.entity.*;
 import com.jafarov.quiz.mapper.AnswerMapper;
-import com.jafarov.quiz.mapper.ParticipantAnswerMapper;
 import com.jafarov.quiz.mapper.QuestionMapper;
 import com.jafarov.quiz.mapper.QuizResultMapper;
 import com.jafarov.quiz.repository.AnswerRepository;
@@ -20,6 +18,7 @@ import com.jafarov.quiz.util.session.AuthSessionData;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -98,7 +97,6 @@ public class QuizResultService {
         participantAnswerService.saveAll(answers);
         return saved;
     }
-
 
     public ParticipantQuizResultList showResult(Long id) {
         QuizResult quizResult = quizResultRepository.findById(id)

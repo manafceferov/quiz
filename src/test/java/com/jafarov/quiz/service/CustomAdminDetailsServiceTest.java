@@ -11,14 +11,16 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
 import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class CustomAdminDetailsServiceTest {
 
     @Mock
-    private AdminRepository repository;
+    private AdminRepository adminRepository;
 
     @Mock
     private AdminSessionData adminSessionData;
@@ -31,27 +33,37 @@ class CustomAdminDetailsServiceTest {
         MockitoAnnotations.openMocks(this);
     }
 
+    // ================= SUCCESS =================
+
     @Test
-    void testLoadUserByUsername_UserExists() {
+    void loadUserByUsername_success() {
         Admin admin = new Admin();
-        admin.setEmail("admin@test.com");
+        admin.setId(1L);
+        admin.setEmail("admin@mail.com");
+        admin.setPassword("secret");
 
-        when(repository.findByEmail("admin@test.com")).thenReturn(Optional.of(admin));
+        when(adminRepository.findByEmail("admin@mail.com"))
+                .thenReturn(Optional.of(admin));
 
-        UserDetails userDetails = service.loadUserByUsername("admin@test.com");
+        UserDetails userDetails =
+                service.loadUserByUsername("admin@mail.com");
 
         assertNotNull(userDetails);
         assertTrue(userDetails instanceof CustomAdminDetails);
+        assertEquals("admin@mail.com", userDetails.getUsername());
+
         verify(adminSessionData, times(1)).setAdmin(admin);
     }
 
-    @Test
-    void testLoadUserByUsername_UserNotFound() {
-        when(repository.findByEmail("unknown@test.com")).thenReturn(Optional.empty());
+    // ================= NOT FOUND =================
 
-        assertThrows(UsernameNotFoundException.class, () ->
-                service.loadUserByUsername("unknown@test.com")
-        );
+    @Test
+    void loadUserByUsername_notFound() {
+        when(adminRepository.findByEmail("x@mail.com"))
+                .thenReturn(Optional.empty());
+
+        assertThrows(UsernameNotFoundException.class,
+                () -> service.loadUserByUsername("x@mail.com"));
 
         verify(adminSessionData, never()).setAdmin(any());
     }

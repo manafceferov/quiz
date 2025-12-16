@@ -3,28 +3,72 @@
 <div class="container mt-5">
     <h2 class="text-center mb-4" th:text="${detail.topicName}">Mövzu Adı</h2>
 
-    <div th:each="q : ${detail.questions}" class="mb-4">
-        <h5 th:utext="${q.question}">Sual mətni</h5>
+    <div class="container mt-5">
 
-        <ul class="list-group">
-            <li th:each="a : ${q.answers}"
-                class="list-group-item d-flex justify-content-between align-items-center"
-                th:classappend="(${a.selected && a.correct} ? 'list-group-item-success' :
+        <div th:each="q, iterStat : ${detail.questions}" class="mb-4">
+
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h5 th:utext="${q.question}">Sual mətni</h5>
+                <a th:if="${iterStat.index == 0}" th:href="@{/quiz/my-exams}" class="btn btn-dark btn-sm">
+                    Geri
+                </a>
+            </div>
+
+            <ul class="list-group">
+                <li th:each="a : ${q.answers}"
+                    class="list-group-item d-flex justify-content-between align-items-center"
+                    th:classappend="(${a.selected && a.correct} ? 'list-group-item-success' :
                      (${a.selected && !a.correct} ? 'list-group-item-danger' :
                       (${!a.selected && a.correct} ? 'list-group-item-warning' : '')))">
 
-                <span th:utext="${a.answer}">Cavab</span>
+                    <span th:utext="${a.answer}">Cavab</span>
 
-                <span th:if="${a.selected && !a.correct}"
-                      class="fw-bold"
-                      style="color: black;">Səhv</span>
+                    <span th:if="${a.selected && !a.correct}"
+                          class="fw-bold"
+                          style="color: black;">Səhv</span>
 
-                <span th:if="${!a.selected && a.correct}"
-                      class="fw-bold"
-                      style="color: black;">Düzgün</span>
-            </li>
-        </ul>
+                    <span th:if="${!a.selected && a.correct}"
+                          class="fw-bold"
+                          style="color: black;">Düzgün</span>
+                </li>
+            </ul>
+
+        </div>
+
+        <div class="row text-center my-5">
+
+            <div class="col-md-4 mb-3">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h6 class="text-muted">Ümumi sual</h6>
+                        <h2 class="fw-bold" th:text="${detail.questionCount}">0</h2>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h6 class="text-muted">Düzgün cavab</h6>
+                        <h2 class="fw-bold text-success"
+                            th:text="${detail.correctAnswersCount}">0</h2>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h6 class="text-muted">Nəticə</h6>
+                        <h2 class="fw-bold text-primary">
+                            <span th:text="${detail.correctPercent}">0</span>%
+                        </h2>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
     </div>
-</div>
 
-<th:block th:replace="~{participant/fragments/footer}"></th:block>
+    <th:block th:replace="~{participant/fragments/footer}"></th:block>

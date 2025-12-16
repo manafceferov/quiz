@@ -34,10 +34,11 @@ public class ParticipantTopicController {
                         @RequestParam(defaultValue = "10") int size,
                         Model model
     ) {
+        Long participantId = authSessionData.getParticipantSessionData().getId();
         Pageable pageable = PageRequest.of(page, size);
-        model.addAttribute("topics", service.getAll(name, pageable));
+        model.addAttribute("topics", service.getAllByParticipant(participantId, name, pageable));
         model.addAttribute("name", name);
-        model.addAttribute("currentParticipantId", authSessionData.getParticipantSessionData().getId());
+        model.addAttribute("currentParticipantId", participantId);
         return "participant/topic/index";
     }
 

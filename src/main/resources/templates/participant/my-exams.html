@@ -1,5 +1,12 @@
 <th:block th:replace="~{participant/fragments/header}"></th:block>
 
+<style>
+    .search-wrapper {
+        max-width: 500px;
+        margin: 0 auto;
+    }
+</style>
+
 <div class="container-fluid mt-5">
     <h2 class="mb-4 text-center">Keçmiş İmtahanlar</h2>
 
@@ -9,13 +16,19 @@
 
     <div class="search-wrapper mb-4 w-50 mx-auto">
         <form th:action="@{/quiz/my-exams}" method="get" class="d-flex">
+
             <input type="text" name="name" class="form-control"
                    placeholder="Mövzu axtar"
                    th:value="${param.name != null} ? ${param.name} : ''"/>
+
             <button type="submit" class="btn btn-primary ms-2">Axtar</button>
+
+            <a th:href="@{/quiz/my-exams}" class="btn btn-outline-warning ms-2">
+                Sıfırla
+            </a>
+
         </form>
     </div>
-
 
     <div class="table-responsive" th:if="${!#lists.isEmpty(results)}">
         <table class="table table-bordered table-hover align-middle text-center">
