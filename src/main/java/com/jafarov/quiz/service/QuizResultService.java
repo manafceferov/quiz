@@ -110,15 +110,20 @@ public class QuizResultService {
     }
 
     public Page<ParticipantQuizResultList> getResultsForCurrentParticipant(
+            String topic,
             Pageable pageable
     ) {
-        Long participantId = getCurrentParticipantId();
+        Long participantId = authSessionData.getParticipantSessionData().getId();
 
-        return quizResultRepository
-                .findAllByParticipantId(participantId, pageable)
-                .map(quizResultMapper::toParticipantQuizResultList);
+        Page<QuizResult> page =
+                quizResultRepository.searchByParticipantAndTopic(
+                        participantId,
+                        (topic == null || topic.isBlank()) ? null : topic.trim(),
+                        pageable
+                );
+
+        return page.map(quizResultMapper::toParticipantQuizResultList);
     }
-
 
     @Transactional(readOnly = true)
     public List<QuestionExamDto> getAllExamQuestions(Long topicId) {

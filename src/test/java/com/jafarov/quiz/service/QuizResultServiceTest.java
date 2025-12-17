@@ -128,20 +128,26 @@ class QuizResultServiceTest {
         Page<QuizResult> quizResultPage =
                 new PageImpl<>(List.of(qr), pageable, 1);
 
-        when(quizResultRepository.findAllByParticipantId(7L, pageable))
-                .thenReturn(quizResultPage);
+        when(quizResultRepository.searchByParticipantAndTopic(
+                eq(7L),
+                isNull(),
+                eq(pageable)
+        )).thenReturn(quizResultPage);
 
         when(quizResultMapper.toParticipantQuizResultList(qr))
                 .thenReturn(new ParticipantQuizResultList());
 
         Page<ParticipantQuizResultList> result =
-                service.getResultsForCurrentParticipant(pageable);
+                service.getResultsForCurrentParticipant(null, pageable);
 
         assertNotNull(result);
         assertEquals(1, result.getTotalElements());
 
-        verify(quizResultRepository)
-                .findAllByParticipantId(7L, pageable);
+        verify(quizResultRepository).searchByParticipantAndTopic(
+                7L,
+                null,
+                pageable
+        );
     }
 
     @Test
