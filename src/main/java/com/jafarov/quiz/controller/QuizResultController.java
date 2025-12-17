@@ -7,6 +7,9 @@ import com.jafarov.quiz.entity.QuizResult;
 import com.jafarov.quiz.util.session.AuthSessionData;
 import com.jafarov.quiz.util.session.ParticipantSessionData;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.ui.Model;
 import com.jafarov.quiz.dto.paticipantquiz.ParticipantQuizResultList;
@@ -15,6 +18,7 @@ import com.jafarov.quiz.service.QuizResultService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,7 +30,7 @@ public class QuizResultController extends BaseController {
     private final AuthSessionData authSessionData;
 
     public QuizResultController(QuizResultService quizResultService,
-                                 AuthSessionData authSessionData
+                                AuthSessionData authSessionData
     ) {
         this.quizResultService = quizResultService;
         this.authSessionData = authSessionData;
@@ -48,11 +52,21 @@ public class QuizResultController extends BaseController {
 //        return "redirect:/participant/my-exams";
 //    }
 
-
     @GetMapping("/my-exams")
-    public String myExams(Model model) {
-        List<ParticipantQuizResultList> results = quizResultService.getResultsForCurrentParticipant();
-        model.addAttribute("results", results);
+    public String myExams(Model model,
+                          @RequestParam(defaultValue = "0") int page,
+                          @RequestParam(defaultValue = "10") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+
+        Page<ParticipantQuizResultList> resultPage =
+                quizResultService.getResultsForCurrentParticipant(pageable);
+
+        model.addAttribute("results", resultPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", resultPage.getTotalPages());
+        model.addAttribute("totalItems", resultPage.getTotalElements());
+
         return "participant/my-exams";
     }
 
@@ -123,12 +137,9 @@ public class QuizResultController extends BaseController {
     }
 
     @GetMapping("/participant/exam-detail/{quizResultId}")
-    public String examDetail(@PathVariable Long quizResultId,
-                             Model model
-    ) {
+    public String examDetail(@PathVariable Long quizResultId, Model model) {
         ParticipantQuizResultDetail detail = quizResultService.getExamDetail(quizResultId);
         model.addAttribute("detail", detail);
         return "participant/examdetail";
     }
-
 }

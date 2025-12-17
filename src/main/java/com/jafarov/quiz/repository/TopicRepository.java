@@ -47,14 +47,27 @@ public interface TopicRepository extends JpaRepository<Topic, Long> {
     @Query("SELECT t FROM Topic t WHERE t.isActive = true")
     Page<Topic> findAllByIsActiveTrue(Pageable pageable);
 
-    @Query("""
-                SELECT t.id AS id, t.name AS name, COUNT(q.id) AS questionCount
-                FROM Topic t
-                LEFT JOIN Question q ON q.topic.id = t.id AND q.isActive = true
-                WHERE t.isActive = true AND (:keyword IS NULL OR LOWER(t.name)  LIKE LOWER(CONCAT('%', :keyword, '%')))
-                GROUP BY t.id, t.name
-            """)
-    List<TopicWithQuestionCountProjection> searchByNameWithQuestionCount(@Param("keyword") String keyword);
+    @Query(
+            value = """
+        SELECT t.id AS id, t.name AS name, COUNT(q.id) AS questionCount
+        FROM Topic t
+        LEFT JOIN Question q ON q.topic.id = t.id AND q.isActive = true
+        WHERE t.isActive = true
+          AND (:keyword IS NULL OR LOWER(t.name) LIKE LOWER(CONCAT('%', :keyword, '%')))
+        GROUP BY t.id, t.name
+    """,
+            countQuery = """
+        SELECT COUNT(t.id)
+        FROM Topic t
+        WHERE t.isActive = true
+          AND (:keyword IS NULL OR LOWER(t.name) LIKE LOWER(CONCAT('%', :keyword, '%')))
+    """
+    )
+    Page<TopicWithQuestionCountProjection> searchByNameWithQuestionCount(
+            @Param("keyword") String keyword,
+            Pageable pageable
+    );
+
 
     Page<Topic> findByByParticipant(Long byParticipant, Pageable pageable);
 

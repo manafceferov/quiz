@@ -15,6 +15,7 @@ import com.jafarov.quiz.repository.ParticipantAnswerRepository;
 import com.jafarov.quiz.repository.QuestionRepository;
 import com.jafarov.quiz.repository.QuizResultRepository;
 import com.jafarov.quiz.util.session.AuthSessionData;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -108,12 +109,16 @@ public class QuizResultService {
         return authSessionData.getParticipantSessionData().getId();
     }
 
-    public List<ParticipantQuizResultList> getResultsForCurrentParticipant() {
+    public Page<ParticipantQuizResultList> getResultsForCurrentParticipant(
+            Pageable pageable
+    ) {
         Long participantId = getCurrentParticipantId();
-        return quizResultRepository.findAllByParticipantId(participantId).stream()
-                .map(quizResultMapper::toParticipantQuizResultList)
-                .toList();
+
+        return quizResultRepository
+                .findAllByParticipantId(participantId, pageable)
+                .map(quizResultMapper::toParticipantQuizResultList);
     }
+
 
     @Transactional(readOnly = true)
     public List<QuestionExamDto> getAllExamQuestions(Long topicId) {

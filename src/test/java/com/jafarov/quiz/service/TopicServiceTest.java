@@ -98,14 +98,24 @@ class TopicServiceTest {
     }
 
     @Test
-    void testSearchTopicsWithQuestionCount() {
-        when(topicRepository.searchByNameWithQuestionCount("java"))
-                .thenReturn(Collections.emptyList());
+    void testGetTopics_WithName() {
+        Pageable pageable = PageRequest.of(0, 10);
 
-        List<TopicWithQuestionCountProjection> result =
-                topicService.searchTopicsWithQuestionCount("java");
+        Page<TopicWithQuestionCountProjection> page =
+                new PageImpl<>(Collections.emptyList(), pageable, 0);
+
+        when(topicRepository.searchByNameWithQuestionCount(
+                eq("java"), eq(pageable)))
+                .thenReturn(page);
+
+        Page<TopicWithQuestionCountProjection> result =
+                topicService.getTopics("java", pageable);
 
         assertNotNull(result);
+        assertEquals(0, result.getTotalElements());
+
+        verify(topicRepository)
+                .searchByNameWithQuestionCount("java", pageable);
     }
 
     @Test
