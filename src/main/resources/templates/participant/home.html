@@ -20,6 +20,18 @@
         #welcomeMessage {
             transition: opacity 0.5s ease;
         }
+
+        /* Light mode: boz-qara placeholder */
+        body:not(.dark-mode) input.form-control::placeholder {
+            color: #6c757d !important;
+            opacity: 1;
+        }
+
+        /* Dark mode: ağ placeholder */
+        body.dark-mode input.form-control::placeholder {
+            color: #ffffff !important;
+            opacity: 1;
+        }
     </style>
 </head>
 
@@ -36,7 +48,7 @@
     </div>
 </div>
 
-<div class="container-fluid mt-5">
+<div class="container-fluid mt-5 pb-5">
 
     <div class="search-wrapper mb-4">
         <form th:action="@{/}" method="get" class="d-flex">
@@ -58,7 +70,8 @@
         </form>
     </div>
 
-    <div class="table-responsive">
+    <!-- TABLE SABİT HÜNDLÜK -->
+    <div class="table-responsive" style="min-height: 500px;">
         <table class="table table-bordered table-hover align-middle text-center">
 
             <thead class="table-dark">
@@ -100,9 +113,9 @@
         </table>
     </div>
 
-    <nav th:if="${totalPages > 1}">
+    <!-- PAGINATION HƏMİŞƏ EYNİ YERDƏ -->
+    <nav th:if="${totalPages > 1}" class="mt-3">
         <ul class="pagination justify-content-start">
-
             <li class="page-item"
                 th:classappend="${currentPage == 0} ? 'disabled'">
                 <a class="page-link"
@@ -127,7 +140,6 @@
                     Növbəti
                 </a>
             </li>
-
         </ul>
     </nav>
 

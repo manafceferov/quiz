@@ -54,21 +54,24 @@ public class QuizResultController extends BaseController {
 
     @GetMapping("/my-exams")
     public String myExams(Model model,
+                          @RequestParam(required = false) String topic,
                           @RequestParam(defaultValue = "0") int page,
                           @RequestParam(defaultValue = "10") int size
     ) {
         Pageable pageable = PageRequest.of(page, size);
 
         Page<ParticipantQuizResultList> resultPage =
-                quizResultService.getResultsForCurrentParticipant(pageable);
+                quizResultService.getResultsForCurrentParticipant(topic, pageable);
 
         model.addAttribute("results", resultPage.getContent());
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", resultPage.getTotalPages());
         model.addAttribute("totalItems", resultPage.getTotalElements());
+        model.addAttribute("topic", topic);
 
         return "participant/my-exams";
     }
+
 
     @GetMapping("/result/{id}")
     public String showResult(@PathVariable Long id,
