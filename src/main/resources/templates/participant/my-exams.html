@@ -15,13 +15,11 @@
             margin: 0 auto;
         }
 
-        /* Light mode placeholder */
         body:not(.dark-mode) input.form-control::placeholder {
             color: #6c757d !important;
             opacity: 1;
         }
 
-        /* Dark mode placeholder */
         body.dark-mode input.form-control::placeholder {
             color: #ffffff !important;
             opacity: 1;
@@ -37,7 +35,6 @@
 
     <h2 class="mb-4 text-center">Keçmiş İmtahanlar</h2>
 
-    <!-- 🔍 AXTARIŞ (HOME İLƏ EYNİ) -->
     <div class="search-wrapper mb-4">
         <form th:action="@{/quiz/my-exams}" method="get" class="d-flex">
 
@@ -58,13 +55,11 @@
         </form>
     </div>
 
-    <!-- INFO -->
     <div th:if="${#lists.isEmpty(results)}"
          class="alert alert-info text-center">
         Hələ ki, keçmiş imtahan nəticələriniz yoxdur.
     </div>
 
-    <!-- TABLE (SABİT HÜNDÜRLÜK) -->
     <div class="table-responsive" style="min-height: 500px;">
         <table class="table table-bordered table-hover align-middle text-center">
 
@@ -104,7 +99,6 @@
         </table>
     </div>
 
-    <!-- PAGINATION (HƏMİŞƏ EYNİ YERDƏ – SOLDA) -->
     <nav th:if="${totalPages > 1}" class="mt-3">
         <ul class="pagination justify-content-start mb-0">
 

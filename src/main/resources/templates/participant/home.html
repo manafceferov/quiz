@@ -21,13 +21,11 @@
             transition: opacity 0.5s ease;
         }
 
-        /* Light mode: boz-qara placeholder */
         body:not(.dark-mode) input.form-control::placeholder {
             color: #6c757d !important;
             opacity: 1;
         }
 
-        /* Dark mode: ağ placeholder */
         body.dark-mode input.form-control::placeholder {
             color: #ffffff !important;
             opacity: 1;
@@ -70,7 +68,6 @@
         </form>
     </div>
 
-    <!-- TABLE SABİT HÜNDLÜK -->
     <div class="table-responsive" style="min-height: 500px;">
         <table class="table table-bordered table-hover align-middle text-center">
 
@@ -113,7 +110,6 @@
         </table>
     </div>
 
-    <!-- PAGINATION HƏMİŞƏ EYNİ YERDƏ -->
     <nav th:if="${totalPages > 1}" class="mt-3">
         <ul class="pagination justify-content-start">
             <li class="page-item"
