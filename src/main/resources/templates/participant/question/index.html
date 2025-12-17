@@ -1,41 +1,57 @@
 <th:block th:replace="~{participant/fragments/header}"></th:block>
 
+<style>
+    .search-wrapper {
+        max-width: 500px;
+        margin: 0 auto;
+    }
+
+    body:not(.dark-mode) input.form-control::placeholder {
+        color: #6c757d !important;
+        opacity: 1;
+    }
+
+    body.dark-mode input.form-control::placeholder {
+        color: #ffffff !important;
+        opacity: 1;
+    }
+</style>
+
 <div class="px-4 mt-4 w-100">
     <div class="alert alert-success shadow border border-success text-center" th:if="${success}">
         <i class="fa fa-check mr-2"></i> [[${success}]]
     </div>
 
-    <div class="mb-4">
+    <div class="search-wrapper mb-4">
         <form th:action="@{/participant/questions/topic/{topicId}(topicId=${topicId})}"
               method="get"
-              class="d-flex align-items-center justify-content-center">
+              class="d-flex">
 
             <input type="text"
                    name="keyword"
                    class="form-control"
                    placeholder="Sual mətni ilə axtar"
-                   th:value="${keyword}"
-                   style="width: 300px; margin-right: 4px;">
+                   th:value="${keyword}"/>
 
-            <div class="d-flex">
-                <button type="submit" class="btn btn-outline-primary" style="margin-right: 4px;">
-                    <i class="fas fa-search"></i> Axtar
-                </button>
+            <button type="submit" class="btn btn-primary ms-2">
+                Axtar
+            </button>
 
-                <a th:href="@{/participant/questions/topic/{topicId}(topicId=${topicId})}" class="btn btn-outline-warning">
-                    <i class="fas fa-sync"></i> Sıfırla
-                </a>
-            </div>
+            <a th:href="@{/participant/questions/topic/{topicId}(topicId=${topicId})}"
+               class="btn btn-outline-warning ms-2">
+                Sıfırla
+            </a>
+
         </form>
     </div>
-
 
     <div class="card shadow mb-4 w-100">
         <div class="card-header d-flex justify-content-between align-items-center bg-dark text-white">
             <h5 class="m-0">Sual Siyahısı</h5>
             <div>
                 <th:block th:if="${topic.byParticipant == currentParticipantId}">
-                    <a th:href="@{/participant/questions/topic/{topicId}/create(topicId=${topicId})}" class="btn btn-success mr-2">Əlavə Et</a>
+                    <a th:href="@{/participant/questions/topic/{topicId}/create(topicId=${topicId})}"
+                       class="btn btn-success mr-2">Əlavə Et</a>
                 </th:block>
                 <a th:href="@{/participant/topics}" class="btn btn-secondary">Geri</a>
             </div>
@@ -53,18 +69,24 @@
                     </thead>
                     <tbody>
                     <tr th:each="question, stat : ${questions}">
-                        <td><div class="badge badge-pill badge-dark">[[${stat.count}]]</div></td>
+                        <td>
+                            <div class="badge badge-pill badge-dark">[[${stat.count}]]</div>
+                        </td>
                         <td th:utext="${question.question}"></td>
                         <td th:text="${@diffForHumans.getTime(question.createdAt)}"></td>
                         <td class="align-middle">
                             <th:block th:if="${question.byParticipant == currentParticipantId}">
-                                <a th:href="@{/participant/questions/{id}/edit(id=${question.id})}" class="btn btn-info btn-sm btn-circle">
+                                <a th:href="@{/participant/questions/{id}/edit(id=${question.id})}"
+                                   class="btn btn-info btn-sm btn-circle">
                                     <i class="fas fa-pencil-alt"></i>
                                 </a>
-                                <a href="#" th:data-url="@{/participant/questions/{id}/delete(id=${question.id}, topicId=${topicId})}" class="btn btn-danger btn-sm btn-circle delete-btn">
+                                <a href="#"
+                                   th:data-url="@{/participant/questions/{id}/delete(id=${question.id}, topicId=${topicId})}"
+                                   class="btn btn-danger btn-sm btn-circle delete-btn">
                                     <i class="far fa-trash-alt"></i>
                                 </a>
-                                <form th:action="@{/participant/questions/change-status/question/{id}/status/{status}(id=${question.id}, status=${question.isActive ? 0 : 1})}" method="GET" class="d-inline-block m-0 p-0">
+                                <form th:action="@{/participant/questions/change-status/question/{id}/status/{status}(id=${question.id}, status=${question.isActive ? 0 : 1})}"
+                                      method="GET" class="d-inline-block m-0 p-0">
                                     <input type="hidden" name="topicId" th:value="${topicId}"/>
                                     <input type="checkbox" th:checked="${question.isActive}"
                                            data-toggle="toggle" data-on='<i class="fas fa-check"></i> On'
@@ -86,7 +108,7 @@
         </div>
     </div>
 </div>
-<!-- Modal -->
+
 <div class="modal fade" id="deleteModal" tabindex="-1" data-backdrop="static">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-danger">
