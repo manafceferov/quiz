@@ -19,6 +19,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.Optional;
@@ -116,16 +117,31 @@ class QuizResultServiceTest {
 
     @Test
     void getResultsForCurrentParticipant() {
-        when(authSessionData.getParticipantSessionData()).thenReturn(participantSessionData);
-        when(participantSessionData.getId()).thenReturn(7L);
+        Pageable pageable = PageRequest.of(0, 10);
+
+        when(authSessionData.getParticipantSessionData())
+                .thenReturn(participantSessionData);
+        when(participantSessionData.getId())
+                .thenReturn(7L);
 
         QuizResult qr = new QuizResult();
-        when(quizResultRepository.findAllByParticipantId(7L)).thenReturn(List.of(qr));
+        Page<QuizResult> quizResultPage =
+                new PageImpl<>(List.of(qr), pageable, 1);
+
+        when(quizResultRepository.findAllByParticipantId(7L, pageable))
+                .thenReturn(quizResultPage);
+
         when(quizResultMapper.toParticipantQuizResultList(qr))
                 .thenReturn(new ParticipantQuizResultList());
 
-        List<ParticipantQuizResultList> result = service.getResultsForCurrentParticipant();
-        assertEquals(1, result.size());
+        Page<ParticipantQuizResultList> result =
+                service.getResultsForCurrentParticipant(pageable);
+
+        assertNotNull(result);
+        assertEquals(1, result.getTotalElements());
+
+        verify(quizResultRepository)
+                .findAllByParticipantId(7L, pageable);
     }
 
     @Test

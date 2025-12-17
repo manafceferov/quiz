@@ -3,14 +3,14 @@
         <nav aria-label="...">
             <ul class="pagination">
                 <li th:classappend="${pageData.first} ? 'disabled'">
-                    <a class="page-link" th:href="@{${pageUrl}(page=${pageData.number - 1})}">Previous</a>
+                    <a class="page-link" th:href="@{${pageUrl}(page=${pageData.number - 1})}">Əvvəlki</a>
                 </li>
                 <li th:each="i : ${#numbers.sequence(1, pageData.totalPages)}"
                     th:classappend="${i == pageData.number + 1} ? 'active'">
                     <a class="page-link" th:href="@{${pageUrl}(page=${i})}" th:text="${i}">1</a>
                 </li>
                 <li th:classappend="${pageData.last} ? 'disabled'">
-                    <a class="page-link" th:href="@{${pageUrl}(page=${pageData.number + 1})}">Next</a>
+                    <a class="page-link" th:href="@{${pageUrl}(page=${pageData.number + 1})}">Növbəti</a>
                 </li>
             </ul>
         </nav>

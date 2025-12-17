@@ -11,7 +11,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -55,8 +54,8 @@ public class TopicService{
         return repository.getAllTopicsWithQuestionsCount(pageable);
     }
 
-    public List<TopicWithQuestionCountProjection> searchTopicsWithQuestionCount(String name) {
-        return repository.searchByNameWithQuestionCount(name);
+    public Page<TopicWithQuestionCountProjection> getTopics(String name, Pageable pageable) {
+        return repository.searchByNameWithQuestionCount(name, pageable);
     }
 
 //    public List<TopicWithQuestionCountProjection> getAllWithQuestionCount() {
@@ -69,12 +68,10 @@ public class TopicService{
     }
 
     public void deleteById(Long id) {
-
         repository.deleteById(id);
     }
 
     public Optional<Topic> findById(Long id) {
-
         return repository.findById(id);
     }
 
@@ -105,6 +102,4 @@ public class TopicService{
         }
         return repository.findByByParticipantAndNameContainingIgnoreCase(participantId, name.trim(), pageable);
     }
-
-
 }
