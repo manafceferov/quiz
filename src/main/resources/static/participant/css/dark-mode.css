@@ -123,8 +123,8 @@ body.dark-mode .dropdown-item:hover {
 
 /* Navbar tam qara */
 body.dark-mode .navbar {
-    background-color: #000000 !important; /* Tam qara */
-    background-image: none !important;    /* Gradienti ləğv et */
+    background-color: #000000 !important;
+    background-image: none !important;
     border: none !important;
 }
 
@@ -216,12 +216,10 @@ body.dark-mode .btn-outline-secondary:hover {
     color: unset !important;
 }
 
-/* 🔘 "← İmtahanlara qayıt" düyməsi üçün həm dark, həm light mode düzəlişi */
-
 /* Light mode */
 .btn-outline-light {
-    color: #000000 !important; /* Qara mətn */
-    border-color: #000000 !important; /* Qara sərhəd */
+    color: #000000 !important;
+    border-color: #000000 !important;
     background-color: transparent !important;
 }
 
@@ -233,8 +231,8 @@ body.dark-mode .btn-outline-secondary:hover {
 
 /* Dark mode */
 body.dark-mode .btn-outline-light {
-    color: #ffffff !important; /* Ağ mətn */
-    border-color: #ffffff !important; /* Ağ sərhəd */
+    color: #ffffff !important;
+    border-color: #ffffff !important;
     background-color: transparent !important;
 }
 
@@ -320,4 +318,45 @@ body.dark-mode .text-primary {
     color: #ffffff !important;
 }
 
+/* 🗓 Date input calendar icon – dark mode fix */
+body.dark-mode input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    opacity: 1;
+    cursor: pointer;
+}
+
+/* ⬇️ Select (gender) dropdown arrow – dark mode fix */
+body.dark-mode select {
+    background-color: #212529;
+    color: #f8f9fa;
+}
+
+body.dark-mode select option {
+    background-color: #212529;
+    color: #f8f9fa;
+}
+
+/* Chrome, Edge, Safari */
+body.dark-mode select::-ms-expand {
+    filter: invert(1);
+}
+
+body.dark-mode select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image:
+            linear-gradient(45deg, transparent 50%, white 50%),
+            linear-gradient(135deg, white 50%, transparent 50%),
+            linear-gradient(to right, #212529, #212529);
+    background-position:
+            calc(100% - 20px) calc(1em + 2px),
+            calc(100% - 15px) calc(1em + 2px),
+            100% 0;
+    background-size:
+            5px 5px,
+            5px 5px,
+            2.5em 2.5em;
+    background-repeat: no-repeat;
+}
 
