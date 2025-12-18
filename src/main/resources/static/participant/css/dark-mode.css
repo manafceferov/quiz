@@ -123,8 +123,8 @@ body.dark-mode .dropdown-item:hover {
 
 /* Navbar tam qara */
 body.dark-mode .navbar {
-    background-color: #000000 !important; /* Tam qara */
-    background-image: none !important;    /* Gradienti ləğv et */
+    background-color: #000000 !important;
+    background-image: none !important;
     border: none !important;
 }
 
@@ -216,12 +216,10 @@ body.dark-mode .btn-outline-secondary:hover {
     color: unset !important;
 }
 
-/* 🔘 "← İmtahanlara qayıt" düyməsi üçün həm dark, həm light mode düzəlişi */
-
 /* Light mode */
 .btn-outline-light {
-    color: #000000 !important; /* Qara mətn */
-    border-color: #000000 !important; /* Qara sərhəd */
+    color: #000000 !important;
+    border-color: #000000 !important;
     background-color: transparent !important;
 }
 
@@ -233,8 +231,8 @@ body.dark-mode .btn-outline-secondary:hover {
 
 /* Dark mode */
 body.dark-mode .btn-outline-light {
-    color: #ffffff !important; /* Ağ mətn */
-    border-color: #ffffff !important; /* Ağ sərhəd */
+    color: #ffffff !important;
+    border-color: #ffffff !important;
     background-color: transparent !important;
 }
 
@@ -329,8 +327,8 @@ body.dark-mode input[type="date"]::-webkit-calendar-picker-indicator {
 
 /* ⬇️ Select (gender) dropdown arrow – dark mode fix */
 body.dark-mode select {
-    background-color: #212529;   /* fon dark olsun */
-    color: #f8f9fa;              /* text ağ */
+    background-color: #212529;
+    color: #f8f9fa;
 }
 
 body.dark-mode select option {
