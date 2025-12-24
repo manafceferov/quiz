@@ -6,7 +6,7 @@ plugins {
     id 'org.liquibase.gradle' version '2.2.0'
 }
 
-group = 'com.jafarov'
+group = 'com.quiz'
 version = '0.0.1-SNAPSHOT'
 
 java {
