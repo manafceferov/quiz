@@ -7,7 +7,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-
 import java.util.List;
 import java.util.Locale;
 
@@ -23,21 +22,19 @@ public class ParticipantValidationExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public String handleValidationExceptions(MethodArgumentNotValidException ex,
                                              Model model,
-                                             Locale locale) {
-
+                                             Locale locale
+    ) {
         List<String> errors = ex.getBindingResult()
                 .getFieldErrors()
                 .stream()
                 .map(error -> {
                     String fieldLabel = messageSource.getMessage(error.getField(), null, error.getField(), locale);
                     String messageTemplate = error.getDefaultMessage();
+                    assert messageTemplate != null;
                     return messageSource.getMessage(messageTemplate, new Object[]{fieldLabel}, messageTemplate, locale);
                 })
                 .toList();
-
         model.addAttribute("errors", errors);
-
-        // DTO null olarsa yeni, boş bir DTO əlavə et
         Object target = ex.getBindingResult().getTarget();
         ProfileProjectionEditDto dto;
         if (target instanceof ProfileProjectionEditDto existingDto) {
@@ -46,10 +43,7 @@ public class ParticipantValidationExceptionHandler {
             dto = new ProfileProjectionEditDto();
         }
         model.addAttribute("participantEditDto", dto);
-
         return "participant/profile";
     }
-
-
 }
 

@@ -20,19 +20,16 @@ public class TopicService{
     private final TopicMapper mapper;
     private final QuestionRepository questionRepository;
     private final AnswerRepository answerRepository;
-    private final QuestionService questionService;
 
     public TopicService(TopicRepository repository,
                         TopicMapper mapper,
                         QuestionRepository questionRepository,
-                        AnswerRepository answerRepository,
-                        QuestionService questionService
+                        AnswerRepository answerRepository
     ) {
         this.repository = repository;
         this.mapper = mapper;
         this.questionRepository = questionRepository;
         this.answerRepository = answerRepository;
-        this.questionService = questionService;
     }
 
     @Transactional

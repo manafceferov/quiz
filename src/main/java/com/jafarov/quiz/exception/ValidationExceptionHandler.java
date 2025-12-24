@@ -18,22 +18,22 @@ public class ValidationExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public String handleValidationExceptions(MethodArgumentNotValidException ex, Model model, Locale locale) {
+    public String handleValidationExceptions(MethodArgumentNotValidException ex,
+                                             Model model,
+                                             Locale locale
+    ) {
         List<String> errors = ex.getBindingResult()
                 .getFieldErrors()
                 .stream()
                 .map(error -> {
                     String fieldLabel = messageSource.getMessage(error.getField(), null, error.getField(), locale);
                     String messageTemplate = error.getDefaultMessage();
+                    assert messageTemplate != null;
                     return messageSource.getMessage(messageTemplate, new Object[]{fieldLabel}, messageTemplate, locale);
                 })
                 .toList();
-
         model.addAttribute("errors", errors);
-
-        // Burada redirect ediləcək səhifəni qaytarırsan
-        // Əgər səhifəni dinamik qaytarmaq istəyirsənsə, əlavə custom annotation və ya parametr lazım olar
-        return "admin/admin/create"; // Əgər bu default form səhifəndirsə
+        return "admin/admin/create";
     }
 }
 

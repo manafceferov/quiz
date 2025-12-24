@@ -26,24 +26,19 @@ public class FieldMatchValidator implements ConstraintValidator<FieldMatch, Obje
     @Override
     public boolean isValid(Object value, ConstraintValidatorContext context) {
         try {
-            // Reflection ilə sahələri əldə edirik
             Field firstField = value.getClass().getDeclaredField(firstFieldName);
             Field secondField = value.getClass().getDeclaredField(secondFieldName);
             firstField.setAccessible(true);
             secondField.setAccessible(true);
-
-            // Həmin sahələrin dəyərlərini müqayisə edirik
             Object firstValue = firstField.get(value);
             Object secondValue = secondField.get(value);
 
             if (firstValue == null && secondValue == null) {
                 return true;
             }
-
             if (firstValue != null && firstValue.equals(secondValue)) {
                 return true;
             } else {
-                // Mesajları UTF-8 formatında düzgün alırıq
                 String firstFieldLabel = messageSource.getMessage(firstFieldName, null, LocaleContextHolder.getLocale());
                 String secondFieldLabel = messageSource.getMessage(secondFieldName, null, LocaleContextHolder.getLocale());
 

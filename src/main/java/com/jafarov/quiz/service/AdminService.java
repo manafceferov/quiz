@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class AdminService {
@@ -55,7 +56,7 @@ public class AdminService {
     }
 
     public void update(AdminUpdateRequest request) {
-        Admin admin = repository.findById(request.getId())
+        Admin admin = repository.findById(Objects.requireNonNull(request.getId()))
                 .orElseThrow(() -> new RuntimeException("İstifadəçi tapılmadı: " + request.getId()));
 
         if (request.getPassword() == null || request.getPassword().isBlank()) {

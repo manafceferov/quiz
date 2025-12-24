@@ -35,7 +35,6 @@ public class QuestionController extends BaseController{
                         @RequestParam(defaultValue = "10") int size,
                         @RequestParam(required = false) String keyword
     ) {
-
         Pageable pageable = PageRequest.of(page, size);
         model.addAttribute("questions", service.searchQuestionsByTopicAndKeyword(topicId, keyword, pageable));
         model.addAttribute("topicId", topicId);
@@ -59,7 +58,6 @@ public class QuestionController extends BaseController{
                          Long topicId,
                          Model model
     ) {
-
         QuestionInsertRequest request = new QuestionInsertRequest();
         request.setTopicId(topicId);
         model.addAttribute("request", request);
@@ -74,7 +72,6 @@ public class QuestionController extends BaseController{
                          RedirectAttributes redirectAttributes,
                          @RequestParam(name = "correctAnswerIndex") int correctAnswerIndex
     ) {
-
         if (bindingResult.hasErrors()) {
             model.addAttribute("errors", bindingResult.getAllErrors());
             return "admin/question/create";
@@ -91,7 +88,6 @@ public class QuestionController extends BaseController{
                        Long id,
                        Model model
     ) {
-
         QuestionEditDto data = service.getQuestionWithAnswersById(id);
         model.addAttribute("request", data);
         return "admin/question/edit";
@@ -105,7 +101,6 @@ public class QuestionController extends BaseController{
                        RedirectAttributes redirectAttributes,
                        @RequestParam(name = "correctAnswerIndex") int correctAnswerIndex
     ) {
-
         if (bindingResult.hasErrors()) {
             model.addAttribute("errors", bindingResult.getAllErrors());
             return "admin/question/edit";
@@ -121,7 +116,6 @@ public class QuestionController extends BaseController{
                          @RequestParam Long topicId,
                          RedirectAttributes redirectAttributes
     ) {
-
         service.deleteById(id);
         redirectAttributes.addFlashAttribute("success", "Sual silindi");
         redirectAttributes.addAttribute("topicId", topicId);
@@ -134,7 +128,6 @@ public class QuestionController extends BaseController{
                                @RequestParam Long topicId,
                                RedirectAttributes redirectAttributes
     ) {
-
         Boolean result = service.changeStatus(id, status);
         if (!result) {
             redirectAttributes.addFlashAttribute("errors", "Xeta bas verdi");

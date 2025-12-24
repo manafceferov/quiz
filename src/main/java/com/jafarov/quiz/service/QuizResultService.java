@@ -70,7 +70,7 @@ public class QuizResultService {
 
         Map<Long, Long> correctAnswers = answerRepository.findCorrectAnswersByTopicId(topicId)
                 .stream()
-                .collect(Collectors.toMap(a -> a.getQuestion().getId(), Answer::getId));
+                .collect(Collectors.toMap(a -> Objects.requireNonNull(a.getQuestion()).getId(), Answer::getId));
 
         long correctCount = request.getAnswers().stream()
                 .filter(a -> {
@@ -94,7 +94,6 @@ public class QuizResultService {
                     return pa;
                 })
                 .toList();
-
         participantAnswerService.saveAll(answers);
         return saved;
     }
@@ -121,7 +120,6 @@ public class QuizResultService {
                         (topic == null || topic.isBlank()) ? null : topic.trim(),
                         pageable
                 );
-
         return page.map(quizResultMapper::toParticipantQuizResultList);
     }
 
@@ -147,7 +145,7 @@ public class QuizResultService {
 
         ParticipantQuizResultDetail detail = new ParticipantQuizResultDetail();
         detail.setParticipantId(quizResult.getParticipantId());
-        detail.setTopicName(quizResult.getTopic().getName());
+        detail.setTopicName(Objects.requireNonNull(quizResult.getTopic()).getName());
         detail.setCorrectAnswersCount(quizResult.getCorrectAnswersCount());
         detail.setQuestionCount(quizResult.getQuestionsCount());
         detail.setCorrectPercent(quizResult.getCorrectPercent());
@@ -166,7 +164,7 @@ public class QuizResultService {
                     ParticipantQuestionWithAnswers participantQuestionWithAnswers = new ParticipantQuestionWithAnswers();
                     participantQuestionWithAnswers.setQuestion(question.getQuestion());
 
-                    List<Answer> allAnswers = question.getAnswers().stream()
+                    List<Answer> allAnswers = Objects.requireNonNull(question.getAnswers()).stream()
                             .filter(Answer::isActive)
                             .toList();
 

@@ -66,19 +66,16 @@ public class TopicController extends BaseController{
             model.addAttribute("errors", bindingResult.getAllErrors());
             return "admin/topic/create";
         }
-
         service.save(request);
         return "redirect:/admin/topics";
     }
 
     @GetMapping("/{id}/edit")
-    public String edit(@PathVariable("id")
-                       Long id,
+    public String edit(@PathVariable Long id,
                        Model model
     ) {
         Topic topic = service.findById(id)
                 .orElseThrow(() -> new RuntimeException("Topic not found: " + id));
-
         model.addAttribute("request", topic);
         return "admin/topic/edit";
     }
@@ -94,13 +91,12 @@ public class TopicController extends BaseController{
             model.addAttribute("topic", service.getById(request.getId()));
             return "admin/topic/edit";
         }
-
         service.update(request);
         return "redirect:/admin/topics";
     }
 
     @GetMapping("/{id}/delete")
-    public String delete(@PathVariable("id") Long id) {
+    public String delete(@PathVariable Long id) {
         service.deleteById(id);
         return "redirect:/admin/topics";
     }
