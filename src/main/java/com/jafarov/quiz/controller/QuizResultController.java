@@ -59,19 +59,15 @@ public class QuizResultController extends BaseController {
                           @RequestParam(defaultValue = "10") int size
     ) {
         Pageable pageable = PageRequest.of(page, size);
-
         Page<ParticipantQuizResultList> resultPage =
                 quizResultService.getResultsForCurrentParticipant(topic, pageable);
-
         model.addAttribute("results", resultPage.getContent());
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", resultPage.getTotalPages());
         model.addAttribute("totalItems", resultPage.getTotalElements());
         model.addAttribute("topic", topic);
-
         return "participant/my-exams";
     }
-
 
     @GetMapping("/result/{id}")
     public String showResult(@PathVariable Long id,
@@ -91,16 +87,13 @@ public class QuizResultController extends BaseController {
         if (questionIndex < 0 || questionIndex >= questions.size()) {
             return "redirect:/participant/" + topicId + "/question/0";
         }
-
         QuestionExamDto question = questions.get(questionIndex);
-
         model.addAttribute("question", question);
         model.addAttribute("questions", questions);
         model.addAttribute("topicId", topicId);
         model.addAttribute("questionIndex", questionIndex);
         model.addAttribute("totalQuestions", questions.size());
         model.addAttribute("isExamFinished", false);
-
         return "participant/exam";
     }
 
@@ -114,15 +107,13 @@ public class QuizResultController extends BaseController {
         if (questions.isEmpty()) {
             return "redirect:/";
         }
-        QuestionExamDto question = questions.get(0);
-
+        QuestionExamDto question = questions.getFirst();
         model.addAttribute("question", question);
         model.addAttribute("questions", questions);
         model.addAttribute("topicId", topicId);
         model.addAttribute("questionIndex", 0);
         model.addAttribute("totalQuestions", questions.size());
         model.addAttribute("isExamFinished", false);
-
         return "participant/exam";
     }
 
@@ -134,7 +125,6 @@ public class QuizResultController extends BaseController {
         Long participantId = authSessionData.getParticipantSessionData().getId();
         request.setParticipantId(participantId);
         request.setTopicId(topicId);
-
         QuizResult savedResult = quizResultService.saveQuizResult(request);
         return savedResult.getId();
     }

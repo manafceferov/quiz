@@ -3,7 +3,6 @@ package com.jafarov.quiz;
 import com.jafarov.quiz.dto.admin.AdminInsertRequest;
 import com.jafarov.quiz.service.AdminService;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import java.util.LinkedList;
 import java.util.List;
@@ -12,13 +11,10 @@ import java.util.List;
 public class DataInitializer implements CommandLineRunner {
 
     public final AdminService adminService;
-    private final PasswordEncoder passwordEncoder;
 
-    public DataInitializer(AdminService adminService,
-                           PasswordEncoder passwordEncoder
+    public DataInitializer(AdminService adminService
     ) {
         this.adminService = adminService;
-        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -33,7 +29,6 @@ public class DataInitializer implements CommandLineRunner {
                 adminService.existsByEmail("mjafarov21@gmail.com")) {
             return;
         }
-
         userRequest.add(
                 new AdminInsertRequest(1L,
                         "Anar",
@@ -43,7 +38,6 @@ public class DataInitializer implements CommandLineRunner {
                         "123456"
                 )
         );
-
         userRequest.add(
                 new AdminInsertRequest(2L,
                         "Manaf",
@@ -53,7 +47,6 @@ public class DataInitializer implements CommandLineRunner {
                         "123456"
                 )
         );
-
         adminService.saveAll(userRequest);
     }
 }

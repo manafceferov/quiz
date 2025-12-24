@@ -22,7 +22,6 @@ class TopicServiceTest {
     private TopicMapper topicMapper;
     private QuestionRepository questionRepository;
     private AnswerRepository answerRepository;
-    private QuestionService questionService;
 
     private TopicService topicService;
 
@@ -32,14 +31,12 @@ class TopicServiceTest {
         topicMapper = mock(TopicMapper.class);
         questionRepository = mock(QuestionRepository.class);
         answerRepository = mock(AnswerRepository.class);
-        questionService = mock(QuestionService.class);
 
         topicService = new TopicService(
                 topicRepository,
                 topicMapper,
                 questionRepository,
-                answerRepository,
-                questionService
+                answerRepository
         );
     }
 

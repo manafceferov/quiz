@@ -14,6 +14,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.Objects;
+
 @Controller
 @RequestMapping("/participant/topics")
 public class ParticipantTopicController {
@@ -69,7 +71,7 @@ public class ParticipantTopicController {
                        Model model
     ) {
         Topic t = service.findById(id).orElseThrow();
-        if (!t.getByParticipant().equals(authSessionData.getParticipantSessionData().getId())) {
+        if (!Objects.equals(t.getByParticipant(), authSessionData.getParticipantSessionData().getId())) {
             return "redirect:/participant/topics";
         }
         model.addAttribute("request", t);
@@ -83,7 +85,7 @@ public class ParticipantTopicController {
                        RedirectAttributes redirect
     ) {
         Topic topic = service.findById(request.getId()).orElseThrow();
-        if (!topic.getByParticipant().equals(authSessionData.getParticipantSessionData().getId())) {
+        if (!Objects.equals(topic.getByParticipant(), authSessionData.getParticipantSessionData().getId())) {
             return "redirect:/participant/topics";
         }
 
@@ -102,7 +104,7 @@ public class ParticipantTopicController {
                          RedirectAttributes redirect
     ) {
         Topic t = service.findById(id).orElseThrow();
-        if (!t.getByParticipant().equals(authSessionData.getParticipantSessionData().getId())) {
+        if (!Objects.equals(t.getByParticipant(), authSessionData.getParticipantSessionData().getId())) {
             return "redirect:/participant/topics";
         }
         service.deleteById(id);
@@ -116,7 +118,7 @@ public class ParticipantTopicController {
                                RedirectAttributes redirect
     ) {
         Topic t = service.findById(id).orElseThrow();
-        if (!t.getByParticipant().equals(authSessionData.getParticipantSessionData().getId())) {
+        if (!Objects.equals(t.getByParticipant(), authSessionData.getParticipantSessionData().getId())) {
             return "redirect:/participant/topics";
         }
         service.changeStatus(id, status);

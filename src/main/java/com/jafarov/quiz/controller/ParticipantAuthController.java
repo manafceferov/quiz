@@ -14,7 +14,8 @@ public class ParticipantAuthController extends BaseController{
 
     private final ParticipantService participantService;
 
-    public ParticipantAuthController(ParticipantService participantService) {
+    public ParticipantAuthController(ParticipantService participantService
+    ) {
         this.participantService = participantService;
     }
 

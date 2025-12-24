@@ -14,7 +14,6 @@ public @interface FieldMatch {
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 
-    // Sahə adları
     String first();
     String second();
 

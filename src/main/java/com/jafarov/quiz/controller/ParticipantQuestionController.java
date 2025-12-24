@@ -17,6 +17,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.Objects;
+
 @Controller
 @RequestMapping("/participant/questions")
 public class ParticipantQuestionController {
@@ -88,7 +90,7 @@ public class ParticipantQuestionController {
                        Model model
     ) {
         QuestionEditDto data = service.getQuestionWithAnswersById(id);
-        if (!data.getByParticipant().equals(authSessionData.getParticipantSessionData().getId())) {
+        if (!Objects.equals(data.getByParticipant(), authSessionData.getParticipantSessionData().getId())) {
             return "redirect:/participant/questions/topic/" + data.getTopicId();
         }
         model.addAttribute("request", data);
@@ -103,7 +105,7 @@ public class ParticipantQuestionController {
                        @RequestParam int correctAnswerIndex
     ) {
         QuestionEditDto data = service.getQuestionWithAnswersById(request.getId());
-        if (!data.getByParticipant().equals(authSessionData.getParticipantSessionData().getId())) {
+        if (!Objects.equals(data.getByParticipant(), authSessionData.getParticipantSessionData().getId())) {
             return "redirect:/participant/questions/topic/" + data.getTopicId();
         }
         if (bindingResult.hasErrors()) {
@@ -122,7 +124,7 @@ public class ParticipantQuestionController {
                          RedirectAttributes redirect
     ) {
         QuestionEditDto data = service.getQuestionWithAnswersById(id);
-        if (!data.getByParticipant().equals(authSessionData.getParticipantSessionData().getId())) {
+        if (!Objects.equals(data.getByParticipant(), authSessionData.getParticipantSessionData().getId())) {
             redirect.addAttribute("topicId", topicId);
             return "redirect:/participant/questions/topic/{topicId}";
         }
@@ -139,7 +141,7 @@ public class ParticipantQuestionController {
                                RedirectAttributes redirect
     ) {
         QuestionEditDto data = service.getQuestionWithAnswersById(id);
-        if (!data.getByParticipant().equals(authSessionData.getParticipantSessionData().getId())) {
+        if (!Objects.equals(data.getByParticipant(), authSessionData.getParticipantSessionData().getId())) {
             redirect.addAttribute("topicId", topicId);
             return "redirect:/participant/questions/topic/{topicId}";
         }

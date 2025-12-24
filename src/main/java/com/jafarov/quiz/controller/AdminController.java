@@ -65,7 +65,7 @@ public class AdminController extends BaseController {
     }
 
     @GetMapping("{id}/edit")
-    public String edit(@PathVariable("id") Long id,
+    public String edit(@PathVariable Long id,
                        Model model
     ) {
         Admin admin = adminService.edit(id);
@@ -84,13 +84,12 @@ public class AdminController extends BaseController {
             model.addAttribute("user", adminService.edit(request.getId()));
             return "admin/user/edit";
         }
-
         adminService.update(request);
         return "redirect:/admin/users";
     }
 
     @GetMapping("/{id}/delete")
-    public String delete(@PathVariable("id") Long id) {
+    public String delete(@PathVariable Long id) {
         adminService.deleteById(id);
         return "redirect:/admin/users";
     }

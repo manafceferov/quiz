@@ -45,11 +45,9 @@ public class ParticipantService {
         if (!password.equals(confirmPassword)) {
             throw new IllegalArgumentException("Şifrə və təsdiq uyğun gəlmir");
         }
-
         if (participantRepository.findByEmail(email).isPresent()) {
             throw new IllegalArgumentException("Bu email artıq qeydiyyatdan keçib");
         }
-
         Participant participant = new Participant();
         participant.setFirstName(firstName);
         participant.setLastName(lastName);
@@ -57,7 +55,6 @@ public class ParticipantService {
         participant.setPassword(passwordEncoder.encode(password));
         participant.setStatus(true);
         participant = participantRepository.save(participant);
-
         return participant;
     }
 

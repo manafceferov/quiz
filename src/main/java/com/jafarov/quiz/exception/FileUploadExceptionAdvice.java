@@ -10,7 +10,8 @@ public class FileUploadExceptionAdvice {
 
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     public String handleMaxSizeException(MaxUploadSizeExceededException exc,
-                                         RedirectAttributes redirectAttributes) {
+                                         RedirectAttributes redirectAttributes
+    ) {
         redirectAttributes.addFlashAttribute("message",
                 "Faylın ölçüsü icazə verilən maksimum ölçünü keçdi!");
         return "redirect:/admin/questions";

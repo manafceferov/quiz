@@ -60,7 +60,7 @@ public class QuestionService {
     public void update(QuestionUpdateRequest request,
                        int correctAnswerIndex
     ) {
-        Question question = repository.findById(request.getId())
+        Question question = repository.findById(Objects.requireNonNull(request.getId()))
                 .orElseThrow(() -> new EntityNotFoundException("Sual tapılmadı: " + request.getId()));
         question.setQuestion(request.getQuestion());
         question.setTopicId(request.getTopicId());
@@ -114,7 +114,6 @@ public class QuestionService {
 
     public QuestionEditDto getQuestionWithAnswersById(Long id) {
         Question data = repository.getQuestionWithAnswersById(id);
-
         return mapper.toQuestionEditDtoFromQuestionDbo(data);
     }
 
@@ -131,15 +130,16 @@ public class QuestionService {
         return true;
     }
 
-    public Page<QuestionEditDto> getQuestionsWithParticipantByTopic(Long topicId, String keyword, Pageable pageable) {
+    public Page<QuestionEditDto> getQuestionsWithParticipantByTopic(Long topicId,
+                                                                    String keyword,
+                                                                    Pageable pageable
+    ) {
         Page<Question> questions;
         if (keyword == null || keyword.trim().isEmpty()) {
             questions = repository.findByTopicId(topicId, pageable);
         } else {
             questions = repository.findByTopicIdAndQuestionContainingIgnoreCase(topicId, keyword.trim(), pageable);
         }
-
-        // Entity -> DTO
         return questions.map(mapper::toQuestionEditDtoFromQuestionDbo);
     }
 
